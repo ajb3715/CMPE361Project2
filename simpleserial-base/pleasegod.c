@@ -58,13 +58,12 @@ void permute(uint8_t *block) {
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
 
-    // Example permutation: Rotate bytes left by 3 (constant-time)
     for (int i = 0; i < BLOCK_SIZE; i++) {
         block[i] = temp[(i + 3) % BLOCK_SIZE];
     }
 }
 
-// BCEA Encryption function
+// Encryption function
 void encrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
     for (int round = 0; round < ROUNDS; round++) {
         balanced_xor(block, mask);        // Masking step
@@ -77,21 +76,15 @@ void encrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
 // Function to get the plaintext from UART and perform encryption
 uint8_t get_pt(uint8_t* pt, uint8_t len)
 {
-    uint8_t mask[BLOCK_SIZE] = {0}; // Use a fixed mask for simplicity
-    uint8_t key[BLOCK_SIZE] = {0};  // Use a fixed key for simplicity
+    uint8_t mask[BLOCK_SIZE] = {6942053180081134455}; // Use a fixed mask for simplicity
+    uint8_t key[BLOCK_SIZE] = {9395718465930374};  // Use a fixed key for simplicity
 
-    encrypt_block(pt, key, mask);   // Perform BCEA encryption
+    encrypt_block(pt, key, mask);   // Perform encryption
 
     simpleserial_put('r', BLOCK_SIZE, pt);  // Send the encrypted ciphertext over UART
     return 0x00;
 }
 
-// Function to reset any values (if needed, in this case it's not necessary)
-uint8_t reset(uint8_t* x, uint8_t len)
-{
-    // Reset key or other internal states if necessary
-    return 0x00;
-}
 
 #if SS_VER == SS_VER_2_1
 uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
@@ -128,7 +121,6 @@ int main(void)
     simpleserial_addcmd(0x01, 16, aes);  // Add AES command for testing
     #else
     simpleserial_addcmd('p', 16, get_pt);  // Use 'p' command to get plaintext and encrypt
-    simpleserial_addcmd('x', 0, reset);   // Add reset command
     #endif
 
     while(1)

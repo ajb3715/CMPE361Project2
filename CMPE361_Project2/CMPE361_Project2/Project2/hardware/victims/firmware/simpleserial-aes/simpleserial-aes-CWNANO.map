@@ -1,0 +1,762 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+                              objdir-CWNANO/stm32f0_hal_lowlevel.o (__gnu_thumb1_case_uqi)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+                              objdir-CWNANO/stm32f0_hal_lowlevel.o (__aeabi_uidiv)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o (exit)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o) (_global_impure_ptr)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o (__libc_init_array)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+                              objdir-CWNANO/simpleserial-aes.o (memcpy)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o (memset)
+c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o) (_exit)
+
+Discarded input sections
+
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+ .data          0x00000000        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ .rodata        0x00000000       0x24 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ .text          0x00000000       0x80 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .ARM.extab     0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .ARM.exidx     0x00000000       0x10 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .ARM.attributes
+                0x00000000       0x1b c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ .text          0x00000000        0x0 objdir-CWNANO/simpleserial-aes.o
+ .data          0x00000000        0x0 objdir-CWNANO/simpleserial-aes.o
+ .bss           0x00000000        0x0 objdir-CWNANO/simpleserial-aes.o
+ .text.inverse_substitute_byte
+                0x00000000       0x28 objdir-CWNANO/simpleserial-aes.o
+ .text.inverse_substitute
+                0x00000000       0x18 objdir-CWNANO/simpleserial-aes.o
+ .text.reverse_permute
+                0x00000000       0x26 objdir-CWNANO/simpleserial-aes.o
+ .text.decrypt_block
+                0x00000000       0x2e objdir-CWNANO/simpleserial-aes.o
+ .text.give_dt  0x00000000       0x48 objdir-CWNANO/simpleserial-aes.o
+ .text          0x00000000        0x0 objdir-CWNANO/simpleserial.o
+ .data          0x00000000        0x0 objdir-CWNANO/simpleserial.o
+ .text.hex_decode
+                0x00000000       0x74 objdir-CWNANO/simpleserial.o
+ .text.ss_puts  0x00000000       0x14 objdir-CWNANO/simpleserial.o
+ .text          0x00000000        0x0 objdir-CWNANO/stm32f0_hal_nano.o
+ .data          0x00000000        0x0 objdir-CWNANO/stm32f0_hal_nano.o
+ .text.led_error
+                0x00000000       0x10 objdir-CWNANO/stm32f0_hal_nano.o
+ .text.led_ok   0x00000000       0x10 objdir-CWNANO/stm32f0_hal_nano.o
+ .text          0x00000000        0x0 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text.HAL_RCC_GetSysClockFreq
+                0x00000000        0x6 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text.HAL_RCC_GetPCLK1Freq
+                0x00000000        0x6 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text.HAL_RCC_GetPCLK2Freq
+                0x00000000        0x6 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text.HAL_RCCEx_PeriphCLKConfig
+                0x00000000      0x10c objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text.UART_CheckIdleState
+                0x00000000       0x16 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .text          0x00000000        0x0 objdir-CWNANO/aes.o
+ .data          0x00000000      0x20b objdir-CWNANO/aes.o
+ .bss           0x00000000       0xc8 objdir-CWNANO/aes.o
+ .text.KeyExpansion
+                0x00000000       0x98 objdir-CWNANO/aes.o
+ .text.AddRoundKey
+                0x00000000       0x38 objdir-CWNANO/aes.o
+ .text.SubBytes
+                0x00000000       0x2c objdir-CWNANO/aes.o
+ .text.ShiftRows
+                0x00000000       0x3c objdir-CWNANO/aes.o
+ .text.xtime    0x00000000       0x10 objdir-CWNANO/aes.o
+ .text.InvSubBytes
+                0x00000000       0x2c objdir-CWNANO/aes.o
+ .text.InvShiftRows
+                0x00000000       0x3c objdir-CWNANO/aes.o
+ .text.Cipher   0x00000000       0xa0 objdir-CWNANO/aes.o
+ .text.BlockCopy
+                0x00000000        0xe objdir-CWNANO/aes.o
+ .text.AES128_ECB_indp_setkey
+                0x00000000       0x10 objdir-CWNANO/aes.o
+ .text.AES128_ECB_indp_crypto
+                0x00000000       0x18 objdir-CWNANO/aes.o
+ .text.AES128_ECB_encrypt
+                0x00000000       0x24 objdir-CWNANO/aes.o
+ .text.AES128_ECB_decrypt
+                0x00000000      0x160 objdir-CWNANO/aes.o
+ .debug_info    0x00000000      0xa42 objdir-CWNANO/aes.o
+ .debug_abbrev  0x00000000      0x2f2 objdir-CWNANO/aes.o
+ .debug_loc     0x00000000      0x89c objdir-CWNANO/aes.o
+ .debug_aranges
+                0x00000000       0x80 objdir-CWNANO/aes.o
+ .debug_ranges  0x00000000       0xd8 objdir-CWNANO/aes.o
+ .debug_line    0x00000000      0x8ea objdir-CWNANO/aes.o
+ .debug_str     0x00000000      0x340 objdir-CWNANO/aes.o
+ .comment       0x00000000       0x4e objdir-CWNANO/aes.o
+ .debug_frame   0x00000000      0x158 objdir-CWNANO/aes.o
+ .ARM.attributes
+                0x00000000       0x2c objdir-CWNANO/aes.o
+ .text          0x00000000        0x0 objdir-CWNANO/aes-independant.o
+ .data          0x00000000        0x0 objdir-CWNANO/aes-independant.o
+ .bss           0x00000000       0x10 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_init
+                0x00000000        0x2 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_key
+                0x00000000        0x8 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_enc
+                0x00000000        0x8 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_enc_pretrigger
+                0x00000000        0x2 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_enc_posttrigger
+                0x00000000        0x2 objdir-CWNANO/aes-independant.o
+ .text.aes_indep_mask
+                0x00000000        0x2 objdir-CWNANO/aes-independant.o
+ .debug_info    0x00000000      0x1eb objdir-CWNANO/aes-independant.o
+ .debug_abbrev  0x00000000      0x15d objdir-CWNANO/aes-independant.o
+ .debug_loc     0x00000000       0x8a objdir-CWNANO/aes-independant.o
+ .debug_aranges
+                0x00000000       0x40 objdir-CWNANO/aes-independant.o
+ .debug_ranges  0x00000000       0x30 objdir-CWNANO/aes-independant.o
+ .debug_line    0x00000000      0x197 objdir-CWNANO/aes-independant.o
+ .debug_str     0x00000000      0x271 objdir-CWNANO/aes-independant.o
+ .comment       0x00000000       0x4e objdir-CWNANO/aes-independant.o
+ .debug_frame   0x00000000       0x80 objdir-CWNANO/aes-independant.o
+ .ARM.attributes
+                0x00000000       0x2c objdir-CWNANO/aes-independant.o
+ .text          0x00000000       0x14 objdir-CWNANO/stm32f0_startup.o
+ .data          0x00000000        0x0 objdir-CWNANO/stm32f0_startup.o
+ .bss           0x00000000        0x0 objdir-CWNANO/stm32f0_startup.o
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .text.exit     0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .debug_frame   0x00000000       0x28 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .ARM.attributes
+                0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x00000000        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .data.impure_data
+                0x00000000       0x60 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .rodata._global_impure_ptr
+                0x00000000        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .ARM.attributes
+                0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .text.memset   0x00000000       0x10 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .debug_frame   0x00000000       0x20 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .ARM.attributes
+                0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .text._exit    0x00000000        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .debug_frame   0x00000000       0x20 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .ARM.attributes
+                0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .rodata        0x00000000       0x24 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .eh_frame      0x00000000        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .ARM.attributes
+                0x00000000       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+ .text          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+ .data          0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+ .bss           0x00000000        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x20000000         0x00001000         xrw
+ROM              0x08000000         0x00008000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+LOAD objdir-CWNANO/simpleserial-aes.o
+LOAD objdir-CWNANO/simpleserial.o
+LOAD objdir-CWNANO/stm32f0_hal_nano.o
+LOAD objdir-CWNANO/stm32f0_hal_lowlevel.o
+LOAD objdir-CWNANO/aes.o
+LOAD objdir-CWNANO/aes-independant.o
+LOAD objdir-CWNANO/stm32f0_startup.o
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
+START GROUP
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libc_nano.a
+END GROUP
+START GROUP
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libc_nano.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a
+END GROUP
+START GROUP
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libc_nano.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a
+END GROUP
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtend.o
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+                0x20001000                _estack = 0x20001000
+                0x00000000                _Min_Heap_Size = 0x0
+                0x00000400                _Min_Stack_Size = 0x400
+
+.isr_vector     0x08000000      0x188
+                0x08000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x188 objdir-CWNANO/stm32f0_startup.o
+                0x08000000                g_pfnVectors
+                0x08000188                . = ALIGN (0x4)
+
+.text           0x08000188     0x1170
+                0x08000188                . = ALIGN (0x4)
+ *(.text)
+ .text          0x08000188       0x48 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ .text          0x080001d0       0x14 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+                0x080001d0                __gnu_thumb1_case_uqi
+ .text          0x080001e4      0x114 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+                0x080001e4                __aeabi_uidiv
+                0x080001e4                __udivsi3
+                0x080002f0                __aeabi_uidivmod
+ .text          0x080002f8        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+                0x080002f8                __aeabi_idiv0
+                0x080002f8                __aeabi_ldiv0
+ *(.text*)
+ .text.substitute_byte
+                0x080002fc       0x28 objdir-CWNANO/simpleserial-aes.o
+                0x080002fc                substitute_byte
+ .text.substitute
+                0x08000324       0x18 objdir-CWNANO/simpleserial-aes.o
+                0x08000324                substitute
+ .text.balanced_xor
+                0x0800033c       0x14 objdir-CWNANO/simpleserial-aes.o
+                0x0800033c                balanced_xor
+ .text.permute  0x08000350       0x24 objdir-CWNANO/simpleserial-aes.o
+                0x08000350                permute
+ .text.encrypt_block
+                0x08000374       0x2e objdir-CWNANO/simpleserial-aes.o
+                0x08000374                encrypt_block
+ *fill*         0x080003a2        0x2 
+ .text.get_pt   0x080003a4       0x48 objdir-CWNANO/simpleserial-aes.o
+                0x080003a4                get_pt
+ .text.aes      0x080003ec       0x2a objdir-CWNANO/simpleserial-aes.o
+                0x080003ec                aes
+ *fill*         0x08000416        0x2 
+ .text.startup.main
+                0x08000418       0x28 objdir-CWNANO/simpleserial-aes.o
+                0x08000418                main
+ .text.ss_crc   0x08000440       0x2e objdir-CWNANO/simpleserial.o
+                0x08000440                ss_crc
+ .text.stuff_data
+                0x0800046e       0x24 objdir-CWNANO/simpleserial.o
+                0x0800046e                stuff_data
+ .text.unstuff_data
+                0x08000492       0x22 objdir-CWNANO/simpleserial.o
+                0x08000492                unstuff_data
+ .text.simpleserial_addcmd
+                0x080004b4       0x3c objdir-CWNANO/simpleserial.o
+                0x080004b4                simpleserial_addcmd
+ .text.simpleserial_init
+                0x080004f0       0x20 objdir-CWNANO/simpleserial.o
+                0x080004f0                simpleserial_init
+ .text.simpleserial_put
+                0x08000510       0x4e objdir-CWNANO/simpleserial.o
+                0x08000510                simpleserial_put
+ .text.check_version
+                0x0800055e       0x16 objdir-CWNANO/simpleserial.o
+                0x0800055e                check_version
+ .text.ss_get_commands
+                0x08000574       0x3c objdir-CWNANO/simpleserial.o
+                0x08000574                ss_get_commands
+ .text.simpleserial_get
+                0x080005b0       0xe0 objdir-CWNANO/simpleserial.o
+                0x080005b0                simpleserial_get
+ .text.platform_init
+                0x08000690       0x58 objdir-CWNANO/stm32f0_hal_nano.o
+                0x08000690                platform_init
+ .text.init_uart
+                0x080006e8       0x80 objdir-CWNANO/stm32f0_hal_nano.o
+                0x080006e8                init_uart
+ .text.trigger_setup
+                0x08000768       0x80 objdir-CWNANO/stm32f0_hal_nano.o
+                0x08000768                trigger_setup
+ .text.trigger_high
+                0x080007e8       0x10 objdir-CWNANO/stm32f0_hal_nano.o
+                0x080007e8                trigger_high
+ .text.trigger_low
+                0x080007f8       0x10 objdir-CWNANO/stm32f0_hal_nano.o
+                0x080007f8                trigger_low
+ .text.getch    0x08000808       0x30 objdir-CWNANO/stm32f0_hal_nano.o
+                0x08000808                getch
+ .text.putch    0x08000838       0x1c objdir-CWNANO/stm32f0_hal_nano.o
+                0x08000838                putch
+ .text.HAL_GetTick
+                0x08000854       0x10 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000854                HAL_GetTick
+ .text.HAL_RCC_OscConfig
+                0x08000864      0x3c4 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000864                HAL_RCC_OscConfig
+ .text.HAL_RCC_ClockConfig
+                0x08000c28      0x114 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000c28                HAL_RCC_ClockConfig
+ .text.HAL_GPIO_Init
+                0x08000d3c      0x164 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000d3c                HAL_GPIO_Init
+ .text.HAL_GPIO_WritePin
+                0x08000ea0        0xc objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000ea0                HAL_GPIO_WritePin
+ .text.UART_WaitOnFlagUntilTimeout
+                0x08000eac       0x64 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000eac                UART_WaitOnFlagUntilTimeout
+ .text.UART_SetConfig
+                0x08000f10      0x100 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08000f10                UART_SetConfig
+ .text.HAL_UART_Init
+                0x08001010       0x64 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08001010                HAL_UART_Init
+ .text.HAL_UART_Receive
+                0x08001074       0xf0 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08001074                HAL_UART_Receive
+ .text.HAL_UART_Transmit
+                0x08001164       0xd2 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x08001164                HAL_UART_Transmit
+ *fill*         0x08001236        0x2 
+ .text.Reset_Handler
+                0x08001238       0x48 objdir-CWNANO/stm32f0_startup.o
+                0x08001238                Reset_Handler
+ .text.Default_Handler
+                0x08001280        0x2 objdir-CWNANO/stm32f0_startup.o
+                0x08001280                DebugMon_Handler
+                0x08001280                HardFault_Handler
+                0x08001280                SysTick_Handler
+                0x08001280                PendSV_Handler
+                0x08001280                NMI_Handler
+                0x08001280                UsageFault_Handler
+                0x08001280                Default_Handler
+                0x08001280                MemManage_Handler
+                0x08001280                SVC_Handler
+                0x08001280                BusFault_Handler
+ *fill*         0x08001282        0x2 
+ .text.__libc_init_array
+                0x08001284       0x48 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+                0x08001284                __libc_init_array
+ .text.memcpy   0x080012cc       0x12 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+                0x080012cc                memcpy
+ *(.glue_7)
+ .glue_7        0x080012de        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x080012de        0x0 linker stubs
+ *(.eh_frame)
+ *fill*         0x080012de        0x2 
+ .eh_frame      0x080012e0        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ *(.init)
+ .init          0x080012e0        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+                0x080012e0                _init
+ .init          0x080012e4        0x8 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+ *(.fini)
+ .fini          0x080012ec        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+                0x080012ec                _fini
+ .fini          0x080012f0        0x8 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+                0x080012f8                . = ALIGN (0x4)
+                0x080012f8                _etext = .
+
+.vfp11_veneer   0x080012f8        0x0
+ .vfp11_veneer  0x080012f8        0x0 linker stubs
+
+.v4_bx          0x080012f8        0x0
+ .v4_bx         0x080012f8        0x0 linker stubs
+
+.iplt           0x080012f8        0x0
+ .iplt          0x080012f8        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+
+.rodata         0x080012f8      0x228
+                0x080012f8                . = ALIGN (0x4)
+ *(.rodata)
+ .rodata        0x080012f8      0x200 objdir-CWNANO/simpleserial-aes.o
+ .rodata        0x080014f8        0x3 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ *(.rodata*)
+ .rodata.str1.1
+                0x080014fb       0x22 objdir-CWNANO/simpleserial-aes.o
+                0x08001520                . = ALIGN (0x4)
+ *fill*         0x0800151d        0x3 
+
+.rel.dyn        0x08001520        0x0
+ .rel.iplt      0x08001520        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+
+.ARM.extab      0x08001520        0x0
+                0x08001520                . = ALIGN (0x4)
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x08001520                . = ALIGN (0x4)
+
+.ARM            0x08001520        0x0
+                0x08001520                . = ALIGN (0x4)
+                0x08001520                __exidx_start = .
+ *(.ARM.exidx*)
+                0x08001520                __exidx_end = .
+                0x08001520                . = ALIGN (0x4)
+
+.preinit_array  0x08001520        0x0
+                0x08001520                . = ALIGN (0x4)
+                0x08001520                PROVIDE (__preinit_array_start = .)
+ *(.preinit_array*)
+                0x08001520                PROVIDE (__preinit_array_end = .)
+                0x08001520                . = ALIGN (0x4)
+
+.init_array     0x08001520        0x4
+                0x08001520                . = ALIGN (0x4)
+                0x08001520                PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ *(.init_array*)
+ .init_array    0x08001520        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x08001524                PROVIDE (__init_array_end = .)
+                0x08001524                . = ALIGN (0x4)
+
+.fini_array     0x08001524        0x4
+                0x08001524                . = ALIGN (0x4)
+                [!provide]                PROVIDE (__fini_array_start = .)
+ *(SORT_BY_NAME(.fini_array.*))
+ *(.fini_array*)
+ .fini_array    0x08001524        0x4 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+                [!provide]                PROVIDE (__fini_array_end = .)
+                0x08001528                . = ALIGN (0x4)
+                0x08001528                _sidata = LOADADDR (.data)
+
+.data           0x20000000        0x4 load address 0x08001528
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _sdata = .
+ *(.data)
+ .data          0x20000000        0x4 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                0x20000000                SystemCoreClock
+ *(.data*)
+                0x20000004                . = ALIGN (0x4)
+                0x20000004                _edata = .
+
+.igot.plt       0x20000004        0x0 load address 0x0800152c
+ .igot.plt      0x20000004        0x0 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x20000004                . = ALIGN (0x4)
+
+.bss            0x20000004      0x154 load address 0x0800152c
+                0x20000004                _sbss = .
+                0x20000004                __bss_start__ = _sbss
+ *(.bss)
+ .bss           0x20000004       0x1c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ .bss           0x20000020       0xc4 objdir-CWNANO/simpleserial.o
+ .bss           0x200000e4       0x70 objdir-CWNANO/stm32f0_hal_nano.o
+                0x200000e4                UartHandle
+ .bss           0x20000154        0x4 objdir-CWNANO/stm32f0_hal_lowlevel.o
+ *(.bss*)
+ *(COMMON)
+                0x20000158                . = ALIGN (0x4)
+                0x20000158                _ebss = .
+                0x20000158                __bss_end__ = _ebss
+
+._user_heap_stack
+                0x20000158      0x400 load address 0x0800152c
+                0x20000158                . = ALIGN (0x8)
+                [!provide]                PROVIDE (end = .)
+                [!provide]                PROVIDE (_end = .)
+                0x20000158                . = (. + _Min_Heap_Size)
+                0x20000558                . = (. + _Min_Stack_Size)
+ *fill*         0x20000158      0x400 
+                0x20000558                . = ALIGN (0x8)
+
+/DISCARD/
+ libc.a(*)
+ libm.a(*)
+ libgcc.a(*)
+
+.ARM.attributes
+                0x00000000       0x28
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x00000000       0x1e c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+ .ARM.attributes
+                0x0000001e       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+ .ARM.attributes
+                0x0000004a       0x2c objdir-CWNANO/simpleserial-aes.o
+ .ARM.attributes
+                0x00000076       0x2c objdir-CWNANO/simpleserial.o
+ .ARM.attributes
+                0x000000a2       0x2c objdir-CWNANO/stm32f0_hal_nano.o
+ .ARM.attributes
+                0x000000ce       0x2c objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .ARM.attributes
+                0x000000fa       0x21 objdir-CWNANO/stm32f0_startup.o
+ .ARM.attributes
+                0x0000011b       0x1e c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+ .ARM.attributes
+                0x00000139       0x1e c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+ .ARM.attributes
+                0x00000157       0x1e c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x00000175       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+ .ARM.attributes
+                0x000001a1       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+ .ARM.attributes
+                0x000001cd       0x1e c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtn.o
+OUTPUT(simpleserial-aes-CWNANO.elf elf32-littlearm)
+LOAD linker stubs
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libc.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
+LOAD c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a
+
+.debug_info     0x00000000     0x3571
+ .debug_info    0x00000000      0x927 objdir-CWNANO/simpleserial-aes.o
+ .debug_info    0x00000927      0x81a objdir-CWNANO/simpleserial.o
+ .debug_info    0x00001141      0xeb1 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_info    0x00001ff2     0x157f objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_abbrev   0x00000000      0x92b
+ .debug_abbrev  0x00000000      0x1bd objdir-CWNANO/simpleserial-aes.o
+ .debug_abbrev  0x000001bd      0x201 objdir-CWNANO/simpleserial.o
+ .debug_abbrev  0x000003be      0x1f3 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_abbrev  0x000005b1      0x37a objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_loc      0x00000000     0x24ad
+ .debug_loc     0x00000000      0x876 objdir-CWNANO/simpleserial-aes.o
+ .debug_loc     0x00000876      0x8c8 objdir-CWNANO/simpleserial.o
+ .debug_loc     0x0000113e      0x1c2 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_loc     0x00001300     0x11ad objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_aranges  0x00000000      0x1d0
+ .debug_aranges
+                0x00000000       0x80 objdir-CWNANO/simpleserial-aes.o
+ .debug_aranges
+                0x00000080       0x70 objdir-CWNANO/simpleserial.o
+ .debug_aranges
+                0x000000f0       0x60 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_aranges
+                0x00000150       0x80 objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_ranges   0x00000000      0x3e0
+ .debug_ranges  0x00000000      0x168 objdir-CWNANO/simpleserial-aes.o
+ .debug_ranges  0x00000168       0xe0 objdir-CWNANO/simpleserial.o
+ .debug_ranges  0x00000248       0xc0 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_ranges  0x00000308       0xd8 objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_line     0x00000000     0x23b4
+ .debug_line    0x00000000      0x611 objdir-CWNANO/simpleserial-aes.o
+ .debug_line    0x00000611      0x6d6 objdir-CWNANO/simpleserial.o
+ .debug_line    0x00000ce7      0x4e2 objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_line    0x000011c9     0x11eb objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_str      0x00000000      0xe1e
+ .debug_str     0x00000000      0x31c objdir-CWNANO/simpleserial-aes.o
+                                0x39c (size before relaxing)
+ .debug_str     0x0000031c       0xce objdir-CWNANO/simpleserial.o
+                                0x35f (size before relaxing)
+ .debug_str     0x000003ea      0x705 objdir-CWNANO/stm32f0_hal_nano.o
+                                0x945 (size before relaxing)
+ .debug_str     0x00000aef      0x32f objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                0xc05 (size before relaxing)
+
+.comment        0x00000000       0x4d
+ .comment       0x00000000       0x4d objdir-CWNANO/simpleserial-aes.o
+                                 0x4e (size before relaxing)
+ .comment       0x0000004d       0x4e objdir-CWNANO/simpleserial.o
+ .comment       0x0000004d       0x4e objdir-CWNANO/stm32f0_hal_nano.o
+ .comment       0x0000004d       0x4e objdir-CWNANO/stm32f0_hal_lowlevel.o
+
+.debug_frame    0x00000000      0x5dc
+ .debug_frame   0x00000000      0x180 objdir-CWNANO/simpleserial-aes.o
+ .debug_frame   0x00000180      0x150 objdir-CWNANO/simpleserial.o
+ .debug_frame   0x000002d0      0x10c objdir-CWNANO/stm32f0_hal_nano.o
+ .debug_frame   0x000003dc      0x18c objdir-CWNANO/stm32f0_hal_lowlevel.o
+ .debug_frame   0x00000568       0x20 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+ .debug_frame   0x00000588       0x2c c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+ .debug_frame   0x000005b4       0x28 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+
+.stab           0x00000000      0x144
+ .stab          0x00000000      0x144 objdir-CWNANO/stm32f0_startup.o
+
+.stabstr        0x00000000       0x53
+ .stabstr       0x00000000       0x53 objdir-CWNANO/stm32f0_startup.o
+
+Cross Reference Table
+
+Symbol                                            File
+AES128_ECB_decrypt                                objdir-CWNANO/aes.o
+AES128_ECB_encrypt                                objdir-CWNANO/aes.o
+AES128_ECB_indp_crypto                            objdir-CWNANO/aes.o
+                                                  objdir-CWNANO/aes-independant.o
+AES128_ECB_indp_setkey                            objdir-CWNANO/aes.o
+                                                  objdir-CWNANO/aes-independant.o
+BusFault_Handler                                  objdir-CWNANO/stm32f0_startup.o
+DebugMon_Handler                                  objdir-CWNANO/stm32f0_startup.o
+Default_Handler                                   objdir-CWNANO/stm32f0_startup.o
+HAL_GPIO_Init                                     objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_GPIO_WritePin                                 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_GetTick                                       objdir-CWNANO/stm32f0_hal_lowlevel.o
+HAL_RCCEx_PeriphCLKConfig                         objdir-CWNANO/stm32f0_hal_lowlevel.o
+HAL_RCC_ClockConfig                               objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_RCC_GetPCLK1Freq                              objdir-CWNANO/stm32f0_hal_lowlevel.o
+HAL_RCC_GetPCLK2Freq                              objdir-CWNANO/stm32f0_hal_lowlevel.o
+HAL_RCC_GetSysClockFreq                           objdir-CWNANO/stm32f0_hal_lowlevel.o
+HAL_RCC_OscConfig                                 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_UART_Init                                     objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_UART_Receive                                  objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HAL_UART_Transmit                                 objdir-CWNANO/stm32f0_hal_lowlevel.o
+                                                  objdir-CWNANO/stm32f0_hal_nano.o
+HardFault_Handler                                 objdir-CWNANO/stm32f0_startup.o
+MemManage_Handler                                 objdir-CWNANO/stm32f0_startup.o
+NMI_Handler                                       objdir-CWNANO/stm32f0_startup.o
+PendSV_Handler                                    objdir-CWNANO/stm32f0_startup.o
+Rcon                                              objdir-CWNANO/aes.o
+Reset_Handler                                     objdir-CWNANO/stm32f0_startup.o
+SVC_Handler                                       objdir-CWNANO/stm32f0_startup.o
+SysTick_Handler                                   objdir-CWNANO/stm32f0_startup.o
+SystemCoreClock                                   objdir-CWNANO/stm32f0_hal_lowlevel.o
+SystemInit                                        objdir-CWNANO/stm32f0_startup.o
+UART_CheckIdleState                               objdir-CWNANO/stm32f0_hal_lowlevel.o
+UART_SetConfig                                    objdir-CWNANO/stm32f0_hal_lowlevel.o
+UART_WaitOnFlagUntilTimeout                       objdir-CWNANO/stm32f0_hal_lowlevel.o
+UartHandle                                        objdir-CWNANO/stm32f0_hal_nano.o
+UsageFault_Handler                                objdir-CWNANO/stm32f0_startup.o
+__aeabi_idiv0                                     c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+__aeabi_ldiv0                                     c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+__aeabi_uidiv                                     c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+                                                  objdir-CWNANO/stm32f0_hal_lowlevel.o
+__aeabi_uidivmod                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+__bss_end__                                       c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+__bss_start__                                     c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+__call_exitprocs                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+__deregister_frame_info                           c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+__dso_handle                                      c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+__gnu_thumb1_case_uqi                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_thumb1_case_uqi.o)
+                                                  objdir-CWNANO/stm32f0_hal_lowlevel.o
+__init_array_end                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+__init_array_start                                c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+__libc_fini_array                                 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+__libc_init_array                                 c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+                                                  objdir-CWNANO/stm32f0_startup.o
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+__preinit_array_end                               c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+__preinit_array_start                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+__register_frame_info                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
+__sf_fake_stderr                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+__sf_fake_stdin                                   c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+__sf_fake_stdout                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+__stack                                           c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+__udivsi3                                         c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp\libgcc.a(_udivsi3.o)
+_ebss                                             objdir-CWNANO/stm32f0_startup.o
+_edata                                            objdir-CWNANO/stm32f0_startup.o
+_estack                                           objdir-CWNANO/stm32f0_startup.o
+_exit                                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libnosys.a(_exit.o)
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+_fini                                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+_global_impure_ptr                                c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+_impure_ptr                                       c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-impure.o)
+_init                                             c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crti.o
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-init.o)
+_mainCRTStartup                                   c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+_sbss                                             objdir-CWNANO/stm32f0_startup.o
+_sdata                                            objdir-CWNANO/stm32f0_startup.o
+_sidata                                           objdir-CWNANO/stm32f0_startup.o
+_stack_init                                       c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+_start                                            c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+aes                                               objdir-CWNANO/simpleserial-aes.o
+aes_indep_enc                                     objdir-CWNANO/aes-independant.o
+aes_indep_enc_posttrigger                         objdir-CWNANO/aes-independant.o
+aes_indep_enc_pretrigger                          objdir-CWNANO/aes-independant.o
+aes_indep_init                                    objdir-CWNANO/aes-independant.o
+aes_indep_key                                     objdir-CWNANO/aes-independant.o
+aes_indep_mask                                    objdir-CWNANO/aes-independant.o
+atexit                                            c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+balanced_xor                                      objdir-CWNANO/simpleserial-aes.o
+check_version                                     objdir-CWNANO/simpleserial.o
+decrypt_block                                     objdir-CWNANO/simpleserial-aes.o
+enckey                                            objdir-CWNANO/aes-independant.o
+encrypt_block                                     objdir-CWNANO/simpleserial-aes.o
+exit                                              c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-exit.o)
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+g_pfnVectors                                      objdir-CWNANO/stm32f0_startup.o
+get_pt                                            objdir-CWNANO/simpleserial-aes.o
+getch                                             objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial.o
+give_dt                                           objdir-CWNANO/simpleserial-aes.o
+hardware_init_hook                                c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+hex_decode                                        objdir-CWNANO/simpleserial.o
+init_uart                                         objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+inverse_substitute                                objdir-CWNANO/simpleserial-aes.o
+inverse_substitute_byte                           objdir-CWNANO/simpleserial-aes.o
+led_error                                         objdir-CWNANO/stm32f0_hal_nano.o
+led_ok                                            objdir-CWNANO/stm32f0_hal_nano.o
+main                                              objdir-CWNANO/simpleserial-aes.o
+                                                  objdir-CWNANO/stm32f0_startup.o
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+memcpy                                            c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memcpy-stub.o)
+                                                  objdir-CWNANO/aes.o
+                                                  objdir-CWNANO/simpleserial.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+memset                                            c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg_nano.a(lib_a-memset.o)
+                                                  c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+permute                                           objdir-CWNANO/simpleserial-aes.o
+platform_init                                     objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+putch                                             objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial.o
+reverse_permute                                   objdir-CWNANO/simpleserial-aes.o
+rsbox                                             objdir-CWNANO/aes.o
+sbox                                              objdir-CWNANO/aes.o
+simpleserial_addcmd                               objdir-CWNANO/simpleserial.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+simpleserial_get                                  objdir-CWNANO/simpleserial.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+simpleserial_init                                 objdir-CWNANO/simpleserial.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+simpleserial_put                                  objdir-CWNANO/simpleserial.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+software_init_hook                                c:/progra~1/chipwh~1/cw/home/portable/armgcc/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
+ss_crc                                            objdir-CWNANO/simpleserial.o
+ss_get_commands                                   objdir-CWNANO/simpleserial.o
+ss_puts                                           objdir-CWNANO/simpleserial.o
+stuff_data                                        objdir-CWNANO/simpleserial.o
+substitute                                        objdir-CWNANO/simpleserial-aes.o
+substitute_byte                                   objdir-CWNANO/simpleserial-aes.o
+trigger_high                                      objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+trigger_low                                       objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+trigger_setup                                     objdir-CWNANO/stm32f0_hal_nano.o
+                                                  objdir-CWNANO/simpleserial-aes.o
+unstuff_data                                      objdir-CWNANO/simpleserial.o

@@ -1,0 +1,723 @@
+   1              		.cpu cortex-m0
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 0
+  10              		.eabi_attribute 18, 4
+  11              		.file	"basic-passwdcheck.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.delay_2_ms,"ax",%progbits
+  16              		.align	1
+  17              		.arch armv6s-m
+  18              		.syntax unified
+  19              		.code	16
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	delay_2_ms:
+  24              	.LFB4:
+  25              		.file 1 "basic-passwdcheck.c"
+   1:basic-passwdcheck.c **** /*
+   2:basic-passwdcheck.c ****     This file is part of the ChipWhisperer Example Targets
+   3:basic-passwdcheck.c ****     Copyright (C) 2012-2015 NewAE Technology Inc.
+   4:basic-passwdcheck.c **** 
+   5:basic-passwdcheck.c ****     This program is free software: you can redistribute it and/or modify
+   6:basic-passwdcheck.c ****     it under the terms of the GNU General Public License as published by
+   7:basic-passwdcheck.c ****     the Free Software Foundation, either version 3 of the License, or
+   8:basic-passwdcheck.c ****     (at your option) any later version.
+   9:basic-passwdcheck.c **** 
+  10:basic-passwdcheck.c ****     This program is distributed in the hope that it will be useful,
+  11:basic-passwdcheck.c ****     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:basic-passwdcheck.c ****     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  13:basic-passwdcheck.c ****     GNU General Public License for more details.
+  14:basic-passwdcheck.c **** 
+  15:basic-passwdcheck.c ****     You should have received a copy of the GNU General Public License
+  16:basic-passwdcheck.c ****     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  17:basic-passwdcheck.c **** */
+  18:basic-passwdcheck.c **** 
+  19:basic-passwdcheck.c **** #include "hal.h"
+  20:basic-passwdcheck.c **** #include <stdint.h>
+  21:basic-passwdcheck.c **** #include <stdlib.h>
+  22:basic-passwdcheck.c **** #include <stdio.h>
+  23:basic-passwdcheck.c **** 
+  24:basic-passwdcheck.c **** #define IDLE 0
+  25:basic-passwdcheck.c **** #define KEY 1
+  26:basic-passwdcheck.c **** #define PLAIN 2
+  27:basic-passwdcheck.c **** 
+  28:basic-passwdcheck.c **** #define BUFLEN 64
+  29:basic-passwdcheck.c **** 
+  30:basic-passwdcheck.c **** uint8_t memory[BUFLEN];
+  31:basic-passwdcheck.c **** uint8_t tmp[BUFLEN];
+  32:basic-passwdcheck.c **** char asciibuf[BUFLEN];
+  33:basic-passwdcheck.c **** uint8_t pt[16];
+  34:basic-passwdcheck.c **** 
+  35:basic-passwdcheck.c **** static void delay_2_ms(void);
+  36:basic-passwdcheck.c **** 
+  37:basic-passwdcheck.c **** 
+  38:basic-passwdcheck.c **** void my_puts(char *c)
+  39:basic-passwdcheck.c **** {
+  40:basic-passwdcheck.c ****   do {
+  41:basic-passwdcheck.c ****     putch(*c);
+  42:basic-passwdcheck.c **** 
+  43:basic-passwdcheck.c ****   } while (*++c);
+  44:basic-passwdcheck.c **** }
+  45:basic-passwdcheck.c **** 
+  46:basic-passwdcheck.c **** static void delay_2_ms()
+  47:basic-passwdcheck.c **** {
+  26              		.loc 1 47 1 view -0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 8
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  48:basic-passwdcheck.c ****   for (volatile unsigned int i=0; i < 0xfff; i++ ){
+  31              		.loc 1 48 3 view .LVU1
+  32              	.LBB2:
+  33              		.loc 1 48 8 view .LVU2
+  34              		.loc 1 48 30 is_stmt 0 view .LVU3
+  35 0000 0023     		movs	r3, #0
+  36              	.LBE2:
+  47:basic-passwdcheck.c ****   for (volatile unsigned int i=0; i < 0xfff; i++ ){
+  37              		.loc 1 47 1 view .LVU4
+  38 0002 82B0     		sub	sp, sp, #8
+  39              	.LCFI0:
+  40              		.cfi_def_cfa_offset 8
+  41              	.LBB3:
+  42              		.loc 1 48 3 view .LVU5
+  43 0004 054A     		ldr	r2, .L4
+  44              		.loc 1 48 30 view .LVU6
+  45 0006 0193     		str	r3, [sp, #4]
+  46              	.L2:
+  47              		.loc 1 48 35 is_stmt 1 discriminator 1 view .LVU7
+  48              		.loc 1 48 37 is_stmt 0 discriminator 1 view .LVU8
+  49 0008 019B     		ldr	r3, [sp, #4]
+  50              		.loc 1 48 3 discriminator 1 view .LVU9
+  51 000a 9342     		cmp	r3, r2
+  52 000c 01D9     		bls	.L3
+  53              	.LBE3:
+  49:basic-passwdcheck.c ****     ;
+  50:basic-passwdcheck.c ****   }
+  51:basic-passwdcheck.c **** }
+  54              		.loc 1 51 1 view .LVU10
+  55 000e 02B0     		add	sp, sp, #8
+  56              		@ sp needed
+  57 0010 7047     		bx	lr
+  58              	.L3:
+  59              	.LBB4:
+  49:basic-passwdcheck.c ****     ;
+  60              		.loc 1 49 5 is_stmt 1 discriminator 3 view .LVU11
+  48:basic-passwdcheck.c ****     ;
+  61              		.loc 1 48 46 discriminator 3 view .LVU12
+  48:basic-passwdcheck.c ****     ;
+  62              		.loc 1 48 47 is_stmt 0 discriminator 3 view .LVU13
+  63 0012 019B     		ldr	r3, [sp, #4]
+  64 0014 0133     		adds	r3, r3, #1
+  65 0016 0193     		str	r3, [sp, #4]
+  66 0018 F6E7     		b	.L2
+  67              	.L5:
+  68 001a C046     		.align	2
+  69              	.L4:
+  70 001c FE0F0000 		.word	4094
+  71              	.LBE4:
+  72              		.cfi_endproc
+  73              	.LFE4:
+  75              		.section	.text.my_puts,"ax",%progbits
+  76              		.align	1
+  77              		.global	my_puts
+  78              		.syntax unified
+  79              		.code	16
+  80              		.thumb_func
+  81              		.fpu softvfp
+  83              	my_puts:
+  84              	.LVL0:
+  85              	.LFB3:
+  39:basic-passwdcheck.c ****   do {
+  86              		.loc 1 39 1 is_stmt 1 view -0
+  87              		.cfi_startproc
+  88              		@ args = 0, pretend = 0, frame = 0
+  89              		@ frame_needed = 0, uses_anonymous_args = 0
+  39:basic-passwdcheck.c ****   do {
+  90              		.loc 1 39 1 is_stmt 0 view .LVU15
+  91 0000 10B5     		push	{r4, lr}
+  92              	.LCFI1:
+  93              		.cfi_def_cfa_offset 8
+  94              		.cfi_offset 4, -8
+  95              		.cfi_offset 14, -4
+  96 0002 0400     		movs	r4, r0
+  97              	.LVL1:
+  98              	.L7:
+  40:basic-passwdcheck.c ****     putch(*c);
+  99              		.loc 1 40 3 is_stmt 1 discriminator 1 view .LVU16
+  41:basic-passwdcheck.c **** 
+ 100              		.loc 1 41 5 discriminator 1 view .LVU17
+ 101 0004 2078     		ldrb	r0, [r4]
+  43:basic-passwdcheck.c **** }
+ 102              		.loc 1 43 3 is_stmt 0 discriminator 1 view .LVU18
+ 103 0006 0134     		adds	r4, r4, #1
+ 104              	.LVL2:
+  41:basic-passwdcheck.c **** 
+ 105              		.loc 1 41 5 discriminator 1 view .LVU19
+ 106 0008 FFF7FEFF 		bl	putch
+ 107              	.LVL3:
+  43:basic-passwdcheck.c **** }
+ 108              		.loc 1 43 11 is_stmt 1 discriminator 1 view .LVU20
+  43:basic-passwdcheck.c **** }
+ 109              		.loc 1 43 3 is_stmt 0 discriminator 1 view .LVU21
+ 110 000c 2378     		ldrb	r3, [r4]
+ 111 000e 002B     		cmp	r3, #0
+ 112 0010 F8D1     		bne	.L7
+  44:basic-passwdcheck.c **** 
+ 113              		.loc 1 44 1 view .LVU22
+ 114              		@ sp needed
+ 115              	.LVL4:
+  44:basic-passwdcheck.c **** 
+ 116              		.loc 1 44 1 view .LVU23
+ 117 0012 10BD     		pop	{r4, pc}
+ 118              		.cfi_endproc
+ 119              	.LFE3:
+ 121              		.section	.text.my_read,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	my_read
+ 124              		.syntax unified
+ 125              		.code	16
+ 126              		.thumb_func
+ 127              		.fpu softvfp
+ 129              	my_read:
+ 130              	.LVL5:
+ 131              	.LFB5:
+  52:basic-passwdcheck.c **** 
+  53:basic-passwdcheck.c **** void my_read(char *buf, int len)
+  54:basic-passwdcheck.c **** {
+ 132              		.loc 1 54 1 is_stmt 1 view -0
+ 133              		.cfi_startproc
+ 134              		@ args = 0, pretend = 0, frame = 0
+ 135              		@ frame_needed = 0, uses_anonymous_args = 0
+  55:basic-passwdcheck.c ****   for(int i = 0; i < len; i++) {
+ 136              		.loc 1 55 3 view .LVU25
+ 137              	.LBB5:
+ 138              		.loc 1 55 7 view .LVU26
+ 139              		.loc 1 55 7 is_stmt 0 view .LVU27
+ 140              	.LBE5:
+  54:basic-passwdcheck.c ****   for(int i = 0; i < len; i++) {
+ 141              		.loc 1 54 1 view .LVU28
+ 142 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 143              	.LCFI2:
+ 144              		.cfi_def_cfa_offset 24
+ 145              		.cfi_offset 3, -24
+ 146              		.cfi_offset 4, -20
+ 147              		.cfi_offset 5, -16
+ 148              		.cfi_offset 6, -12
+ 149              		.cfi_offset 7, -8
+ 150              		.cfi_offset 14, -4
+  54:basic-passwdcheck.c ****   for(int i = 0; i < len; i++) {
+ 151              		.loc 1 54 1 view .LVU29
+ 152 0002 0400     		movs	r4, r0
+ 153 0004 0E00     		movs	r6, r1
+ 154              	.LBB6:
+ 155              		.loc 1 55 3 view .LVU30
+ 156 0006 0500     		movs	r5, r0
+ 157              	.LVL6:
+ 158              	.L10:
+ 159              		.loc 1 55 18 is_stmt 1 discriminator 1 view .LVU31
+ 160              		.loc 1 55 3 is_stmt 0 discriminator 1 view .LVU32
+ 161 0008 2B1B     		subs	r3, r5, r4
+ 162              	.LVL7:
+ 163              		.loc 1 55 3 discriminator 1 view .LVU33
+ 164 000a 9E42     		cmp	r6, r3
+ 165 000c 04DC     		bgt	.L11
+ 166              	.LBE6:
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+  57:basic-passwdcheck.c **** 
+  58:basic-passwdcheck.c ****     if (buf[i] == '\n') {
+  59:basic-passwdcheck.c ****       buf[i] = '\0';
+  60:basic-passwdcheck.c ****       return;
+  61:basic-passwdcheck.c ****     }
+  62:basic-passwdcheck.c ****   }
+  63:basic-passwdcheck.c ****   buf[len - 1] = '\0';
+ 167              		.loc 1 63 3 is_stmt 1 view .LVU34
+ 168              		.loc 1 63 16 is_stmt 0 view .LVU35
+ 169 000e 0023     		movs	r3, #0
+ 170              	.LVL8:
+ 171              		.loc 1 63 16 view .LVU36
+ 172 0010 A419     		adds	r4, r4, r6
+ 173              	.LVL9:
+ 174              		.loc 1 63 16 view .LVU37
+ 175 0012 013C     		subs	r4, r4, #1
+ 176 0014 2370     		strb	r3, [r4]
+ 177 0016 0AE0     		b	.L9
+ 178              	.LVL10:
+ 179              	.L11:
+ 180              	.LBB7:
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 181              		.loc 1 56 45 is_stmt 1 discriminator 1 view .LVU38
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 182              		.loc 1 56 11 discriminator 1 view .LVU39
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 183              		.loc 1 56 21 is_stmt 0 discriminator 1 view .LVU40
+ 184 0018 FFF7FEFF 		bl	getch
+ 185              	.LVL11:
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 186              		.loc 1 56 15 discriminator 1 view .LVU41
+ 187 001c 2F00     		movs	r7, r5
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 188              		.loc 1 56 19 discriminator 1 view .LVU42
+ 189 001e 2870     		strb	r0, [r5]
+  56:basic-passwdcheck.c ****     while (buf[i] = getch(), buf[i] == '\0');
+ 190              		.loc 1 56 11 discriminator 1 view .LVU43
+ 191 0020 0028     		cmp	r0, #0
+ 192 0022 F9D0     		beq	.L11
+  58:basic-passwdcheck.c ****       buf[i] = '\0';
+ 193              		.loc 1 58 5 is_stmt 1 view .LVU44
+  58:basic-passwdcheck.c ****       buf[i] = '\0';
+ 194              		.loc 1 58 8 is_stmt 0 view .LVU45
+ 195 0024 0135     		adds	r5, r5, #1
+ 196              	.LVL12:
+  58:basic-passwdcheck.c ****       buf[i] = '\0';
+ 197              		.loc 1 58 8 view .LVU46
+ 198 0026 0A28     		cmp	r0, #10
+ 199 0028 EED1     		bne	.L10
+  59:basic-passwdcheck.c ****       return;
+ 200              		.loc 1 59 7 is_stmt 1 view .LVU47
+  59:basic-passwdcheck.c ****       return;
+ 201              		.loc 1 59 14 is_stmt 0 view .LVU48
+ 202 002a 0023     		movs	r3, #0
+ 203 002c 3B70     		strb	r3, [r7]
+  60:basic-passwdcheck.c ****     }
+ 204              		.loc 1 60 7 is_stmt 1 view .LVU49
+ 205              	.LVL13:
+ 206              	.L9:
+  60:basic-passwdcheck.c ****     }
+ 207              		.loc 1 60 7 is_stmt 0 view .LVU50
+ 208              	.LBE7:
+  64:basic-passwdcheck.c **** }
+ 209              		.loc 1 64 1 view .LVU51
+ 210              		@ sp needed
+ 211              	.LVL14:
+ 212              		.loc 1 64 1 view .LVU52
+ 213 002e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 214              		.cfi_endproc
+ 215              	.LFE5:
+ 217              		.section	.rodata.str1.1,"aMS",%progbits,1
+ 218              	.LC2:
+ 219 0000 2A2A2A2A 		.ascii	"*****Safe-o-matic 3000 Booting...\012\000"
+ 219      2A536166 
+ 219      652D6F2D 
+ 219      6D617469 
+ 219      63203330 
+ 220              	.LC4:
+ 221 0023 416C6967 		.ascii	"Aligning bits........[DONE]\012\000"
+ 221      6E696E67 
+ 221      20626974 
+ 221      732E2E2E 
+ 221      2E2E2E2E 
+ 222              	.LC6:
+ 223 0040 43686563 		.ascii	"Checking Cesium RNG..[DONE]\012\000"
+ 223      6B696E67 
+ 223      20436573 
+ 223      69756D20 
+ 223      524E472E 
+ 224              	.LC8:
+ 225 005d 4D617371 		.ascii	"Masquerading flash...[DONE]\012\000"
+ 225      75657261 
+ 225      64696E67 
+ 225      20666C61 
+ 225      73682E2E 
+ 226              	.LC10:
+ 227 007a 44656372 		.ascii	"Decrypting database..[DONE]\012\000"
+ 227      79707469 
+ 227      6E672064 
+ 227      61746162 
+ 227      6173652E 
+ 228              	.LC12:
+ 229 0097 0A0A00   		.ascii	"\012\012\000"
+ 230              	.LC14:
+ 231 009a 5741524E 		.ascii	"WARNING: UNAUTHORIZED ACCESS WILL BE PUNISHED\012\000"
+ 231      494E473A 
+ 231      20554E41 
+ 231      5554484F 
+ 231      52495A45 
+ 232              	.LC16:
+ 233 00c9 506C6561 		.ascii	"Please enter password to continue: \000"
+ 233      73652065 
+ 233      6E746572 
+ 233      20706173 
+ 233      73776F72 
+ 234              	.LC18:
+ 235 00ed 50415353 		.ascii	"PASSWORD FAIL\012\000"
+ 235      574F5244 
+ 235      20464149 
+ 235      4C0A00
+ 236              	.LC20:
+ 237 00fc 41636365 		.ascii	"Access granted, Welcome!\012\000"
+ 237      73732067 
+ 237      72616E74 
+ 237      65642C20 
+ 237      57656C63 
+ 238              	.LC0:
+ 239 0116 68307078 		.ascii	"h0px3\000"
+ 239      3300
+ 240              		.section	.text.startup.main,"ax",%progbits
+ 241              		.align	1
+ 242              		.global	main
+ 243              		.syntax unified
+ 244              		.code	16
+ 245              		.thumb_func
+ 246              		.fpu softvfp
+ 248              	main:
+ 249              	.LFB6:
+  65:basic-passwdcheck.c **** 
+  66:basic-passwdcheck.c **** int main(void)
+  67:basic-passwdcheck.c ****   {
+ 250              		.loc 1 67 3 is_stmt 1 view -0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 48
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+  68:basic-passwdcheck.c ****     platform_init();
+ 254              		.loc 1 68 5 view .LVU54
+  67:basic-passwdcheck.c ****     platform_init();
+ 255              		.loc 1 67 3 is_stmt 0 view .LVU55
+ 256 0000 30B5     		push	{r4, r5, lr}
+ 257              	.LCFI3:
+ 258              		.cfi_def_cfa_offset 12
+ 259              		.cfi_offset 4, -12
+ 260              		.cfi_offset 5, -8
+ 261              		.cfi_offset 14, -4
+ 262 0002 8DB0     		sub	sp, sp, #52
+ 263              	.LCFI4:
+ 264              		.cfi_def_cfa_offset 64
+  69:basic-passwdcheck.c ****   init_uart();
+  70:basic-passwdcheck.c ****   trigger_setup();
+  71:basic-passwdcheck.c **** 
+  72:basic-passwdcheck.c ****     char passwd[32];
+  73:basic-passwdcheck.c ****     char correct_passwd[] = "h0px3";
+ 265              		.loc 1 73 10 view .LVU56
+ 266 0004 02AC     		add	r4, sp, #8
+  68:basic-passwdcheck.c ****   init_uart();
+ 267              		.loc 1 68 5 view .LVU57
+ 268 0006 FFF7FEFF 		bl	platform_init
+ 269              	.LVL15:
+  69:basic-passwdcheck.c ****   init_uart();
+ 270              		.loc 1 69 3 is_stmt 1 view .LVU58
+ 271 000a FFF7FEFF 		bl	init_uart
+ 272              	.LVL16:
+  70:basic-passwdcheck.c **** 
+ 273              		.loc 1 70 3 view .LVU59
+ 274 000e FFF7FEFF 		bl	trigger_setup
+ 275              	.LVL17:
+  72:basic-passwdcheck.c ****     char correct_passwd[] = "h0px3";
+ 276              		.loc 1 72 5 view .LVU60
+ 277              		.loc 1 73 5 view .LVU61
+ 278              		.loc 1 73 10 is_stmt 0 view .LVU62
+ 279 0012 0622     		movs	r2, #6
+ 280 0014 2449     		ldr	r1, .L28
+ 281 0016 2000     		movs	r0, r4
+ 282 0018 FFF7FEFF 		bl	memcpy
+ 283              	.LVL18:
+  74:basic-passwdcheck.c **** 
+  75:basic-passwdcheck.c ****   while(1){
+ 284              		.loc 1 75 3 is_stmt 1 view .LVU63
+ 285              	.LBB8:
+  76:basic-passwdcheck.c **** 
+  77:basic-passwdcheck.c ****         my_puts("*****Safe-o-matic 3000 Booting...\n");
+ 286              		.loc 1 77 9 view .LVU64
+ 287 001c 2348     		ldr	r0, .L28+4
+ 288 001e FFF7FEFF 		bl	my_puts
+ 289              	.LVL19:
+  78:basic-passwdcheck.c ****         //Print some fancy-sounding stuff so that attackers
+  79:basic-passwdcheck.c ****         //will get scared and leave us alone
+  80:basic-passwdcheck.c ****         my_puts("Aligning bits........[DONE]\n");
+ 290              		.loc 1 80 9 view .LVU65
+ 291 0022 2348     		ldr	r0, .L28+8
+ 292 0024 FFF7FEFF 		bl	my_puts
+ 293              	.LVL20:
+  81:basic-passwdcheck.c ****         delay_2_ms();
+ 294              		.loc 1 81 9 view .LVU66
+ 295 0028 FFF7FEFF 		bl	delay_2_ms
+ 296              	.LVL21:
+  82:basic-passwdcheck.c ****         my_puts("Checking Cesium RNG..[DONE]\n");
+ 297              		.loc 1 82 9 view .LVU67
+ 298 002c 2148     		ldr	r0, .L28+12
+ 299 002e FFF7FEFF 		bl	my_puts
+ 300              	.LVL22:
+  83:basic-passwdcheck.c ****         delay_2_ms();
+ 301              		.loc 1 83 9 view .LVU68
+ 302 0032 FFF7FEFF 		bl	delay_2_ms
+ 303              	.LVL23:
+  84:basic-passwdcheck.c ****         my_puts("Masquerading flash...[DONE]\n");
+ 304              		.loc 1 84 9 view .LVU69
+ 305 0036 2048     		ldr	r0, .L28+16
+ 306 0038 FFF7FEFF 		bl	my_puts
+ 307              	.LVL24:
+  85:basic-passwdcheck.c ****         delay_2_ms();
+ 308              		.loc 1 85 9 view .LVU70
+ 309 003c FFF7FEFF 		bl	delay_2_ms
+ 310              	.LVL25:
+  86:basic-passwdcheck.c ****         my_puts("Decrypting database..[DONE]\n");
+ 311              		.loc 1 86 9 view .LVU71
+ 312 0040 1E48     		ldr	r0, .L28+20
+ 313 0042 FFF7FEFF 		bl	my_puts
+ 314              	.LVL26:
+  87:basic-passwdcheck.c ****         delay_2_ms();
+ 315              		.loc 1 87 9 view .LVU72
+ 316 0046 FFF7FEFF 		bl	delay_2_ms
+ 317              	.LVL27:
+  88:basic-passwdcheck.c ****         my_puts("\n\n");
+ 318              		.loc 1 88 9 view .LVU73
+ 319 004a 1D48     		ldr	r0, .L28+24
+ 320 004c FFF7FEFF 		bl	my_puts
+ 321              	.LVL28:
+  89:basic-passwdcheck.c **** 
+  90:basic-passwdcheck.c ****         //Give them one last warning
+  91:basic-passwdcheck.c ****         my_puts("WARNING: UNAUTHORIZED ACCESS WILL BE PUNISHED\n");
+ 322              		.loc 1 91 9 view .LVU74
+ 323 0050 1C48     		ldr	r0, .L28+28
+ 324 0052 FFF7FEFF 		bl	my_puts
+ 325              	.LVL29:
+  92:basic-passwdcheck.c **** 
+  93:basic-passwdcheck.c ****         trigger_low();
+ 326              		.loc 1 93 9 view .LVU75
+  94:basic-passwdcheck.c **** 
+  95:basic-passwdcheck.c ****         //Get password
+  96:basic-passwdcheck.c ****         my_puts("Please enter password to continue: ");
+  97:basic-passwdcheck.c ****         my_read(passwd, 32);
+ 327              		.loc 1 97 9 is_stmt 0 view .LVU76
+ 328 0056 04AD     		add	r5, sp, #16
+  93:basic-passwdcheck.c **** 
+ 329              		.loc 1 93 9 view .LVU77
+ 330 0058 FFF7FEFF 		bl	trigger_low
+ 331              	.LVL30:
+  96:basic-passwdcheck.c ****         my_read(passwd, 32);
+ 332              		.loc 1 96 9 is_stmt 1 view .LVU78
+ 333 005c 1A48     		ldr	r0, .L28+32
+ 334 005e FFF7FEFF 		bl	my_puts
+ 335              	.LVL31:
+ 336              		.loc 1 97 9 view .LVU79
+ 337 0062 2021     		movs	r1, #32
+ 338 0064 2800     		movs	r0, r5
+ 339 0066 FFF7FEFF 		bl	my_read
+ 340              	.LVL32:
+  98:basic-passwdcheck.c **** 
+  99:basic-passwdcheck.c ****         uint8_t passbad = 0;
+ 341              		.loc 1 99 9 view .LVU80
+ 100:basic-passwdcheck.c **** 
+ 101:basic-passwdcheck.c ****         trigger_high();
+ 342              		.loc 1 101 9 view .LVU81
+ 343 006a FFF7FEFF 		bl	trigger_high
+ 344              	.LVL33:
+ 102:basic-passwdcheck.c **** 
+ 103:basic-passwdcheck.c ****         for(uint8_t i = 0; i < sizeof(correct_passwd); i++){
+ 345              		.loc 1 103 9 view .LVU82
+ 346              	.LBB9:
+ 347              		.loc 1 103 13 view .LVU83
+ 348              		.loc 1 103 28 view .LVU84
+ 349              	.LBE9:
+ 101:basic-passwdcheck.c **** 
+ 350              		.loc 1 101 9 is_stmt 0 view .LVU85
+ 351 006e 0023     		movs	r3, #0
+ 352              	.LVL34:
+ 353              	.L19:
+ 354              	.LBB10:
+ 104:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 355              		.loc 1 104 13 is_stmt 1 view .LVU86
+ 356              		.loc 1 104 16 is_stmt 0 view .LVU87
+ 357 0070 E15C     		ldrb	r1, [r4, r3]
+ 358 0072 EA5C     		ldrb	r2, [r5, r3]
+ 359 0074 9142     		cmp	r1, r2
+ 360 0076 14D1     		bne	.L18
+ 103:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 361              		.loc 1 103 56 is_stmt 1 discriminator 2 view .LVU88
+ 362              	.LVL35:
+ 103:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 363              		.loc 1 103 28 discriminator 2 view .LVU89
+ 103:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 364              		.loc 1 103 9 is_stmt 0 discriminator 2 view .LVU90
+ 365 0078 0133     		adds	r3, r3, #1
+ 366              	.LVL36:
+ 103:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 367              		.loc 1 103 9 discriminator 2 view .LVU91
+ 368 007a 062B     		cmp	r3, #6
+ 369 007c F8D1     		bne	.L19
+ 103:basic-passwdcheck.c ****             if (correct_passwd[i] != passwd[i]){
+ 370              		.loc 1 103 9 discriminator 2 view .LVU92
+ 371              	.LBE10:
+ 105:basic-passwdcheck.c ****                 passbad = 1;
+ 106:basic-passwdcheck.c ****                 break;
+ 107:basic-passwdcheck.c ****             }
+ 108:basic-passwdcheck.c ****         }
+ 109:basic-passwdcheck.c **** 
+ 110:basic-passwdcheck.c ****         if (passbad){
+ 372              		.loc 1 110 9 is_stmt 1 view .LVU93
+ 111:basic-passwdcheck.c ****             //Stop them fancy timing attacks
+ 112:basic-passwdcheck.c ****              int wait = 1;
+ 113:basic-passwdcheck.c ****             for(volatile int i = 0; i < wait; i++){
+ 114:basic-passwdcheck.c ****                 ;
+ 115:basic-passwdcheck.c ****             }
+ 116:basic-passwdcheck.c ****             delay_2_ms();
+ 117:basic-passwdcheck.c ****             delay_2_ms();
+ 118:basic-passwdcheck.c ****             my_puts("PASSWORD FAIL\n");
+ 119:basic-passwdcheck.c ****             led_error(1);
+ 120:basic-passwdcheck.c ****         } else {
+ 121:basic-passwdcheck.c ****             my_puts("Access granted, Welcome!\n");
+ 373              		.loc 1 121 13 view .LVU94
+ 374 007e 1348     		ldr	r0, .L28+36
+ 375 0080 FFF7FEFF 		bl	my_puts
+ 376              	.LVL37:
+ 377 0084 0CE0     		b	.L22
+ 378              	.LVL38:
+ 379              	.L21:
+ 380              	.LBB11:
+ 381              	.LBB12:
+ 114:basic-passwdcheck.c ****             }
+ 382              		.loc 1 114 17 discriminator 3 view .LVU95
+ 113:basic-passwdcheck.c ****                 ;
+ 383              		.loc 1 113 47 discriminator 3 view .LVU96
+ 113:basic-passwdcheck.c ****                 ;
+ 384              		.loc 1 113 48 is_stmt 0 discriminator 3 view .LVU97
+ 385 0086 019B     		ldr	r3, [sp, #4]
+ 386 0088 0133     		adds	r3, r3, #1
+ 387              	.L27:
+ 388 008a 0193     		str	r3, [sp, #4]
+ 113:basic-passwdcheck.c ****                 ;
+ 389              		.loc 1 113 37 is_stmt 1 discriminator 3 view .LVU98
+ 113:basic-passwdcheck.c ****                 ;
+ 390              		.loc 1 113 39 is_stmt 0 discriminator 3 view .LVU99
+ 391 008c 019B     		ldr	r3, [sp, #4]
+ 113:basic-passwdcheck.c ****                 ;
+ 392              		.loc 1 113 13 discriminator 3 view .LVU100
+ 393 008e 002B     		cmp	r3, #0
+ 394 0090 F9DD     		ble	.L21
+ 395              	.LBE12:
+ 116:basic-passwdcheck.c ****             delay_2_ms();
+ 396              		.loc 1 116 13 is_stmt 1 view .LVU101
+ 397 0092 FFF7FEFF 		bl	delay_2_ms
+ 398              	.LVL39:
+ 117:basic-passwdcheck.c ****             my_puts("PASSWORD FAIL\n");
+ 399              		.loc 1 117 13 view .LVU102
+ 400 0096 FFF7FEFF 		bl	delay_2_ms
+ 401              	.LVL40:
+ 118:basic-passwdcheck.c ****             led_error(1);
+ 402              		.loc 1 118 13 view .LVU103
+ 403 009a 0D48     		ldr	r0, .L28+40
+ 404 009c FFF7FEFF 		bl	my_puts
+ 405              	.LVL41:
+ 119:basic-passwdcheck.c ****         } else {
+ 406              		.loc 1 119 25 view .LVU104
+ 407              	.L22:
+ 408              	.L26:
+ 119:basic-passwdcheck.c ****         } else {
+ 409              		.loc 1 119 25 is_stmt 0 view .LVU105
+ 410              	.LBE11:
+ 122:basic-passwdcheck.c ****             led_ok(1);
+ 411              		.loc 1 122 22 is_stmt 1 discriminator 1 view .LVU106
+ 123:basic-passwdcheck.c ****         }
+ 124:basic-passwdcheck.c **** 
+ 125:basic-passwdcheck.c ****         //All done;
+ 126:basic-passwdcheck.c ****         while(1);
+ 412              		.loc 1 126 9 discriminator 1 view .LVU107
+ 413              		.loc 1 126 17 discriminator 1 view .LVU108
+ 414              		.loc 1 126 14 discriminator 1 view .LVU109
+ 415 00a0 FEE7     		b	.L26
+ 416              	.LVL42:
+ 417              	.L18:
+ 110:basic-passwdcheck.c ****             //Stop them fancy timing attacks
+ 418              		.loc 1 110 9 view .LVU110
+ 419              	.LBB14:
+ 112:basic-passwdcheck.c ****             for(volatile int i = 0; i < wait; i++){
+ 420              		.loc 1 112 14 view .LVU111
+ 113:basic-passwdcheck.c ****                 ;
+ 421              		.loc 1 113 13 view .LVU112
+ 422              	.LBB13:
+ 113:basic-passwdcheck.c ****                 ;
+ 423              		.loc 1 113 17 view .LVU113
+ 113:basic-passwdcheck.c ****                 ;
+ 424              		.loc 1 113 30 is_stmt 0 view .LVU114
+ 425 00a2 0023     		movs	r3, #0
+ 426              	.LVL43:
+ 113:basic-passwdcheck.c ****                 ;
+ 427              		.loc 1 113 30 view .LVU115
+ 428 00a4 F1E7     		b	.L27
+ 429              	.L29:
+ 430 00a6 C046     		.align	2
+ 431              	.L28:
+ 432 00a8 16010000 		.word	.LC0
+ 433 00ac 00000000 		.word	.LC2
+ 434 00b0 23000000 		.word	.LC4
+ 435 00b4 40000000 		.word	.LC6
+ 436 00b8 5D000000 		.word	.LC8
+ 437 00bc 7A000000 		.word	.LC10
+ 438 00c0 97000000 		.word	.LC12
+ 439 00c4 9A000000 		.word	.LC14
+ 440 00c8 C9000000 		.word	.LC16
+ 441 00cc FC000000 		.word	.LC20
+ 442 00d0 ED000000 		.word	.LC18
+ 443              	.LBE13:
+ 444              	.LBE14:
+ 445              	.LBE8:
+ 446              		.cfi_endproc
+ 447              	.LFE6:
+ 449              		.global	pt
+ 450              		.global	asciibuf
+ 451              		.global	tmp
+ 452              		.global	memory
+ 453              		.bss
+ 456              	pt:
+ 457 0000 00000000 		.space	16
+ 457      00000000 
+ 457      00000000 
+ 457      00000000 
+ 460              	asciibuf:
+ 461 0010 00000000 		.space	64
+ 461      00000000 
+ 461      00000000 
+ 461      00000000 
+ 461      00000000 
+ 464              	tmp:
+ 465 0050 00000000 		.space	64
+ 465      00000000 
+ 465      00000000 
+ 465      00000000 
+ 465      00000000 
+ 468              	memory:
+ 469 0090 00000000 		.space	64
+ 469      00000000 
+ 469      00000000 
+ 469      00000000 
+ 469      00000000 
+ 470              		.text
+ 471              	.Letext0:
+ 472              		.file 2 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\_def
+ 473              		.file 3 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_stdint.
+ 474              		.file 4 ".././hal/stm32f0/stm32f0_hal.h"
+ 475              		.file 5 ".././hal/hal.h"
+ 476              		.file 6 "<built-in>"
+DEFINED SYMBOLS
+                            *ABS*:00000000 basic-passwdcheck.c
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:16     .text.delay_2_ms:00000000 $t
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:23     .text.delay_2_ms:00000000 delay_2_ms
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:70     .text.delay_2_ms:0000001c $d
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:76     .text.my_puts:00000000 $t
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:83     .text.my_puts:00000000 my_puts
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:122    .text.my_read:00000000 $t
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:129    .text.my_read:00000000 my_read
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:241    .text.startup.main:00000000 $t
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:248    .text.startup.main:00000000 main
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:432    .text.startup.main:000000a8 $d
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:456    .bss:00000000 pt
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:460    .bss:00000010 asciibuf
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:464    .bss:00000050 tmp
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:468    .bss:00000090 memory
+C:\Users\mjzeec\AppData\Local\Temp\ccKrK4BD.s:457    .bss:00000000 $d
+
+UNDEFINED SYMBOLS
+putch
+getch
+platform_init
+init_uart
+trigger_setup
+memcpy
+trigger_low
+trigger_high
