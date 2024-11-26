@@ -5548,8 +5548,8 @@
  3257 0000 00000000 		.space	4
  3258              		.text
  3259              	.Letext0:
- 3260              		.file 2 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\_def
- 3261              		.file 3 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_stdint.
+ 3260              		.file 2 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\
+ 3261              		.file 3 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_std
  3262              		.file 4 ".././hal/stm32f0/CMSIS/device/stm32f030x6.h"
  3263              		.file 5 ".././hal/stm32f0/CMSIS/device/stm32f0xx.h"
  3264              		.file 6 ".././hal/stm32f0/stm32f0xx_hal_def.h"
@@ -5561,58 +5561,58 @@
  3270              		.file 12 ".././hal/stm32f0/CMSIS/device/system_stm32f0xx.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f0_hal_lowlevel.c
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:16     .text.HAL_GetTick:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:24     .text.HAL_GetTick:00000000 HAL_GetTick
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:48     .text.HAL_GetTick:0000000c $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:53     .text.HAL_RCC_GetSysClockFreq:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:60     .text.HAL_RCC_GetSysClockFreq:00000000 HAL_RCC_GetSysClockFreq
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:78     .text.HAL_RCC_GetPCLK1Freq:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:85     .text.HAL_RCC_GetPCLK1Freq:00000000 HAL_RCC_GetPCLK1Freq
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:99     .text.HAL_RCC_GetPCLK2Freq:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:106    .text.HAL_RCC_GetPCLK2Freq:00000000 HAL_RCC_GetPCLK2Freq
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:120    .text.HAL_RCC_OscConfig:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:127    .text.HAL_RCC_OscConfig:00000000 HAL_RCC_OscConfig
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:895    .text.HAL_RCC_OscConfig:00000304 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:905    .text.HAL_RCC_OscConfig:0000031c $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1057   .text.HAL_RCC_OscConfig:000003b8 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1064   .text.HAL_RCC_ClockConfig:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1071   .text.HAL_RCC_ClockConfig:00000000 HAL_RCC_ClockConfig
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1349   .text.HAL_RCC_ClockConfig:00000100 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1358   .text.HAL_RCCEx_PeriphCLKConfig:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1365   .text.HAL_RCCEx_PeriphCLKConfig:00000000 HAL_RCCEx_PeriphCLKConfig
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1633   .text.HAL_RCCEx_PeriphCLKConfig:000000f4 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1644   .text.HAL_GPIO_Init:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:1651   .text.HAL_GPIO_Init:00000000 HAL_GPIO_Init
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2050   .text.HAL_GPIO_Init:0000014c $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2060   .text.HAL_GPIO_WritePin:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2067   .text.HAL_GPIO_WritePin:00000000 HAL_GPIO_WritePin
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2098   .text.UART_WaitOnFlagUntilTimeout:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2105   .text.UART_WaitOnFlagUntilTimeout:00000000 UART_WaitOnFlagUntilTimeout
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2223   .text.UART_WaitOnFlagUntilTimeout:00000060 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2228   .text.UART_CheckIdleState:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2235   .text.UART_CheckIdleState:00000000 UART_CheckIdleState
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2279   .text.UART_SetConfig:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2286   .text.UART_SetConfig:00000000 UART_SetConfig
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2393   .text.UART_SetConfig:0000005c $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2477   .text.UART_SetConfig:0000009e $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2565   .text.UART_SetConfig:000000e4 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2576   .text.HAL_UART_Init:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2583   .text.HAL_UART_Init:00000000 HAL_UART_Init
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2723   .text.HAL_UART_Init:00000060 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2728   .text.HAL_UART_Receive:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2735   .text.HAL_UART_Receive:00000000 HAL_UART_Receive
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2992   .text.HAL_UART_Receive:000000ec $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2997   .text.HAL_UART_Transmit:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3004   .text.HAL_UART_Transmit:00000000 HAL_UART_Transmit
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3249   .data:00000000 SystemCoreClock
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3240   .rodata:00000000 CSWTCH.25
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3245   .data:00000000 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3252   .bss:00000000 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:3256   .bss:00000000 tick.0
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2402   .text.UART_SetConfig:00000065 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2402   .text.UART_SetConfig:00000066 $t
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2486   .text.UART_SetConfig:000000a7 $d
-C:\Users\ajb3715\AppData\Local\Temp\cca63X64.s:2486   .text.UART_SetConfig:000000a8 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:16     .text.HAL_GetTick:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:24     .text.HAL_GetTick:00000000 HAL_GetTick
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:48     .text.HAL_GetTick:0000000c $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:53     .text.HAL_RCC_GetSysClockFreq:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:60     .text.HAL_RCC_GetSysClockFreq:00000000 HAL_RCC_GetSysClockFreq
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:78     .text.HAL_RCC_GetPCLK1Freq:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:85     .text.HAL_RCC_GetPCLK1Freq:00000000 HAL_RCC_GetPCLK1Freq
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:99     .text.HAL_RCC_GetPCLK2Freq:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:106    .text.HAL_RCC_GetPCLK2Freq:00000000 HAL_RCC_GetPCLK2Freq
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:120    .text.HAL_RCC_OscConfig:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:127    .text.HAL_RCC_OscConfig:00000000 HAL_RCC_OscConfig
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:895    .text.HAL_RCC_OscConfig:00000304 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:905    .text.HAL_RCC_OscConfig:0000031c $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1057   .text.HAL_RCC_OscConfig:000003b8 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1064   .text.HAL_RCC_ClockConfig:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1071   .text.HAL_RCC_ClockConfig:00000000 HAL_RCC_ClockConfig
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1349   .text.HAL_RCC_ClockConfig:00000100 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1358   .text.HAL_RCCEx_PeriphCLKConfig:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1365   .text.HAL_RCCEx_PeriphCLKConfig:00000000 HAL_RCCEx_PeriphCLKConfig
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1633   .text.HAL_RCCEx_PeriphCLKConfig:000000f4 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1644   .text.HAL_GPIO_Init:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:1651   .text.HAL_GPIO_Init:00000000 HAL_GPIO_Init
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2050   .text.HAL_GPIO_Init:0000014c $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2060   .text.HAL_GPIO_WritePin:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2067   .text.HAL_GPIO_WritePin:00000000 HAL_GPIO_WritePin
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2098   .text.UART_WaitOnFlagUntilTimeout:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2105   .text.UART_WaitOnFlagUntilTimeout:00000000 UART_WaitOnFlagUntilTimeout
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2223   .text.UART_WaitOnFlagUntilTimeout:00000060 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2228   .text.UART_CheckIdleState:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2235   .text.UART_CheckIdleState:00000000 UART_CheckIdleState
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2279   .text.UART_SetConfig:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2286   .text.UART_SetConfig:00000000 UART_SetConfig
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2393   .text.UART_SetConfig:0000005c $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2477   .text.UART_SetConfig:0000009e $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2565   .text.UART_SetConfig:000000e4 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2576   .text.HAL_UART_Init:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2583   .text.HAL_UART_Init:00000000 HAL_UART_Init
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2723   .text.HAL_UART_Init:00000060 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2728   .text.HAL_UART_Receive:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2735   .text.HAL_UART_Receive:00000000 HAL_UART_Receive
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2992   .text.HAL_UART_Receive:000000ec $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2997   .text.HAL_UART_Transmit:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3004   .text.HAL_UART_Transmit:00000000 HAL_UART_Transmit
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3249   .data:00000000 SystemCoreClock
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3240   .rodata:00000000 CSWTCH.25
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3245   .data:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3252   .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:3256   .bss:00000000 tick.0
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2402   .text.UART_SetConfig:00000065 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2402   .text.UART_SetConfig:00000066 $t
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2486   .text.UART_SetConfig:000000a7 $d
+C:\Users\alexb\AppData\Local\Temp\cc1Iu3FV.s:2486   .text.UART_SetConfig:000000a8 $t
 
 UNDEFINED SYMBOLS
 __aeabi_uidiv

@@ -2451,56 +2451,56 @@
  1511      00000000 
  1512              		.text
  1513              	.Letext0:
- 1514              		.file 2 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\_def
- 1515              		.file 3 "c:\\progra~1\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_stdint.
+ 1514              		.file 2 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\
+ 1515              		.file 3 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_std
  1516              		.file 4 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:00000000 aes.c
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:16     .text.KeyExpansion:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:23     .text.KeyExpansion:00000000 KeyExpansion
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:239    .text.KeyExpansion:00000088 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1510   .bss:00000018 RoundKey
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1477   .data:0000010b sbox
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:247    .text.AddRoundKey:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:253    .text.AddRoundKey:00000000 AddRoundKey
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:323    .text.AddRoundKey:00000030 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:329    .text.SubBytes:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:335    .text.SubBytes:00000000 SubBytes
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:413    .text.SubBytes:00000024 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:419    .text.ShiftRows:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:425    .text.ShiftRows:00000000 ShiftRows
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:510    .text.ShiftRows:00000038 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:515    .text.xtime:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:521    .text.xtime:00000000 xtime
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:552    .text.InvSubBytes:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:558    .text.InvSubBytes:00000000 InvSubBytes
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:636    .text.InvSubBytes:00000024 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1459   .data:0000000b rsbox
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:642    .text.InvShiftRows:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:648    .text.InvShiftRows:00000000 InvShiftRows
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:733    .text.InvShiftRows:00000038 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:738    .text.Cipher:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:744    .text.Cipher:00000000 Cipher
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:941    .text.Cipher:0000009c $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:946    .text.BlockCopy:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:952    .text.BlockCopy:00000000 BlockCopy
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:988    .text.AES128_ECB_indp_setkey:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:995    .text.AES128_ECB_indp_setkey:00000000 AES128_ECB_indp_setkey
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1023   .text.AES128_ECB_indp_setkey:0000000c $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1028   .text.AES128_ECB_indp_crypto:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1035   .text.AES128_ECB_indp_crypto:00000000 AES128_ECB_indp_crypto
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1069   .text.AES128_ECB_indp_crypto:00000014 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1074   .text.AES128_ECB_encrypt:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1081   .text.AES128_ECB_encrypt:00000000 AES128_ECB_encrypt
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1133   .text.AES128_ECB_encrypt:00000020 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1138   .text.AES128_ECB_decrypt:00000000 $t
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1145   .text.AES128_ECB_decrypt:00000000 AES128_ECB_decrypt
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1444   .text.AES128_ECB_decrypt:0000015c $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1455   .data:00000000 Rcon
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1494   .bss:00000000 $d
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1498   .bss:00000000 Key
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1502   .bss:00000004 state
-C:\Users\ajb3715\AppData\Local\Temp\ccmqolq8.s:1506   .bss:00000008 input_save
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:16     .text.KeyExpansion:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:23     .text.KeyExpansion:00000000 KeyExpansion
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:239    .text.KeyExpansion:00000088 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1510   .bss:00000018 RoundKey
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1477   .data:0000010b sbox
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:247    .text.AddRoundKey:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:253    .text.AddRoundKey:00000000 AddRoundKey
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:323    .text.AddRoundKey:00000030 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:329    .text.SubBytes:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:335    .text.SubBytes:00000000 SubBytes
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:413    .text.SubBytes:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:419    .text.ShiftRows:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:425    .text.ShiftRows:00000000 ShiftRows
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:510    .text.ShiftRows:00000038 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:515    .text.xtime:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:521    .text.xtime:00000000 xtime
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:552    .text.InvSubBytes:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:558    .text.InvSubBytes:00000000 InvSubBytes
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:636    .text.InvSubBytes:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1459   .data:0000000b rsbox
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:642    .text.InvShiftRows:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:648    .text.InvShiftRows:00000000 InvShiftRows
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:733    .text.InvShiftRows:00000038 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:738    .text.Cipher:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:744    .text.Cipher:00000000 Cipher
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:941    .text.Cipher:0000009c $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:946    .text.BlockCopy:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:952    .text.BlockCopy:00000000 BlockCopy
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:988    .text.AES128_ECB_indp_setkey:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:995    .text.AES128_ECB_indp_setkey:00000000 AES128_ECB_indp_setkey
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1023   .text.AES128_ECB_indp_setkey:0000000c $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1028   .text.AES128_ECB_indp_crypto:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1035   .text.AES128_ECB_indp_crypto:00000000 AES128_ECB_indp_crypto
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1069   .text.AES128_ECB_indp_crypto:00000014 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1074   .text.AES128_ECB_encrypt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1081   .text.AES128_ECB_encrypt:00000000 AES128_ECB_encrypt
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1133   .text.AES128_ECB_encrypt:00000020 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1138   .text.AES128_ECB_decrypt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1145   .text.AES128_ECB_decrypt:00000000 AES128_ECB_decrypt
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1444   .text.AES128_ECB_decrypt:0000015c $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1455   .data:00000000 Rcon
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1494   .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1498   .bss:00000000 Key
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1502   .bss:00000004 state
+C:\Users\alexb\AppData\Local\Temp\ccDupL0Y.s:1506   .bss:00000008 input_save
 
 UNDEFINED SYMBOLS
 memcpy

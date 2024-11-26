@@ -2,12 +2,15 @@
 #include "hal.h"
 #include "simpleserial.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // Define constants and parameters
 #define BLOCK_SIZE 16
 #define ROUNDS 10
+
 
 // Example S-box (simple byte substitution table)
 static const uint8_t SBox[256] = {
@@ -139,10 +142,20 @@ void decrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
 // Function to get the plaintext from UART and perform encryption
 uint8_t get_pt(uint8_t* pt, uint8_t len)
 {
-    uint8_t mask[BLOCK_SIZE] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                             0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
-	uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
-                            0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+
+    uint8_t mask[BLOCK_SIZE];
+
+    srand(69);
+
+    // Fill the array with random values
+
+    for (int i = 0; i < 16; i++) {
+        mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+    }
+
+    //uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
+    //                       0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+
 
 	trigger_high();
 
@@ -160,10 +173,22 @@ uint8_t get_pt(uint8_t* pt, uint8_t len)
 
 uint8_t give_dt(uint8_t* dt, uint8_t len)
 {
-    uint8_t mask[BLOCK_SIZE] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                             0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
-	uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
-                            0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+
+    uint8_t mask[BLOCK_SIZE];
+
+    srand(69);
+
+    // Fill the array with random values
+
+    for (int i = 0; i < 16; i++) {
+        mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+    }
+
+    // uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
+    //                         0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+
+
+	trigger_high();
 
 	trigger_high();
 
@@ -177,30 +202,68 @@ uint8_t give_dt(uint8_t* dt, uint8_t len)
 	return 0x00;
 }
 
-
-#if SS_VER == SS_VER_2_1
-uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+uint8_t get_key(uint8_t* pykey)
 {
-    uint8_t req_len = 0;
-    uint8_t err = 0;
-
-    if (scmd & 0x01) {
-        req_len += 16;
-        if (req_len > len) {
-            return SS_ERR_LEN;
-        }
-        err = get_pt(buf + req_len - 16, 16);
-        if (err)
-            return err;
-    }
-
-    if (len != req_len) {
-        return SS_ERR_LEN;
+    for (uint8_t i = 0; i < 16; i++){
+        key[i] = pykey[i];
     }
 
     return 0x00;
+
 }
-#endif
+
+
+uint8_t get_pt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+{
+    uint8_t err = 0;
+    err = get_pt(buf, len);
+        return err;
+    
+    return 0x00;
+}
+
+uint8_t give_dt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+{
+    uint8_t err = 0;
+    err = give_dt(buf, len);
+        return err;
+    
+    return 0x00;
+}
+
+uint8_t get_key_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+{
+    uint8_t err = 0;
+    err = get_key(buf);
+        return err;
+    
+    return 0x00;
+}
+
+
+// #if SS_VER == SS_VER_2_1
+// uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+// {
+//     uint8_t req_len = 0;
+//     uint8_t err = 0;
+
+//     if (scmd & 0x01) {
+//         req_len += 16;
+//         if (req_len > len) {
+//             return SS_ERR_LEN;
+//         }
+//         err = get_pt(buf + req_len - 16, 16);
+//         if (err)
+//             return err;
+//     }
+
+//     if (len != req_len) {
+//         return SS_ERR_LEN;
+//     }
+
+//     return 0x00;
+// }
+// #endif
 
 int main(void)
 {
@@ -210,10 +273,11 @@ int main(void)
 
     simpleserial_init();
     #if SS_VER == SS_VER_2_1
-    simpleserial_addcmd(0x01, 16, aes);  // Add AES command for testing 
+    // simpleserial_addcmd(0x01, 16, aes);  // Add AES command for testing 
+    simpleserial_addcmd('d', 16, give_dt_wrapper); // Use 'd' command to get cyphertext and decrypt
+    simpleserial_addcmd('e', 16, get_pt_wrapper);  // Use 'p' command to get plaintext and encrypt
+    simpleserial_addcmd('l', 16, get_key_wrapper); // Use 'k' command to get the key
     #else
-	simpleserial_addcmd('d', 16, give_dt); // Use 'd' command to get cyphertext and decrypt
-    simpleserial_addcmd('p', 16, get_pt);  // Use 'p' command to get plaintext and encrypt
 	
     #endif
 
