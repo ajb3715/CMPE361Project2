@@ -18,7 +18,7 @@ uint8_t mask[BLOCK_SIZE];
 
 
 
-// Example S-box (simple byte substitution table)
+//S-Box
 static const uint8_t SBox[256] = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -38,7 +38,7 @@ static const uint8_t SBox[256] = {
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 };
 
-// Define the inverse S-box (populate fully for a complete implementation)
+//Inverse S-Box
 static const uint8_t InvSBox[256] = {
     0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
     0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
@@ -79,7 +79,7 @@ uint8_t substitute_byte(uint8_t byte) {
     return result;
 }
 
-// Apply the substitution step (constant-time)
+// Apply the substitution step
 void substitute(uint8_t *block) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
         block[i] = substitute_byte(block[i]);
@@ -89,11 +89,11 @@ void substitute(uint8_t *block) {
 // Perform XOR
 void balanced_xor(uint8_t *block, const uint8_t *mask) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
-        block[i] ^= mask[i];  // XOR is already constant-time
+        block[i] ^= mask[i]; 
     }
 }
 
-// Perform permutation (avoid data-dependent indexing)
+// Perform permutation
 void permute(uint8_t *block) {
     
     uint8_t temp[BLOCK_SIZE];
@@ -135,7 +135,7 @@ void encrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
     }
 }
 
-
+// Apply the substitution step
 uint8_t inverse_substitute_byte(uint8_t byte) {
     uint8_t result = 0;
     for (int i = 0; i < 256; i++) {
@@ -145,15 +145,15 @@ uint8_t inverse_substitute_byte(uint8_t byte) {
     return result;
 }
 
-// Apply the substitution step (constant-time)
 
+// Function to substitute a byte
 void inverse_substitute(uint8_t *block) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
         block[i] = inverse_substitute_byte(block[i]);
     }
 }
 
-// Perform reverse permutation (rotate bytes right by 3)
+//Reverse permutation
 void reverse_permute(uint8_t *block) {
 
     uint8_t temp[BLOCK_SIZE];
