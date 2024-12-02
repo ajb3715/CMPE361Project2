@@ -95,13 +95,41 @@ void balanced_xor(uint8_t *block, const uint8_t *mask) {
 
 // Perform permutation (avoid data-dependent indexing)
 void permute(uint8_t *block) {
+    // uint8_t temp[BLOCK_SIZE];
+    // memcpy(temp, block, BLOCK_SIZE);
+
+    // //Rotate bytes left by 3
+    // for (int i = 0; i < BLOCK_SIZE; i++) {
+    //     block[i] = temp[(i + 3) % BLOCK_SIZE];
+    // }
+
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
 
-    //Rotate bytes left by 3
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        block[i] = temp[(i + 3) % BLOCK_SIZE];
-    }
+    // The block is represented as a 4x4 matrix:
+    // Row 0: No shift
+    block[0] = temp[0];
+    block[1] = temp[1];
+    block[2] = temp[2];
+    block[3] = temp[3];
+
+    // Row 1: Shift left by 1
+    block[4] = temp[5];
+    block[5] = temp[6];
+    block[6] = temp[7];
+    block[7] = temp[4];
+
+    // Row 2: Shift left by 2
+    block[8] = temp[10];
+    block[9] = temp[11];
+    block[10] = temp[8];
+    block[11] = temp[9];
+
+    // Row 3: Shift left by 3
+    block[12] = temp[15];
+    block[13] = temp[12];
+    block[14] = temp[13];
+    block[15] = temp[14];
 }
 
 // Encryption function
@@ -134,12 +162,40 @@ void inverse_substitute(uint8_t *block) {
 
 // Perform reverse permutation (rotate bytes right by 3)
 void reverse_permute(uint8_t *block) {
+    // uint8_t temp[BLOCK_SIZE];
+    // memcpy(temp, block, BLOCK_SIZE);
+
+    // for (int i = 0; i < BLOCK_SIZE; i++) {
+    //     block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+    // }
+
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
 
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
-    }
+    // The block is represented as a 4x4 matrix:
+    // Row 0: No shift
+    block[0] = temp[0];
+    block[1] = temp[1];
+    block[2] = temp[2];
+    block[3] = temp[3];
+
+    // Row 1: Shift right by 1
+    block[4] = temp[7];
+    block[5] = temp[4];
+    block[6] = temp[5];
+    block[7] = temp[6];
+
+    // Row 2: Shift right by 2
+    block[8] = temp[10];
+    block[9] = temp[11];
+    block[10] = temp[8];
+    block[11] = temp[9];
+
+    // Row 3: Shift right by 3
+    block[12] = temp[13];
+    block[13] = temp[14];
+    block[14] = temp[15];
+    block[15] = temp[12];
 }
 
 //Decryption function
