@@ -1,5 +1,6 @@
 
 #include "hal.h"
+#include "aes-independant.h"
 #include "simpleserial.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -10,6 +11,11 @@
 // Define constants and parameters
 #define BLOCK_SIZE 16
 #define ROUNDS 10
+
+uint8_t key[BLOCK_SIZE];
+
+uint8_t mask[BLOCK_SIZE];
+
 
 
 // Example S-box (simple byte substitution table)
@@ -52,10 +58,18 @@ static const uint8_t InvSBox[256] = {
     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
 };
 
-// Perform inverse substitution using the inverse S-box
+
+// Initialize the pseudorandom mask
+void init_mask(){
+    srand(time(NULL));
+
+    for (int i = 0; i < 16; i++) {
+        mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+    }
+}
 
 
-// Function to substitute a byte using a constant-time lookup
+// Function to substitute a byte
 uint8_t substitute_byte(uint8_t byte) {
     uint8_t result = 0;
     for (int i = 0; i < 256; i++) {
@@ -72,19 +86,19 @@ void substitute(uint8_t *block) {
     }
 }
 
-// Perform XOR in constant time
+// Perform XOR
 void balanced_xor(uint8_t *block, const uint8_t *mask) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
         block[i] ^= mask[i];  // XOR is already constant-time
     }
 }
 
-// Perform a constant-time permutation (avoid data-dependent indexing)
+// Perform permutation (avoid data-dependent indexing)
 void permute(uint8_t *block) {
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
 
-    // Example permutation: Rotate bytes left by 3 (constant-time)
+    //Rotate bytes left by 3
     for (int i = 0; i < BLOCK_SIZE; i++) {
         block[i] = temp[(i + 3) % BLOCK_SIZE];
     }
@@ -143,20 +157,6 @@ void decrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
 uint8_t get_pt(uint8_t* pt, uint8_t len)
 {
 
-    uint8_t mask[BLOCK_SIZE];
-
-    srand(69);
-
-    // Fill the array with random values
-
-    for (int i = 0; i < 16; i++) {
-        mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
-    }
-
-    //uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
-    //                       0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
-
-
 	trigger_high();
 
   #ifdef ADD_JITTER
@@ -174,19 +174,6 @@ uint8_t get_pt(uint8_t* pt, uint8_t len)
 uint8_t give_dt(uint8_t* dt, uint8_t len)
 {
 
-    uint8_t mask[BLOCK_SIZE];
-
-    srand(69);
-
-    // Fill the array with random values
-
-    for (int i = 0; i < 16; i++) {
-        mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
-    }
-
-    // uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
-    //                         0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
-
 
 	trigger_high();
 
@@ -196,18 +183,18 @@ uint8_t give_dt(uint8_t* dt, uint8_t len)
   for (volatile uint8_t b = 0; b < (*dt & 0x0F); b++);
   #endif
 
+
 	decrypt_block(dt, key, mask); /* encrypting the data block */
 	trigger_low();
 	simpleserial_put('r', 16, dt);
 	return 0x00;
 }
 
-uint8_t get_key(uint8_t* pykey)
+uint8_t get_key(uint8_t* pykey, uint8_t len)
 {
-    for (uint8_t i = 0; i < 16; i++){
-        key[i] = pykey[i];
-    }
-
+    for(uint8_t i=0; i < 16; i++){
+		key[i] = pykey[i];
+	}
     return 0x00;
 
 }
@@ -234,42 +221,19 @@ uint8_t give_dt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
 uint8_t get_key_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
 {
     uint8_t err = 0;
-    err = get_key(buf);
+    err = get_key(buf, len);
         return err;
     
     return 0x00;
 }
 
 
-// #if SS_VER == SS_VER_2_1
-// uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
-// {
-//     uint8_t req_len = 0;
-//     uint8_t err = 0;
-
-//     if (scmd & 0x01) {
-//         req_len += 16;
-//         if (req_len > len) {
-//             return SS_ERR_LEN;
-//         }
-//         err = get_pt(buf + req_len - 16, 16);
-//         if (err)
-//             return err;
-//     }
-
-//     if (len != req_len) {
-//         return SS_ERR_LEN;
-//     }
-
-//     return 0x00;
-// }
-// #endif
-
 int main(void)
 {
     platform_init();
     init_uart();
     trigger_setup();
+    init_mask();
 
     simpleserial_init();
     #if SS_VER == SS_VER_2_1
@@ -277,6 +241,7 @@ int main(void)
     simpleserial_addcmd('d', 16, give_dt_wrapper); // Use 'd' command to get cyphertext and decrypt
     simpleserial_addcmd('e', 16, get_pt_wrapper);  // Use 'p' command to get plaintext and encrypt
     simpleserial_addcmd('l', 16, get_key_wrapper); // Use 'k' command to get the key
+
     #else
 	
     #endif

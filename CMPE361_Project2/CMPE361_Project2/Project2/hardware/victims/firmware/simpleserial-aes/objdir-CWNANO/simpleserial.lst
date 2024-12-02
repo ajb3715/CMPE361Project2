@@ -1628,35 +1628,35 @@
  1148              		.file 6 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:00000000 simpleserial.c
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:16     .text.ss_crc:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:24     .text.ss_crc:00000000 ss_crc
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:102    .text.hex_decode:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:109    .text.hex_decode:00000000 hex_decode
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:290    .text.ss_puts:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:297    .text.ss_puts:00000000 ss_puts
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:336    .text.stuff_data:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:343    .text.stuff_data:00000000 stuff_data
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:410    .text.unstuff_data:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:417    .text.unstuff_data:00000000 unstuff_data
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:482    .text.simpleserial_addcmd:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:489    .text.simpleserial_addcmd:00000000 simpleserial_addcmd
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:561    .text.simpleserial_addcmd:00000034 $d
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:1140   .bss:00000004 commands
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:567    .text.simpleserial_init:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:574    .text.simpleserial_init:00000000 simpleserial_init
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:607    .text.simpleserial_init:00000018 $d
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:731    .text.check_version:00000000 check_version
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:783    .text.ss_get_commands:00000000 ss_get_commands
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:613    .text.simpleserial_put:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:620    .text.simpleserial_put:00000000 simpleserial_put
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:724    .text.check_version:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:776    .text.ss_get_commands:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:868    .text.ss_get_commands:00000034 $d
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:875    .text.simpleserial_get:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:882    .text.simpleserial_get:00000000 simpleserial_get
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:1126   .text.simpleserial_get:000000d8 $d
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:1132   .bss:00000000 $d
-C:\Users\alexb\AppData\Local\Temp\ccxrHvwT.s:1136   .bss:00000000 num_commands
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:16     .text.ss_crc:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:24     .text.ss_crc:00000000 ss_crc
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:102    .text.hex_decode:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:109    .text.hex_decode:00000000 hex_decode
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:290    .text.ss_puts:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:297    .text.ss_puts:00000000 ss_puts
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:336    .text.stuff_data:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:343    .text.stuff_data:00000000 stuff_data
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:410    .text.unstuff_data:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:417    .text.unstuff_data:00000000 unstuff_data
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:482    .text.simpleserial_addcmd:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:489    .text.simpleserial_addcmd:00000000 simpleserial_addcmd
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:561    .text.simpleserial_addcmd:00000034 $d
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:1140   .bss:00000004 commands
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:567    .text.simpleserial_init:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:574    .text.simpleserial_init:00000000 simpleserial_init
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:607    .text.simpleserial_init:00000018 $d
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:731    .text.check_version:00000000 check_version
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:783    .text.ss_get_commands:00000000 ss_get_commands
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:613    .text.simpleserial_put:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:620    .text.simpleserial_put:00000000 simpleserial_put
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:724    .text.check_version:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:776    .text.ss_get_commands:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:868    .text.ss_get_commands:00000034 $d
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:875    .text.simpleserial_get:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:882    .text.simpleserial_get:00000000 simpleserial_get
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:1126   .text.simpleserial_get:000000d8 $d
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:1132   .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\ccxTrLOb.s:1136   .bss:00000000 num_commands
 
 UNDEFINED SYMBOLS
 putch

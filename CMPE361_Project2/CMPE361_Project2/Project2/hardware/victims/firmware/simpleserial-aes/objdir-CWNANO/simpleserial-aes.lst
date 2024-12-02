@@ -12,1702 +12,1661 @@
   12              		.text
   13              	.Ltext0:
   14              		.cfi_sections	.debug_frame
-  15              		.section	.text.substitute_byte,"ax",%progbits
+  15              		.section	.text.init_mask,"ax",%progbits
   16              		.align	1
-  17              		.global	substitute_byte
+  17              		.global	init_mask
   18              		.arch armv6s-m
   19              		.syntax unified
   20              		.code	16
   21              		.thumb_func
   22              		.fpu softvfp
-  24              	substitute_byte:
-  25              	.LVL0:
-  26              	.LFB3:
-  27              		.file 1 "simpleserial-aes.c"
+  24              	init_mask:
+  25              	.LFB3:
+  26              		.file 1 "simpleserial-aes.c"
    1:simpleserial-aes.c **** 
    2:simpleserial-aes.c **** #include "hal.h"
-   3:simpleserial-aes.c **** #include "simpleserial.h"
-   4:simpleserial-aes.c **** #include <stdint.h>
-   5:simpleserial-aes.c **** #include <stdio.h>
-   6:simpleserial-aes.c **** #include <stdlib.h>
-   7:simpleserial-aes.c **** #include <string.h>
-   8:simpleserial-aes.c **** #include <time.h>
-   9:simpleserial-aes.c **** 
-  10:simpleserial-aes.c **** // Define constants and parameters
-  11:simpleserial-aes.c **** #define BLOCK_SIZE 16
-  12:simpleserial-aes.c **** #define ROUNDS 10
-  13:simpleserial-aes.c **** 
-  14:simpleserial-aes.c **** uint8_t key[BLOCK_SIZE];
-  15:simpleserial-aes.c **** 
+   3:simpleserial-aes.c **** #include "aes-independant.h"
+   4:simpleserial-aes.c **** #include "simpleserial.h"
+   5:simpleserial-aes.c **** #include <stdint.h>
+   6:simpleserial-aes.c **** #include <stdio.h>
+   7:simpleserial-aes.c **** #include <stdlib.h>
+   8:simpleserial-aes.c **** #include <string.h>
+   9:simpleserial-aes.c **** #include <time.h>
+  10:simpleserial-aes.c **** 
+  11:simpleserial-aes.c **** // Define constants and parameters
+  12:simpleserial-aes.c **** #define BLOCK_SIZE 16
+  13:simpleserial-aes.c **** #define ROUNDS 10
+  14:simpleserial-aes.c **** 
+  15:simpleserial-aes.c **** uint8_t key[BLOCK_SIZE];
   16:simpleserial-aes.c **** 
-  17:simpleserial-aes.c **** 
-  18:simpleserial-aes.c **** // Example S-box (simple byte substitution table)
-  19:simpleserial-aes.c **** static const uint8_t SBox[256] = {
-  20:simpleserial-aes.c ****     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
-  21:simpleserial-aes.c ****     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
-  22:simpleserial-aes.c ****     0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
-  23:simpleserial-aes.c ****     0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
-  24:simpleserial-aes.c ****     0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
-  25:simpleserial-aes.c ****     0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
-  26:simpleserial-aes.c ****     0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
-  27:simpleserial-aes.c ****     0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
-  28:simpleserial-aes.c ****     0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
-  29:simpleserial-aes.c ****     0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
-  30:simpleserial-aes.c ****     0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
-  31:simpleserial-aes.c ****     0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
-  32:simpleserial-aes.c ****     0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
-  33:simpleserial-aes.c ****     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
-  34:simpleserial-aes.c ****     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
-  35:simpleserial-aes.c ****     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
-  36:simpleserial-aes.c **** };
-  37:simpleserial-aes.c **** 
-  38:simpleserial-aes.c **** // Define the inverse S-box (populate fully for a complete implementation)
-  39:simpleserial-aes.c **** static const uint8_t InvSBox[256] = {
-  40:simpleserial-aes.c ****     0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
-  41:simpleserial-aes.c ****     0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
-  42:simpleserial-aes.c ****     0x54, 0x7B, 0x94, 0x32, 0xA6, 0xC2, 0x23, 0x3D, 0xEE, 0x4C, 0x95, 0x0B, 0x42, 0xFA, 0xC3, 0x4E,
-  43:simpleserial-aes.c ****     0x08, 0x2E, 0xA1, 0x66, 0x28, 0xD9, 0x24, 0xB2, 0x76, 0x5B, 0xA2, 0x49, 0x6D, 0x8B, 0xD1, 0x25,
-  44:simpleserial-aes.c ****     0x72, 0xF8, 0xF6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xD4, 0xA4, 0x5C, 0xCC, 0x5D, 0x65, 0xB6, 0x92,
-  45:simpleserial-aes.c ****     0x6C, 0x70, 0x48, 0x50, 0xFD, 0xED, 0xB9, 0xDA, 0x5E, 0x15, 0x46, 0x57, 0xA7, 0x8D, 0x9D, 0x84,
-  46:simpleserial-aes.c ****     0x90, 0xD8, 0xAB, 0x00, 0x8C, 0xBC, 0xD3, 0x0A, 0xF7, 0xE4, 0x58, 0x05, 0xB8, 0xB3, 0x45, 0x06,
-  47:simpleserial-aes.c ****     0xD0, 0x2C, 0x1E, 0x8F, 0xCA, 0x3F, 0x0F, 0x02, 0xC1, 0xAF, 0xBD, 0x03, 0x01, 0x13, 0x8A, 0x6B,
-  48:simpleserial-aes.c ****     0x3A, 0x91, 0x11, 0x41, 0x4F, 0x67, 0xDC, 0xEA, 0x97, 0xF2, 0xCF, 0xCE, 0xF0, 0xB4, 0xE6, 0x73,
-  49:simpleserial-aes.c ****     0x96, 0xAC, 0x74, 0x22, 0xE7, 0xAD, 0x35, 0x85, 0xE2, 0xF9, 0x37, 0xE8, 0x1C, 0x75, 0xDF, 0x6E,
-  50:simpleserial-aes.c ****     0x47, 0xF1, 0x1A, 0x71, 0x1D, 0x29, 0xC5, 0x89, 0x6F, 0xB7, 0x62, 0x0E, 0xAA, 0x18, 0xBE, 0x1B,
-  51:simpleserial-aes.c ****     0xFC, 0x56, 0x3E, 0x4B, 0xC6, 0xD2, 0x79, 0x20, 0x9A, 0xDB, 0xC0, 0xFE, 0x78, 0xCD, 0x5A, 0xF4,
-  52:simpleserial-aes.c ****     0x1F, 0xDD, 0xA8, 0x33, 0x88, 0x07, 0xC7, 0x31, 0xB1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xEC, 0x5F,
-  53:simpleserial-aes.c ****     0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
-  54:simpleserial-aes.c ****     0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
-  55:simpleserial-aes.c ****     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
-  56:simpleserial-aes.c **** };
-  57:simpleserial-aes.c **** 
-  58:simpleserial-aes.c **** // Perform inverse substitution using the inverse S-box
-  59:simpleserial-aes.c **** 
+  17:simpleserial-aes.c **** uint8_t mask[BLOCK_SIZE];
+  18:simpleserial-aes.c **** 
+  19:simpleserial-aes.c **** 
+  20:simpleserial-aes.c **** 
+  21:simpleserial-aes.c **** // Example S-box (simple byte substitution table)
+  22:simpleserial-aes.c **** static const uint8_t SBox[256] = {
+  23:simpleserial-aes.c ****     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+  24:simpleserial-aes.c ****     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+  25:simpleserial-aes.c ****     0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+  26:simpleserial-aes.c ****     0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+  27:simpleserial-aes.c ****     0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+  28:simpleserial-aes.c ****     0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+  29:simpleserial-aes.c ****     0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+  30:simpleserial-aes.c ****     0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+  31:simpleserial-aes.c ****     0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+  32:simpleserial-aes.c ****     0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+  33:simpleserial-aes.c ****     0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+  34:simpleserial-aes.c ****     0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+  35:simpleserial-aes.c ****     0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+  36:simpleserial-aes.c ****     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+  37:simpleserial-aes.c ****     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+  38:simpleserial-aes.c ****     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
+  39:simpleserial-aes.c **** };
+  40:simpleserial-aes.c **** 
+  41:simpleserial-aes.c **** // Define the inverse S-box (populate fully for a complete implementation)
+  42:simpleserial-aes.c **** static const uint8_t InvSBox[256] = {
+  43:simpleserial-aes.c ****     0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
+  44:simpleserial-aes.c ****     0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
+  45:simpleserial-aes.c ****     0x54, 0x7B, 0x94, 0x32, 0xA6, 0xC2, 0x23, 0x3D, 0xEE, 0x4C, 0x95, 0x0B, 0x42, 0xFA, 0xC3, 0x4E,
+  46:simpleserial-aes.c ****     0x08, 0x2E, 0xA1, 0x66, 0x28, 0xD9, 0x24, 0xB2, 0x76, 0x5B, 0xA2, 0x49, 0x6D, 0x8B, 0xD1, 0x25,
+  47:simpleserial-aes.c ****     0x72, 0xF8, 0xF6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xD4, 0xA4, 0x5C, 0xCC, 0x5D, 0x65, 0xB6, 0x92,
+  48:simpleserial-aes.c ****     0x6C, 0x70, 0x48, 0x50, 0xFD, 0xED, 0xB9, 0xDA, 0x5E, 0x15, 0x46, 0x57, 0xA7, 0x8D, 0x9D, 0x84,
+  49:simpleserial-aes.c ****     0x90, 0xD8, 0xAB, 0x00, 0x8C, 0xBC, 0xD3, 0x0A, 0xF7, 0xE4, 0x58, 0x05, 0xB8, 0xB3, 0x45, 0x06,
+  50:simpleserial-aes.c ****     0xD0, 0x2C, 0x1E, 0x8F, 0xCA, 0x3F, 0x0F, 0x02, 0xC1, 0xAF, 0xBD, 0x03, 0x01, 0x13, 0x8A, 0x6B,
+  51:simpleserial-aes.c ****     0x3A, 0x91, 0x11, 0x41, 0x4F, 0x67, 0xDC, 0xEA, 0x97, 0xF2, 0xCF, 0xCE, 0xF0, 0xB4, 0xE6, 0x73,
+  52:simpleserial-aes.c ****     0x96, 0xAC, 0x74, 0x22, 0xE7, 0xAD, 0x35, 0x85, 0xE2, 0xF9, 0x37, 0xE8, 0x1C, 0x75, 0xDF, 0x6E,
+  53:simpleserial-aes.c ****     0x47, 0xF1, 0x1A, 0x71, 0x1D, 0x29, 0xC5, 0x89, 0x6F, 0xB7, 0x62, 0x0E, 0xAA, 0x18, 0xBE, 0x1B,
+  54:simpleserial-aes.c ****     0xFC, 0x56, 0x3E, 0x4B, 0xC6, 0xD2, 0x79, 0x20, 0x9A, 0xDB, 0xC0, 0xFE, 0x78, 0xCD, 0x5A, 0xF4,
+  55:simpleserial-aes.c ****     0x1F, 0xDD, 0xA8, 0x33, 0x88, 0x07, 0xC7, 0x31, 0xB1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xEC, 0x5F,
+  56:simpleserial-aes.c ****     0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
+  57:simpleserial-aes.c ****     0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
+  58:simpleserial-aes.c ****     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
+  59:simpleserial-aes.c **** };
   60:simpleserial-aes.c **** 
-  61:simpleserial-aes.c **** // Function to substitute a byte using a constant-time lookup
-  62:simpleserial-aes.c **** uint8_t substitute_byte(uint8_t byte) {
-  28              		.loc 1 62 39 view -0
-  29              		.cfi_startproc
-  30              		@ args = 0, pretend = 0, frame = 0
-  31              		@ frame_needed = 0, uses_anonymous_args = 0
-  63:simpleserial-aes.c ****     uint8_t result = 0;
-  32              		.loc 1 63 5 view .LVU1
-  64:simpleserial-aes.c ****     for (int i = 0; i < 256; i++) {
-  33              		.loc 1 64 5 view .LVU2
-  34              	.LBB2:
-  35              		.loc 1 64 10 view .LVU3
-  36              		.loc 1 64 21 view .LVU4
-  37              		.loc 1 64 14 is_stmt 0 view .LVU5
-  38 0000 0022     		movs	r2, #0
-  39              	.LBE2:
-  62:simpleserial-aes.c ****     uint8_t result = 0;
-  40              		.loc 1 62 39 view .LVU6
-  41 0002 70B5     		push	{r4, r5, r6, lr}
-  42              	.LCFI0:
-  43              		.cfi_def_cfa_offset 16
-  44              		.cfi_offset 4, -16
-  45              		.cfi_offset 5, -12
-  46              		.cfi_offset 6, -8
-  47              		.cfi_offset 14, -4
-  48              	.LBB6:
-  49              		.loc 1 64 5 view .LVU7
-  50 0004 8024     		movs	r4, #128
-  51              	.LBE6:
-  62:simpleserial-aes.c ****     uint8_t result = 0;
-  52              		.loc 1 62 39 view .LVU8
-  53 0006 0100     		movs	r1, r0
-  63:simpleserial-aes.c ****     uint8_t result = 0;
-  54              		.loc 1 63 13 view .LVU9
-  55 0008 1000     		movs	r0, r2
-  56              	.LVL1:
-  57              	.LBB7:
-  58              	.LBB3:
-  65:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  66:simpleserial-aes.c ****         result |= match * SBox[i];           // Add SBox[i] to result only if match
-  59              		.loc 1 66 31 view .LVU10
-  60 000a 064D     		ldr	r5, .L4
-  61              	.LBE3:
-  64:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  62              		.loc 1 64 5 view .LVU11
-  63 000c 6400     		lsls	r4, r4, #1
-  64              	.LVL2:
+  61:simpleserial-aes.c **** 
+  62:simpleserial-aes.c **** // Initialize the pseudorandom mask
+  63:simpleserial-aes.c **** void init_mask(){
+  27              		.loc 1 63 17 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  64:simpleserial-aes.c ****     srand(time(NULL));
+  31              		.loc 1 64 5 view .LVU1
+  63:simpleserial-aes.c ****     srand(time(NULL));
+  32              		.loc 1 63 17 is_stmt 0 view .LVU2
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  38              		.loc 1 64 11 view .LVU3
+  39 0002 0020     		movs	r0, #0
+  40 0004 FFF7FEFF 		bl	time
+  41              	.LVL0:
+  42              		.loc 1 64 5 view .LVU4
+  43 0008 FFF7FEFF 		bl	srand
+  44              	.LVL1:
+  65:simpleserial-aes.c **** 
+  66:simpleserial-aes.c ****     for (int i = 0; i < 16; i++) {
+  45              		.loc 1 66 5 is_stmt 1 view .LVU5
+  46              	.LBB2:
+  47              		.loc 1 66 10 view .LVU6
+  48              		.loc 1 66 21 view .LVU7
+  49              		.loc 1 66 14 is_stmt 0 view .LVU8
+  50 000c 0024     		movs	r4, #0
+  51              	.LVL2:
+  52              	.L3:
+  67:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+  53              		.loc 1 67 9 is_stmt 1 discriminator 3 view .LVU9
+  54              		.loc 1 67 19 is_stmt 0 discriminator 3 view .LVU10
+  55 000e FFF7FEFF 		bl	rand
+  56              	.LVL3:
+  57              		.loc 1 67 26 discriminator 3 view .LVU11
+  58 0012 064B     		ldr	r3, .L5
+  59 0014 1840     		ands	r0, r3
+  60 0016 03D5     		bpl	.L2
+  61 0018 054B     		ldr	r3, .L5+4
+  62 001a 0138     		subs	r0, r0, #1
+  63 001c 1843     		orrs	r0, r3
+  64 001e 0130     		adds	r0, r0, #1
   65              	.L2:
-  66              	.LBB4:
-  65:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  67              		.loc 1 65 9 is_stmt 1 discriminator 3 view .LVU12
-  68              		.loc 1 66 9 discriminator 3 view .LVU13
-  65:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  69              		.loc 1 65 31 is_stmt 0 discriminator 3 view .LVU14
-  70 000e 8B1A     		subs	r3, r1, r2
-  71 0010 5E42     		rsbs	r6, r3, #0
-  72 0012 7341     		adcs	r3, r3, r6
-  73              		.loc 1 66 25 discriminator 3 view .LVU15
-  74 0014 AE5C     		ldrb	r6, [r5, r2]
-  75              	.LBE4:
-  64:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  76              		.loc 1 64 31 discriminator 3 view .LVU16
-  77 0016 0132     		adds	r2, r2, #1
-  78              	.LVL3:
-  79              	.LBB5:
-  80              		.loc 1 66 25 discriminator 3 view .LVU17
-  81 0018 7343     		muls	r3, r6
-  82              		.loc 1 66 16 discriminator 3 view .LVU18
-  83 001a 1843     		orrs	r0, r3
-  84              	.LVL4:
-  85              		.loc 1 66 16 discriminator 3 view .LVU19
-  86 001c C0B2     		uxtb	r0, r0
-  87              	.LVL5:
-  88              		.loc 1 66 16 discriminator 3 view .LVU20
-  89              	.LBE5:
-  64:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  90              		.loc 1 64 30 is_stmt 1 discriminator 3 view .LVU21
-  64:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  91              		.loc 1 64 21 discriminator 3 view .LVU22
-  64:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
-  92              		.loc 1 64 5 is_stmt 0 discriminator 3 view .LVU23
-  93 001e A242     		cmp	r2, r4
-  94 0020 F5D1     		bne	.L2
-  95              	.LBE7:
-  67:simpleserial-aes.c ****     }
-  68:simpleserial-aes.c ****     return result;
-  96              		.loc 1 68 5 is_stmt 1 view .LVU24
+  66              		.loc 1 67 17 discriminator 3 view .LVU12
+  67 0020 044B     		ldr	r3, .L5+8
+  68 0022 E054     		strb	r0, [r4, r3]
+  66:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+  69              		.loc 1 66 29 is_stmt 1 discriminator 3 view .LVU13
+  66:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+  70              		.loc 1 66 30 is_stmt 0 discriminator 3 view .LVU14
+  71 0024 0134     		adds	r4, r4, #1
+  72              	.LVL4:
+  66:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+  73              		.loc 1 66 21 is_stmt 1 discriminator 3 view .LVU15
+  66:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
+  74              		.loc 1 66 5 is_stmt 0 discriminator 3 view .LVU16
+  75 0026 102C     		cmp	r4, #16
+  76 0028 F1D1     		bne	.L3
+  77              	.LBE2:
+  68:simpleserial-aes.c ****     }
   69:simpleserial-aes.c **** }
-  97              		.loc 1 69 1 is_stmt 0 view .LVU25
-  98              		@ sp needed
-  99 0022 70BD     		pop	{r4, r5, r6, pc}
- 100              	.L5:
- 101              		.align	2
- 102              	.L4:
- 103 0024 00010000 		.word	SBox
- 104              		.cfi_endproc
- 105              	.LFE3:
- 107              		.section	.text.substitute,"ax",%progbits
- 108              		.align	1
- 109              		.global	substitute
- 110              		.syntax unified
- 111              		.code	16
- 112              		.thumb_func
- 113              		.fpu softvfp
- 115              	substitute:
- 116              	.LVL6:
- 117              	.LFB4:
+  78              		.loc 1 69 1 view .LVU17
+  79              		@ sp needed
+  80              	.LVL5:
+  81              		.loc 1 69 1 view .LVU18
+  82 002a 10BD     		pop	{r4, pc}
+  83              	.L6:
+  84              		.align	2
+  85              	.L5:
+  86 002c FF000080 		.word	-2147483393
+  87 0030 00FFFFFF 		.word	-256
+  88 0034 00000000 		.word	.LANCHOR0
+  89              		.cfi_endproc
+  90              	.LFE3:
+  92              		.section	.text.substitute_byte,"ax",%progbits
+  93              		.align	1
+  94              		.global	substitute_byte
+  95              		.syntax unified
+  96              		.code	16
+  97              		.thumb_func
+  98              		.fpu softvfp
+ 100              	substitute_byte:
+ 101              	.LVL6:
+ 102              	.LFB4:
   70:simpleserial-aes.c **** 
-  71:simpleserial-aes.c **** // Apply the substitution step (constant-time)
-  72:simpleserial-aes.c **** void substitute(uint8_t *block) {
- 118              		.loc 1 72 33 is_stmt 1 view -0
- 119              		.cfi_startproc
- 120              		@ args = 0, pretend = 0, frame = 0
- 121              		@ frame_needed = 0, uses_anonymous_args = 0
-  73:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 122              		.loc 1 73 5 view .LVU27
- 123              	.LBB8:
- 124              		.loc 1 73 10 view .LVU28
- 125              		.loc 1 73 21 view .LVU29
- 126              	.LBE8:
-  72:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 127              		.loc 1 72 33 is_stmt 0 view .LVU30
- 128 0000 70B5     		push	{r4, r5, r6, lr}
- 129              	.LCFI1:
- 130              		.cfi_def_cfa_offset 16
- 131              		.cfi_offset 4, -16
- 132              		.cfi_offset 5, -12
- 133              		.cfi_offset 6, -8
- 134              		.cfi_offset 14, -4
- 135 0002 0500     		movs	r5, r0
-  72:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 136              		.loc 1 72 33 view .LVU31
- 137 0004 0400     		movs	r4, r0
- 138 0006 1035     		adds	r5, r5, #16
- 139              	.LVL7:
- 140              	.L7:
- 141              	.LBB9:
-  74:simpleserial-aes.c ****         block[i] = substitute_byte(block[i]);
- 142              		.loc 1 74 9 is_stmt 1 discriminator 3 view .LVU32
- 143              		.loc 1 74 20 is_stmt 0 discriminator 3 view .LVU33
- 144 0008 2078     		ldrb	r0, [r4]
- 145 000a FFF7FEFF 		bl	substitute_byte
- 146              	.LVL8:
- 147              		.loc 1 74 18 discriminator 3 view .LVU34
- 148 000e 2070     		strb	r0, [r4]
-  73:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 149              		.loc 1 73 37 is_stmt 1 discriminator 3 view .LVU35
- 150              	.LVL9:
-  73:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 151              		.loc 1 73 21 discriminator 3 view .LVU36
-  73:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 152              		.loc 1 73 5 is_stmt 0 discriminator 3 view .LVU37
- 153 0010 0134     		adds	r4, r4, #1
- 154              	.LVL10:
-  73:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 155              		.loc 1 73 5 discriminator 3 view .LVU38
- 156 0012 AC42     		cmp	r4, r5
- 157 0014 F8D1     		bne	.L7
- 158              	.LBE9:
-  75:simpleserial-aes.c ****     }
-  76:simpleserial-aes.c **** }
- 159              		.loc 1 76 1 view .LVU39
- 160              		@ sp needed
- 161              	.LVL11:
- 162              	.LVL12:
- 163              		.loc 1 76 1 view .LVU40
- 164 0016 70BD     		pop	{r4, r5, r6, pc}
- 165              		.cfi_endproc
- 166              	.LFE4:
- 168              		.section	.text.balanced_xor,"ax",%progbits
- 169              		.align	1
- 170              		.global	balanced_xor
- 171              		.syntax unified
- 172              		.code	16
- 173              		.thumb_func
- 174              		.fpu softvfp
- 176              	balanced_xor:
- 177              	.LVL13:
- 178              	.LFB5:
-  77:simpleserial-aes.c **** 
-  78:simpleserial-aes.c **** // Perform XOR in constant time
-  79:simpleserial-aes.c **** void balanced_xor(uint8_t *block, const uint8_t *mask) {
- 179              		.loc 1 79 56 is_stmt 1 view -0
- 180              		.cfi_startproc
- 181              		@ args = 0, pretend = 0, frame = 0
- 182              		@ frame_needed = 0, uses_anonymous_args = 0
-  80:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 183              		.loc 1 80 5 view .LVU42
- 184              	.LBB10:
- 185              		.loc 1 80 10 view .LVU43
- 186              		.loc 1 80 21 view .LVU44
- 187              		.loc 1 80 14 is_stmt 0 view .LVU45
- 188 0000 0023     		movs	r3, #0
- 189              	.LBE10:
-  79:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 190              		.loc 1 79 56 view .LVU46
- 191 0002 10B5     		push	{r4, lr}
- 192              	.LCFI2:
- 193              		.cfi_def_cfa_offset 8
- 194              		.cfi_offset 4, -8
- 195              		.cfi_offset 14, -4
- 196              	.LVL14:
- 197              	.L10:
- 198              	.LBB11:
-  81:simpleserial-aes.c ****         block[i] ^= mask[i];  // XOR is already constant-time
- 199              		.loc 1 81 9 is_stmt 1 discriminator 3 view .LVU47
- 200              		.loc 1 81 18 is_stmt 0 discriminator 3 view .LVU48
- 201 0004 C25C     		ldrb	r2, [r0, r3]
- 202 0006 CC5C     		ldrb	r4, [r1, r3]
- 203 0008 6240     		eors	r2, r4
- 204 000a C254     		strb	r2, [r0, r3]
-  80:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 205              		.loc 1 80 37 is_stmt 1 discriminator 3 view .LVU49
-  80:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 206              		.loc 1 80 38 is_stmt 0 discriminator 3 view .LVU50
- 207 000c 0133     		adds	r3, r3, #1
- 208              	.LVL15:
-  80:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 209              		.loc 1 80 21 is_stmt 1 discriminator 3 view .LVU51
-  80:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 210              		.loc 1 80 5 is_stmt 0 discriminator 3 view .LVU52
- 211 000e 102B     		cmp	r3, #16
- 212 0010 F8D1     		bne	.L10
- 213              	.LBE11:
-  82:simpleserial-aes.c ****     }
-  83:simpleserial-aes.c **** }
- 214              		.loc 1 83 1 view .LVU53
- 215              		@ sp needed
- 216 0012 10BD     		pop	{r4, pc}
- 217              		.cfi_endproc
- 218              	.LFE5:
- 220              		.section	.text.permute,"ax",%progbits
- 221              		.align	1
- 222              		.global	permute
- 223              		.syntax unified
- 224              		.code	16
- 225              		.thumb_func
- 226              		.fpu softvfp
- 228              	permute:
+  71:simpleserial-aes.c **** 
+  72:simpleserial-aes.c **** // Function to substitute a byte using a constant-time lookup
+  73:simpleserial-aes.c **** uint8_t substitute_byte(uint8_t byte) {
+ 103              		.loc 1 73 39 is_stmt 1 view -0
+ 104              		.cfi_startproc
+ 105              		@ args = 0, pretend = 0, frame = 0
+ 106              		@ frame_needed = 0, uses_anonymous_args = 0
+  74:simpleserial-aes.c ****     uint8_t result = 0;
+ 107              		.loc 1 74 5 view .LVU20
+  75:simpleserial-aes.c ****     for (int i = 0; i < 256; i++) {
+ 108              		.loc 1 75 5 view .LVU21
+ 109              	.LBB3:
+ 110              		.loc 1 75 10 view .LVU22
+ 111              		.loc 1 75 21 view .LVU23
+ 112              		.loc 1 75 14 is_stmt 0 view .LVU24
+ 113 0000 0022     		movs	r2, #0
+ 114              	.LBE3:
+  73:simpleserial-aes.c ****     uint8_t result = 0;
+ 115              		.loc 1 73 39 view .LVU25
+ 116 0002 70B5     		push	{r4, r5, r6, lr}
+ 117              	.LCFI1:
+ 118              		.cfi_def_cfa_offset 16
+ 119              		.cfi_offset 4, -16
+ 120              		.cfi_offset 5, -12
+ 121              		.cfi_offset 6, -8
+ 122              		.cfi_offset 14, -4
+ 123              	.LBB7:
+ 124              		.loc 1 75 5 view .LVU26
+ 125 0004 8024     		movs	r4, #128
+ 126              	.LBE7:
+  73:simpleserial-aes.c ****     uint8_t result = 0;
+ 127              		.loc 1 73 39 view .LVU27
+ 128 0006 0100     		movs	r1, r0
+  74:simpleserial-aes.c ****     uint8_t result = 0;
+ 129              		.loc 1 74 13 view .LVU28
+ 130 0008 1000     		movs	r0, r2
+ 131              	.LVL7:
+ 132              	.LBB8:
+ 133              	.LBB4:
+  76:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+  77:simpleserial-aes.c ****         result |= match * SBox[i];           // Add SBox[i] to result only if match
+ 134              		.loc 1 77 31 view .LVU29
+ 135 000a 064D     		ldr	r5, .L10
+ 136              	.LBE4:
+  75:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 137              		.loc 1 75 5 view .LVU30
+ 138 000c 6400     		lsls	r4, r4, #1
+ 139              	.LVL8:
+ 140              	.L8:
+ 141              	.LBB5:
+  76:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 142              		.loc 1 76 9 is_stmt 1 discriminator 3 view .LVU31
+ 143              		.loc 1 77 9 discriminator 3 view .LVU32
+  76:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 144              		.loc 1 76 31 is_stmt 0 discriminator 3 view .LVU33
+ 145 000e 8B1A     		subs	r3, r1, r2
+ 146 0010 5E42     		rsbs	r6, r3, #0
+ 147 0012 7341     		adcs	r3, r3, r6
+ 148              		.loc 1 77 25 discriminator 3 view .LVU34
+ 149 0014 AE5C     		ldrb	r6, [r5, r2]
+ 150              	.LBE5:
+  75:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 151              		.loc 1 75 31 discriminator 3 view .LVU35
+ 152 0016 0132     		adds	r2, r2, #1
+ 153              	.LVL9:
+ 154              	.LBB6:
+ 155              		.loc 1 77 25 discriminator 3 view .LVU36
+ 156 0018 7343     		muls	r3, r6
+ 157              		.loc 1 77 16 discriminator 3 view .LVU37
+ 158 001a 1843     		orrs	r0, r3
+ 159              	.LVL10:
+ 160              		.loc 1 77 16 discriminator 3 view .LVU38
+ 161 001c C0B2     		uxtb	r0, r0
+ 162              	.LVL11:
+ 163              		.loc 1 77 16 discriminator 3 view .LVU39
+ 164              	.LBE6:
+  75:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 165              		.loc 1 75 30 is_stmt 1 discriminator 3 view .LVU40
+  75:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 166              		.loc 1 75 21 discriminator 3 view .LVU41
+  75:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 167              		.loc 1 75 5 is_stmt 0 discriminator 3 view .LVU42
+ 168 001e A242     		cmp	r2, r4
+ 169 0020 F5D1     		bne	.L8
+ 170              	.LBE8:
+  78:simpleserial-aes.c ****     }
+  79:simpleserial-aes.c ****     return result;
+ 171              		.loc 1 79 5 is_stmt 1 view .LVU43
+  80:simpleserial-aes.c **** }
+ 172              		.loc 1 80 1 is_stmt 0 view .LVU44
+ 173              		@ sp needed
+ 174 0022 70BD     		pop	{r4, r5, r6, pc}
+ 175              	.L11:
+ 176              		.align	2
+ 177              	.L10:
+ 178 0024 00010000 		.word	SBox
+ 179              		.cfi_endproc
+ 180              	.LFE4:
+ 182              		.section	.text.substitute,"ax",%progbits
+ 183              		.align	1
+ 184              		.global	substitute
+ 185              		.syntax unified
+ 186              		.code	16
+ 187              		.thumb_func
+ 188              		.fpu softvfp
+ 190              	substitute:
+ 191              	.LVL12:
+ 192              	.LFB5:
+  81:simpleserial-aes.c **** 
+  82:simpleserial-aes.c **** // Apply the substitution step (constant-time)
+  83:simpleserial-aes.c **** void substitute(uint8_t *block) {
+ 193              		.loc 1 83 33 is_stmt 1 view -0
+ 194              		.cfi_startproc
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+  84:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 197              		.loc 1 84 5 view .LVU46
+ 198              	.LBB9:
+ 199              		.loc 1 84 10 view .LVU47
+ 200              		.loc 1 84 21 view .LVU48
+ 201              	.LBE9:
+  83:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 202              		.loc 1 83 33 is_stmt 0 view .LVU49
+ 203 0000 70B5     		push	{r4, r5, r6, lr}
+ 204              	.LCFI2:
+ 205              		.cfi_def_cfa_offset 16
+ 206              		.cfi_offset 4, -16
+ 207              		.cfi_offset 5, -12
+ 208              		.cfi_offset 6, -8
+ 209              		.cfi_offset 14, -4
+ 210 0002 0500     		movs	r5, r0
+  83:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 211              		.loc 1 83 33 view .LVU50
+ 212 0004 0400     		movs	r4, r0
+ 213 0006 1035     		adds	r5, r5, #16
+ 214              	.LVL13:
+ 215              	.L13:
+ 216              	.LBB10:
+  85:simpleserial-aes.c ****         block[i] = substitute_byte(block[i]);
+ 217              		.loc 1 85 9 is_stmt 1 discriminator 3 view .LVU51
+ 218              		.loc 1 85 20 is_stmt 0 discriminator 3 view .LVU52
+ 219 0008 2078     		ldrb	r0, [r4]
+ 220 000a FFF7FEFF 		bl	substitute_byte
+ 221              	.LVL14:
+ 222              		.loc 1 85 18 discriminator 3 view .LVU53
+ 223 000e 2070     		strb	r0, [r4]
+  84:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 224              		.loc 1 84 37 is_stmt 1 discriminator 3 view .LVU54
+ 225              	.LVL15:
+  84:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 226              		.loc 1 84 21 discriminator 3 view .LVU55
+  84:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 227              		.loc 1 84 5 is_stmt 0 discriminator 3 view .LVU56
+ 228 0010 0134     		adds	r4, r4, #1
  229              	.LVL16:
- 230              	.LFB6:
-  84:simpleserial-aes.c **** 
-  85:simpleserial-aes.c **** // Perform a constant-time permutation (avoid data-dependent indexing)
-  86:simpleserial-aes.c **** void permute(uint8_t *block) {
- 231              		.loc 1 86 30 is_stmt 1 view -0
- 232              		.cfi_startproc
- 233              		@ args = 0, pretend = 0, frame = 16
- 234              		@ frame_needed = 0, uses_anonymous_args = 0
-  87:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 235              		.loc 1 87 5 view .LVU55
-  88:simpleserial-aes.c ****     memcpy(temp, block, BLOCK_SIZE);
- 236              		.loc 1 88 5 view .LVU56
-  86:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 237              		.loc 1 86 30 is_stmt 0 view .LVU57
- 238 0000 1FB5     		push	{r0, r1, r2, r3, r4, lr}
- 239              	.LCFI3:
- 240              		.cfi_def_cfa_offset 24
- 241              		.cfi_offset 0, -24
- 242              		.cfi_offset 1, -20
- 243              		.cfi_offset 2, -16
- 244              		.cfi_offset 3, -12
- 245              		.cfi_offset 4, -8
- 246              		.cfi_offset 14, -4
- 247              		.loc 1 88 5 view .LVU58
- 248 0002 0100     		movs	r1, r0
-  86:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 249              		.loc 1 86 30 view .LVU59
- 250 0004 0400     		movs	r4, r0
- 251              		.loc 1 88 5 view .LVU60
- 252 0006 1022     		movs	r2, #16
- 253 0008 6846     		mov	r0, sp
- 254              	.LVL17:
- 255              		.loc 1 88 5 view .LVU61
- 256 000a FFF7FEFF 		bl	memcpy
- 257              	.LVL18:
-  89:simpleserial-aes.c **** 
-  90:simpleserial-aes.c ****     // Example permutation: Rotate bytes left by 3 (constant-time)
+  84:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 230              		.loc 1 84 5 discriminator 3 view .LVU57
+ 231 0012 AC42     		cmp	r4, r5
+ 232 0014 F8D1     		bne	.L13
+ 233              	.LBE10:
+  86:simpleserial-aes.c ****     }
+  87:simpleserial-aes.c **** }
+ 234              		.loc 1 87 1 view .LVU58
+ 235              		@ sp needed
+ 236              	.LVL17:
+ 237              	.LVL18:
+ 238              		.loc 1 87 1 view .LVU59
+ 239 0016 70BD     		pop	{r4, r5, r6, pc}
+ 240              		.cfi_endproc
+ 241              	.LFE5:
+ 243              		.section	.text.balanced_xor,"ax",%progbits
+ 244              		.align	1
+ 245              		.global	balanced_xor
+ 246              		.syntax unified
+ 247              		.code	16
+ 248              		.thumb_func
+ 249              		.fpu softvfp
+ 251              	balanced_xor:
+ 252              	.LVL19:
+ 253              	.LFB6:
+  88:simpleserial-aes.c **** 
+  89:simpleserial-aes.c **** // Perform XOR in constant time
+  90:simpleserial-aes.c **** void balanced_xor(uint8_t *block, const uint8_t *mask) {
+ 254              		.loc 1 90 56 is_stmt 1 view -0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
   91:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 258              		.loc 1 91 5 is_stmt 1 view .LVU62
- 259              	.LBB12:
- 260              		.loc 1 91 10 view .LVU63
- 261              		.loc 1 91 21 view .LVU64
- 262              		.loc 1 91 14 is_stmt 0 view .LVU65
- 263 000e 0023     		movs	r3, #0
-  92:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
- 264              		.loc 1 92 33 view .LVU66
- 265 0010 0F21     		movs	r1, #15
- 266              	.LVL19:
- 267              	.L13:
- 268              		.loc 1 92 9 is_stmt 1 discriminator 3 view .LVU67
- 269              		.loc 1 92 18 is_stmt 0 discriminator 3 view .LVU68
- 270 0012 6846     		mov	r0, sp
- 271              		.loc 1 92 33 discriminator 3 view .LVU69
- 272 0014 DA1C     		adds	r2, r3, #3
- 273 0016 0A40     		ands	r2, r1
- 274              		.loc 1 92 18 discriminator 3 view .LVU70
- 275 0018 825C     		ldrb	r2, [r0, r2]
- 276 001a E254     		strb	r2, [r4, r3]
-  91:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
- 277              		.loc 1 91 37 is_stmt 1 discriminator 3 view .LVU71
-  91:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
- 278              		.loc 1 91 38 is_stmt 0 discriminator 3 view .LVU72
- 279 001c 0133     		adds	r3, r3, #1
- 280              	.LVL20:
-  91:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
- 281              		.loc 1 91 21 is_stmt 1 discriminator 3 view .LVU73
-  91:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
- 282              		.loc 1 91 5 is_stmt 0 discriminator 3 view .LVU74
- 283 001e 102B     		cmp	r3, #16
- 284 0020 F7D1     		bne	.L13
- 285              	.LBE12:
+ 258              		.loc 1 91 5 view .LVU61
+ 259              	.LBB11:
+ 260              		.loc 1 91 10 view .LVU62
+ 261              		.loc 1 91 21 view .LVU63
+ 262              		.loc 1 91 14 is_stmt 0 view .LVU64
+ 263 0000 0023     		movs	r3, #0
+ 264              	.LBE11:
+  90:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 265              		.loc 1 90 56 view .LVU65
+ 266 0002 10B5     		push	{r4, lr}
+ 267              	.LCFI3:
+ 268              		.cfi_def_cfa_offset 8
+ 269              		.cfi_offset 4, -8
+ 270              		.cfi_offset 14, -4
+ 271              	.LVL20:
+ 272              	.L16:
+ 273              	.LBB12:
+  92:simpleserial-aes.c ****         block[i] ^= mask[i];  // XOR is already constant-time
+ 274              		.loc 1 92 9 is_stmt 1 discriminator 3 view .LVU66
+ 275              		.loc 1 92 18 is_stmt 0 discriminator 3 view .LVU67
+ 276 0004 C25C     		ldrb	r2, [r0, r3]
+ 277 0006 CC5C     		ldrb	r4, [r1, r3]
+ 278 0008 6240     		eors	r2, r4
+ 279 000a C254     		strb	r2, [r0, r3]
+  91:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 280              		.loc 1 91 37 is_stmt 1 discriminator 3 view .LVU68
+  91:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 281              		.loc 1 91 38 is_stmt 0 discriminator 3 view .LVU69
+ 282 000c 0133     		adds	r3, r3, #1
+ 283              	.LVL21:
+  91:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 284              		.loc 1 91 21 is_stmt 1 discriminator 3 view .LVU70
+  91:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 285              		.loc 1 91 5 is_stmt 0 discriminator 3 view .LVU71
+ 286 000e 102B     		cmp	r3, #16
+ 287 0010 F8D1     		bne	.L16
+ 288              	.LBE12:
   93:simpleserial-aes.c ****     }
   94:simpleserial-aes.c **** }
- 286              		.loc 1 94 1 view .LVU75
- 287              		@ sp needed
- 288              	.LVL21:
- 289              		.loc 1 94 1 view .LVU76
- 290 0022 1FBD     		pop	{r0, r1, r2, r3, r4, pc}
- 291              		.cfi_endproc
- 292              	.LFE6:
- 294              		.section	.text.encrypt_block,"ax",%progbits
- 295              		.align	1
- 296              		.global	encrypt_block
- 297              		.syntax unified
- 298              		.code	16
- 299              		.thumb_func
- 300              		.fpu softvfp
- 302              	encrypt_block:
- 303              	.LVL22:
- 304              	.LFB7:
+ 289              		.loc 1 94 1 view .LVU72
+ 290              		@ sp needed
+ 291 0012 10BD     		pop	{r4, pc}
+ 292              		.cfi_endproc
+ 293              	.LFE6:
+ 295              		.section	.text.permute,"ax",%progbits
+ 296              		.align	1
+ 297              		.global	permute
+ 298              		.syntax unified
+ 299              		.code	16
+ 300              		.thumb_func
+ 301              		.fpu softvfp
+ 303              	permute:
+ 304              	.LVL22:
+ 305              	.LFB7:
   95:simpleserial-aes.c **** 
-  96:simpleserial-aes.c **** // Encryption function
-  97:simpleserial-aes.c **** void encrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
- 305              		.loc 1 97 77 is_stmt 1 view -0
- 306              		.cfi_startproc
- 307              		@ args = 0, pretend = 0, frame = 0
- 308              		@ frame_needed = 0, uses_anonymous_args = 0
-  98:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 309              		.loc 1 98 5 view .LVU78
- 310              	.LBB13:
- 311              		.loc 1 98 10 view .LVU79
- 312              		.loc 1 98 25 view .LVU80
- 313              	.LBE13:
-  97:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 314              		.loc 1 97 77 is_stmt 0 view .LVU81
- 315 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 316              	.LCFI4:
- 317              		.cfi_def_cfa_offset 24
- 318              		.cfi_offset 3, -24
- 319              		.cfi_offset 4, -20
- 320              		.cfi_offset 5, -16
- 321              		.cfi_offset 6, -12
- 322              		.cfi_offset 7, -8
- 323              		.cfi_offset 14, -4
-  97:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 324              		.loc 1 97 77 view .LVU82
- 325 0002 0400     		movs	r4, r0
- 326 0004 0E00     		movs	r6, r1
- 327 0006 1700     		movs	r7, r2
- 328 0008 0A25     		movs	r5, #10
+  96:simpleserial-aes.c **** // Perform a constant-time permutation (avoid data-dependent indexing)
+  97:simpleserial-aes.c **** void permute(uint8_t *block) {
+ 306              		.loc 1 97 30 is_stmt 1 view -0
+ 307              		.cfi_startproc
+ 308              		@ args = 0, pretend = 0, frame = 16
+ 309              		@ frame_needed = 0, uses_anonymous_args = 0
+  98:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 310              		.loc 1 98 5 view .LVU74
+  99:simpleserial-aes.c ****     memcpy(temp, block, BLOCK_SIZE);
+ 311              		.loc 1 99 5 view .LVU75
+  97:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 312              		.loc 1 97 30 is_stmt 0 view .LVU76
+ 313 0000 1FB5     		push	{r0, r1, r2, r3, r4, lr}
+ 314              	.LCFI4:
+ 315              		.cfi_def_cfa_offset 24
+ 316              		.cfi_offset 0, -24
+ 317              		.cfi_offset 1, -20
+ 318              		.cfi_offset 2, -16
+ 319              		.cfi_offset 3, -12
+ 320              		.cfi_offset 4, -8
+ 321              		.cfi_offset 14, -4
+ 322              		.loc 1 99 5 view .LVU77
+ 323 0002 0100     		movs	r1, r0
+  97:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 324              		.loc 1 97 30 view .LVU78
+ 325 0004 0400     		movs	r4, r0
+ 326              		.loc 1 99 5 view .LVU79
+ 327 0006 1022     		movs	r2, #16
+ 328 0008 6846     		mov	r0, sp
  329              	.LVL23:
- 330              	.L16:
- 331              	.LBB14:
-  99:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
- 332              		.loc 1 99 9 is_stmt 1 discriminator 3 view .LVU83
- 333 000a 3900     		movs	r1, r7
- 334 000c 2000     		movs	r0, r4
- 335 000e FFF7FEFF 		bl	balanced_xor
- 336              	.LVL24:
- 100:simpleserial-aes.c ****         substitute(block);               // Substitution step
- 337              		.loc 1 100 9 discriminator 3 view .LVU84
- 338 0012 2000     		movs	r0, r4
- 339 0014 FFF7FEFF 		bl	substitute
- 340              	.LVL25:
- 101:simpleserial-aes.c ****         permute(block);                  // Permutation step
- 341              		.loc 1 101 9 discriminator 3 view .LVU85
- 342 0018 2000     		movs	r0, r4
- 343 001a FFF7FEFF 		bl	permute
- 344              	.LVL26:
- 102:simpleserial-aes.c ****         balanced_xor(block, key);        // XOR with key
- 345              		.loc 1 102 9 discriminator 3 view .LVU86
-  98:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
- 346              		.loc 1 98 5 is_stmt 0 discriminator 3 view .LVU87
- 347 001e 013D     		subs	r5, r5, #1
- 348              	.LVL27:
- 349              		.loc 1 102 9 discriminator 3 view .LVU88
- 350 0020 3100     		movs	r1, r6
- 351 0022 2000     		movs	r0, r4
- 352 0024 FFF7FEFF 		bl	balanced_xor
- 353              	.LVL28:
-  98:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
- 354              		.loc 1 98 41 is_stmt 1 discriminator 3 view .LVU89
-  98:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
- 355              		.loc 1 98 25 discriminator 3 view .LVU90
-  98:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
- 356              		.loc 1 98 5 is_stmt 0 discriminator 3 view .LVU91
- 357 0028 002D     		cmp	r5, #0
- 358 002a EED1     		bne	.L16
- 359              	.LBE14:
- 103:simpleserial-aes.c ****     }
- 104:simpleserial-aes.c **** }
- 360              		.loc 1 104 1 view .LVU92
- 361              		@ sp needed
- 362              	.LVL29:
- 363              	.LVL30:
- 364              	.LVL31:
- 365              		.loc 1 104 1 view .LVU93
- 366 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 367              		.cfi_endproc
- 368              	.LFE7:
- 370              		.section	.text.inverse_substitute_byte,"ax",%progbits
- 371              		.align	1
- 372              		.global	inverse_substitute_byte
- 373              		.syntax unified
- 374              		.code	16
- 375              		.thumb_func
- 376              		.fpu softvfp
- 378              	inverse_substitute_byte:
- 379              	.LVL32:
- 380              	.LFB8:
- 105:simpleserial-aes.c **** 
+ 330              		.loc 1 99 5 view .LVU80
+ 331 000a FFF7FEFF 		bl	memcpy
+ 332              	.LVL24:
+ 100:simpleserial-aes.c **** 
+ 101:simpleserial-aes.c ****     // Example permutation: Rotate bytes left by 3 (constant-time)
+ 102:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 333              		.loc 1 102 5 is_stmt 1 view .LVU81
+ 334              	.LBB13:
+ 335              		.loc 1 102 10 view .LVU82
+ 336              		.loc 1 102 21 view .LVU83
+ 337              		.loc 1 102 14 is_stmt 0 view .LVU84
+ 338 000e 0023     		movs	r3, #0
+ 103:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
+ 339              		.loc 1 103 33 view .LVU85
+ 340 0010 0F21     		movs	r1, #15
+ 341              	.LVL25:
+ 342              	.L19:
+ 343              		.loc 1 103 9 is_stmt 1 discriminator 3 view .LVU86
+ 344              		.loc 1 103 18 is_stmt 0 discriminator 3 view .LVU87
+ 345 0012 6846     		mov	r0, sp
+ 346              		.loc 1 103 33 discriminator 3 view .LVU88
+ 347 0014 DA1C     		adds	r2, r3, #3
+ 348 0016 0A40     		ands	r2, r1
+ 349              		.loc 1 103 18 discriminator 3 view .LVU89
+ 350 0018 825C     		ldrb	r2, [r0, r2]
+ 351 001a E254     		strb	r2, [r4, r3]
+ 102:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
+ 352              		.loc 1 102 37 is_stmt 1 discriminator 3 view .LVU90
+ 102:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
+ 353              		.loc 1 102 38 is_stmt 0 discriminator 3 view .LVU91
+ 354 001c 0133     		adds	r3, r3, #1
+ 355              	.LVL26:
+ 102:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
+ 356              		.loc 1 102 21 is_stmt 1 discriminator 3 view .LVU92
+ 102:simpleserial-aes.c ****         block[i] = temp[(i + 3) % BLOCK_SIZE];
+ 357              		.loc 1 102 5 is_stmt 0 discriminator 3 view .LVU93
+ 358 001e 102B     		cmp	r3, #16
+ 359 0020 F7D1     		bne	.L19
+ 360              	.LBE13:
+ 104:simpleserial-aes.c ****     }
+ 105:simpleserial-aes.c **** }
+ 361              		.loc 1 105 1 view .LVU94
+ 362              		@ sp needed
+ 363              	.LVL27:
+ 364              		.loc 1 105 1 view .LVU95
+ 365 0022 1FBD     		pop	{r0, r1, r2, r3, r4, pc}
+ 366              		.cfi_endproc
+ 367              	.LFE7:
+ 369              		.section	.text.encrypt_block,"ax",%progbits
+ 370              		.align	1
+ 371              		.global	encrypt_block
+ 372              		.syntax unified
+ 373              		.code	16
+ 374              		.thumb_func
+ 375              		.fpu softvfp
+ 377              	encrypt_block:
+ 378              	.LVL28:
+ 379              	.LFB8:
  106:simpleserial-aes.c **** 
- 107:simpleserial-aes.c **** uint8_t inverse_substitute_byte(uint8_t byte) {
- 381              		.loc 1 107 47 is_stmt 1 view -0
- 382              		.cfi_startproc
- 383              		@ args = 0, pretend = 0, frame = 0
- 384              		@ frame_needed = 0, uses_anonymous_args = 0
- 108:simpleserial-aes.c ****     uint8_t result = 0;
- 385              		.loc 1 108 5 view .LVU95
- 109:simpleserial-aes.c ****     for (int i = 0; i < 256; i++) {
- 386              		.loc 1 109 5 view .LVU96
- 387              	.LBB15:
- 388              		.loc 1 109 10 view .LVU97
- 389              		.loc 1 109 21 view .LVU98
- 390              		.loc 1 109 14 is_stmt 0 view .LVU99
- 391 0000 0022     		movs	r2, #0
- 392              	.LBE15:
- 107:simpleserial-aes.c ****     uint8_t result = 0;
- 393              		.loc 1 107 47 view .LVU100
- 394 0002 70B5     		push	{r4, r5, r6, lr}
- 395              	.LCFI5:
- 396              		.cfi_def_cfa_offset 16
- 397              		.cfi_offset 4, -16
- 398              		.cfi_offset 5, -12
- 399              		.cfi_offset 6, -8
- 400              		.cfi_offset 14, -4
- 401              	.LBB19:
- 402              		.loc 1 109 5 view .LVU101
- 403 0004 8024     		movs	r4, #128
- 404              	.LBE19:
- 107:simpleserial-aes.c ****     uint8_t result = 0;
- 405              		.loc 1 107 47 view .LVU102
- 406 0006 0100     		movs	r1, r0
- 108:simpleserial-aes.c ****     uint8_t result = 0;
- 407              		.loc 1 108 13 view .LVU103
- 408 0008 1000     		movs	r0, r2
- 409              	.LVL33:
- 410              	.LBB20:
- 411              	.LBB16:
- 110:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 111:simpleserial-aes.c ****         result |= match * InvSBox[i];           // Add SBox[i] to result only if match
- 412              		.loc 1 111 34 view .LVU104
- 413 000a 064D     		ldr	r5, .L21
- 414              	.LBE16:
- 109:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 415              		.loc 1 109 5 view .LVU105
- 416 000c 6400     		lsls	r4, r4, #1
- 417              	.LVL34:
- 418              	.L19:
- 419              	.LBB17:
- 110:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 420              		.loc 1 110 9 is_stmt 1 discriminator 3 view .LVU106
- 421              		.loc 1 111 9 discriminator 3 view .LVU107
- 110:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 422              		.loc 1 110 31 is_stmt 0 discriminator 3 view .LVU108
- 423 000e 8B1A     		subs	r3, r1, r2
- 424 0010 5E42     		rsbs	r6, r3, #0
- 425 0012 7341     		adcs	r3, r3, r6
- 426              		.loc 1 111 25 discriminator 3 view .LVU109
- 427 0014 AE5C     		ldrb	r6, [r5, r2]
- 428              	.LBE17:
- 109:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 429              		.loc 1 109 31 discriminator 3 view .LVU110
- 430 0016 0132     		adds	r2, r2, #1
- 431              	.LVL35:
- 432              	.LBB18:
- 433              		.loc 1 111 25 discriminator 3 view .LVU111
- 434 0018 7343     		muls	r3, r6
- 435              		.loc 1 111 16 discriminator 3 view .LVU112
- 436 001a 1843     		orrs	r0, r3
- 437              	.LVL36:
- 438              		.loc 1 111 16 discriminator 3 view .LVU113
- 439 001c C0B2     		uxtb	r0, r0
- 440              	.LVL37:
- 441              		.loc 1 111 16 discriminator 3 view .LVU114
- 442              	.LBE18:
- 109:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 443              		.loc 1 109 30 is_stmt 1 discriminator 3 view .LVU115
- 109:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 444              		.loc 1 109 21 discriminator 3 view .LVU116
- 109:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
- 445              		.loc 1 109 5 is_stmt 0 discriminator 3 view .LVU117
- 446 001e A242     		cmp	r2, r4
- 447 0020 F5D1     		bne	.L19
- 448              	.LBE20:
- 112:simpleserial-aes.c ****     }
- 113:simpleserial-aes.c ****     return result;
- 449              		.loc 1 113 5 is_stmt 1 view .LVU118
- 114:simpleserial-aes.c **** }
- 450              		.loc 1 114 1 is_stmt 0 view .LVU119
- 451              		@ sp needed
- 452 0022 70BD     		pop	{r4, r5, r6, pc}
- 453              	.L22:
- 454              		.align	2
- 455              	.L21:
- 456 0024 00000000 		.word	InvSBox
- 457              		.cfi_endproc
- 458              	.LFE8:
- 460              		.section	.text.inverse_substitute,"ax",%progbits
- 461              		.align	1
- 462              		.global	inverse_substitute
- 463              		.syntax unified
- 464              		.code	16
- 465              		.thumb_func
- 466              		.fpu softvfp
- 468              	inverse_substitute:
- 469              	.LVL38:
- 470              	.LFB9:
- 115:simpleserial-aes.c **** 
- 116:simpleserial-aes.c **** // Apply the substitution step (constant-time)
+ 107:simpleserial-aes.c **** // Encryption function
+ 108:simpleserial-aes.c **** void encrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
+ 380              		.loc 1 108 77 is_stmt 1 view -0
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 0
+ 383              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 384              		.loc 1 109 5 view .LVU97
+ 385              	.LBB14:
+ 386              		.loc 1 109 10 view .LVU98
+ 387              		.loc 1 109 25 view .LVU99
+ 388              	.LBE14:
+ 108:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 389              		.loc 1 108 77 is_stmt 0 view .LVU100
+ 390 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 391              	.LCFI5:
+ 392              		.cfi_def_cfa_offset 24
+ 393              		.cfi_offset 3, -24
+ 394              		.cfi_offset 4, -20
+ 395              		.cfi_offset 5, -16
+ 396              		.cfi_offset 6, -12
+ 397              		.cfi_offset 7, -8
+ 398              		.cfi_offset 14, -4
+ 108:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 399              		.loc 1 108 77 view .LVU101
+ 400 0002 0400     		movs	r4, r0
+ 401 0004 0E00     		movs	r6, r1
+ 402 0006 1700     		movs	r7, r2
+ 403 0008 0A25     		movs	r5, #10
+ 404              	.LVL29:
+ 405              	.L22:
+ 406              	.LBB15:
+ 110:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
+ 407              		.loc 1 110 9 is_stmt 1 discriminator 3 view .LVU102
+ 408 000a 3900     		movs	r1, r7
+ 409 000c 2000     		movs	r0, r4
+ 410 000e FFF7FEFF 		bl	balanced_xor
+ 411              	.LVL30:
+ 111:simpleserial-aes.c ****         substitute(block);               // Substitution step
+ 412              		.loc 1 111 9 discriminator 3 view .LVU103
+ 413 0012 2000     		movs	r0, r4
+ 414 0014 FFF7FEFF 		bl	substitute
+ 415              	.LVL31:
+ 112:simpleserial-aes.c ****         permute(block);                  // Permutation step
+ 416              		.loc 1 112 9 discriminator 3 view .LVU104
+ 417 0018 2000     		movs	r0, r4
+ 418 001a FFF7FEFF 		bl	permute
+ 419              	.LVL32:
+ 113:simpleserial-aes.c ****         balanced_xor(block, key);        // XOR with key
+ 420              		.loc 1 113 9 discriminator 3 view .LVU105
+ 109:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
+ 421              		.loc 1 109 5 is_stmt 0 discriminator 3 view .LVU106
+ 422 001e 013D     		subs	r5, r5, #1
+ 423              	.LVL33:
+ 424              		.loc 1 113 9 discriminator 3 view .LVU107
+ 425 0020 3100     		movs	r1, r6
+ 426 0022 2000     		movs	r0, r4
+ 427 0024 FFF7FEFF 		bl	balanced_xor
+ 428              	.LVL34:
+ 109:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
+ 429              		.loc 1 109 41 is_stmt 1 discriminator 3 view .LVU108
+ 109:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
+ 430              		.loc 1 109 25 discriminator 3 view .LVU109
+ 109:simpleserial-aes.c ****         balanced_xor(block, mask);        // Masking step
+ 431              		.loc 1 109 5 is_stmt 0 discriminator 3 view .LVU110
+ 432 0028 002D     		cmp	r5, #0
+ 433 002a EED1     		bne	.L22
+ 434              	.LBE15:
+ 114:simpleserial-aes.c ****     }
+ 115:simpleserial-aes.c **** }
+ 435              		.loc 1 115 1 view .LVU111
+ 436              		@ sp needed
+ 437              	.LVL35:
+ 438              	.LVL36:
+ 439              	.LVL37:
+ 440              		.loc 1 115 1 view .LVU112
+ 441 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 442              		.cfi_endproc
+ 443              	.LFE8:
+ 445              		.section	.text.inverse_substitute_byte,"ax",%progbits
+ 446              		.align	1
+ 447              		.global	inverse_substitute_byte
+ 448              		.syntax unified
+ 449              		.code	16
+ 450              		.thumb_func
+ 451              		.fpu softvfp
+ 453              	inverse_substitute_byte:
+ 454              	.LVL38:
+ 455              	.LFB9:
+ 116:simpleserial-aes.c **** 
  117:simpleserial-aes.c **** 
- 118:simpleserial-aes.c **** void inverse_substitute(uint8_t *block) {
- 471              		.loc 1 118 41 is_stmt 1 view -0
- 472              		.cfi_startproc
- 473              		@ args = 0, pretend = 0, frame = 0
- 474              		@ frame_needed = 0, uses_anonymous_args = 0
- 119:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 475              		.loc 1 119 5 view .LVU121
- 476              	.LBB21:
- 477              		.loc 1 119 10 view .LVU122
- 478              		.loc 1 119 21 view .LVU123
- 479              	.LBE21:
- 118:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 480              		.loc 1 118 41 is_stmt 0 view .LVU124
- 481 0000 70B5     		push	{r4, r5, r6, lr}
- 482              	.LCFI6:
- 483              		.cfi_def_cfa_offset 16
- 484              		.cfi_offset 4, -16
- 485              		.cfi_offset 5, -12
- 486              		.cfi_offset 6, -8
- 487              		.cfi_offset 14, -4
- 488 0002 0500     		movs	r5, r0
- 118:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 489              		.loc 1 118 41 view .LVU125
- 490 0004 0400     		movs	r4, r0
- 491 0006 1035     		adds	r5, r5, #16
- 492              	.LVL39:
- 493              	.L24:
- 494              	.LBB22:
- 120:simpleserial-aes.c ****         block[i] = inverse_substitute_byte(block[i]);
- 495              		.loc 1 120 9 is_stmt 1 discriminator 3 view .LVU126
- 496              		.loc 1 120 20 is_stmt 0 discriminator 3 view .LVU127
- 497 0008 2078     		ldrb	r0, [r4]
- 498 000a FFF7FEFF 		bl	inverse_substitute_byte
- 499              	.LVL40:
- 500              		.loc 1 120 18 discriminator 3 view .LVU128
- 501 000e 2070     		strb	r0, [r4]
- 119:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 502              		.loc 1 119 37 is_stmt 1 discriminator 3 view .LVU129
- 503              	.LVL41:
- 119:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 504              		.loc 1 119 21 discriminator 3 view .LVU130
- 119:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 505              		.loc 1 119 5 is_stmt 0 discriminator 3 view .LVU131
- 506 0010 0134     		adds	r4, r4, #1
- 507              	.LVL42:
- 119:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 508              		.loc 1 119 5 discriminator 3 view .LVU132
- 509 0012 AC42     		cmp	r4, r5
- 510 0014 F8D1     		bne	.L24
- 511              	.LBE22:
- 121:simpleserial-aes.c ****     }
- 122:simpleserial-aes.c **** }
- 512              		.loc 1 122 1 view .LVU133
- 513              		@ sp needed
- 514              	.LVL43:
- 515              	.LVL44:
- 516              		.loc 1 122 1 view .LVU134
- 517 0016 70BD     		pop	{r4, r5, r6, pc}
- 518              		.cfi_endproc
- 519              	.LFE9:
- 521              		.section	.text.reverse_permute,"ax",%progbits
- 522              		.align	1
- 523              		.global	reverse_permute
- 524              		.syntax unified
- 525              		.code	16
- 526              		.thumb_func
- 527              		.fpu softvfp
- 529              	reverse_permute:
- 530              	.LVL45:
- 531              	.LFB10:
- 123:simpleserial-aes.c **** 
- 124:simpleserial-aes.c **** // Perform reverse permutation (rotate bytes right by 3)
- 125:simpleserial-aes.c **** void reverse_permute(uint8_t *block) {
- 532              		.loc 1 125 38 is_stmt 1 view -0
- 533              		.cfi_startproc
- 534              		@ args = 0, pretend = 0, frame = 16
- 535              		@ frame_needed = 0, uses_anonymous_args = 0
- 126:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 536              		.loc 1 126 5 view .LVU136
- 127:simpleserial-aes.c ****     memcpy(temp, block, BLOCK_SIZE);
- 537              		.loc 1 127 5 view .LVU137
- 125:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 538              		.loc 1 125 38 is_stmt 0 view .LVU138
- 539 0000 1FB5     		push	{r0, r1, r2, r3, r4, lr}
- 540              	.LCFI7:
- 541              		.cfi_def_cfa_offset 24
- 542              		.cfi_offset 0, -24
- 543              		.cfi_offset 1, -20
- 544              		.cfi_offset 2, -16
- 545              		.cfi_offset 3, -12
- 546              		.cfi_offset 4, -8
- 547              		.cfi_offset 14, -4
- 548              		.loc 1 127 5 view .LVU139
- 549 0002 0100     		movs	r1, r0
- 125:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
- 550              		.loc 1 125 38 view .LVU140
- 551 0004 0400     		movs	r4, r0
- 552              		.loc 1 127 5 view .LVU141
- 553 0006 1022     		movs	r2, #16
- 554 0008 6846     		mov	r0, sp
- 555              	.LVL46:
- 556              		.loc 1 127 5 view .LVU142
- 557 000a FFF7FEFF 		bl	memcpy
- 558              	.LVL47:
+ 118:simpleserial-aes.c **** uint8_t inverse_substitute_byte(uint8_t byte) {
+ 456              		.loc 1 118 47 is_stmt 1 view -0
+ 457              		.cfi_startproc
+ 458              		@ args = 0, pretend = 0, frame = 0
+ 459              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119:simpleserial-aes.c ****     uint8_t result = 0;
+ 460              		.loc 1 119 5 view .LVU114
+ 120:simpleserial-aes.c ****     for (int i = 0; i < 256; i++) {
+ 461              		.loc 1 120 5 view .LVU115
+ 462              	.LBB16:
+ 463              		.loc 1 120 10 view .LVU116
+ 464              		.loc 1 120 21 view .LVU117
+ 465              		.loc 1 120 14 is_stmt 0 view .LVU118
+ 466 0000 0022     		movs	r2, #0
+ 467              	.LBE16:
+ 118:simpleserial-aes.c ****     uint8_t result = 0;
+ 468              		.loc 1 118 47 view .LVU119
+ 469 0002 70B5     		push	{r4, r5, r6, lr}
+ 470              	.LCFI6:
+ 471              		.cfi_def_cfa_offset 16
+ 472              		.cfi_offset 4, -16
+ 473              		.cfi_offset 5, -12
+ 474              		.cfi_offset 6, -8
+ 475              		.cfi_offset 14, -4
+ 476              	.LBB20:
+ 477              		.loc 1 120 5 view .LVU120
+ 478 0004 8024     		movs	r4, #128
+ 479              	.LBE20:
+ 118:simpleserial-aes.c ****     uint8_t result = 0;
+ 480              		.loc 1 118 47 view .LVU121
+ 481 0006 0100     		movs	r1, r0
+ 119:simpleserial-aes.c ****     uint8_t result = 0;
+ 482              		.loc 1 119 13 view .LVU122
+ 483 0008 1000     		movs	r0, r2
+ 484              	.LVL39:
+ 485              	.LBB21:
+ 486              	.LBB17:
+ 121:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 122:simpleserial-aes.c ****         result |= match * InvSBox[i];           // Add SBox[i] to result only if match
+ 487              		.loc 1 122 34 view .LVU123
+ 488 000a 064D     		ldr	r5, .L27
+ 489              	.LBE17:
+ 120:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 490              		.loc 1 120 5 view .LVU124
+ 491 000c 6400     		lsls	r4, r4, #1
+ 492              	.LVL40:
+ 493              	.L25:
+ 494              	.LBB18:
+ 121:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 495              		.loc 1 121 9 is_stmt 1 discriminator 3 view .LVU125
+ 496              		.loc 1 122 9 discriminator 3 view .LVU126
+ 121:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 497              		.loc 1 121 31 is_stmt 0 discriminator 3 view .LVU127
+ 498 000e 8B1A     		subs	r3, r1, r2
+ 499 0010 5E42     		rsbs	r6, r3, #0
+ 500 0012 7341     		adcs	r3, r3, r6
+ 501              		.loc 1 122 25 discriminator 3 view .LVU128
+ 502 0014 AE5C     		ldrb	r6, [r5, r2]
+ 503              	.LBE18:
+ 120:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 504              		.loc 1 120 31 discriminator 3 view .LVU129
+ 505 0016 0132     		adds	r2, r2, #1
+ 506              	.LVL41:
+ 507              	.LBB19:
+ 508              		.loc 1 122 25 discriminator 3 view .LVU130
+ 509 0018 7343     		muls	r3, r6
+ 510              		.loc 1 122 16 discriminator 3 view .LVU131
+ 511 001a 1843     		orrs	r0, r3
+ 512              	.LVL42:
+ 513              		.loc 1 122 16 discriminator 3 view .LVU132
+ 514 001c C0B2     		uxtb	r0, r0
+ 515              	.LVL43:
+ 516              		.loc 1 122 16 discriminator 3 view .LVU133
+ 517              	.LBE19:
+ 120:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 518              		.loc 1 120 30 is_stmt 1 discriminator 3 view .LVU134
+ 120:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 519              		.loc 1 120 21 discriminator 3 view .LVU135
+ 120:simpleserial-aes.c ****         uint8_t match = (byte == i);         // 1 if true, 0 if false
+ 520              		.loc 1 120 5 is_stmt 0 discriminator 3 view .LVU136
+ 521 001e A242     		cmp	r2, r4
+ 522 0020 F5D1     		bne	.L25
+ 523              	.LBE21:
+ 123:simpleserial-aes.c ****     }
+ 124:simpleserial-aes.c ****     return result;
+ 524              		.loc 1 124 5 is_stmt 1 view .LVU137
+ 125:simpleserial-aes.c **** }
+ 525              		.loc 1 125 1 is_stmt 0 view .LVU138
+ 526              		@ sp needed
+ 527 0022 70BD     		pop	{r4, r5, r6, pc}
+ 528              	.L28:
+ 529              		.align	2
+ 530              	.L27:
+ 531 0024 00000000 		.word	InvSBox
+ 532              		.cfi_endproc
+ 533              	.LFE9:
+ 535              		.section	.text.inverse_substitute,"ax",%progbits
+ 536              		.align	1
+ 537              		.global	inverse_substitute
+ 538              		.syntax unified
+ 539              		.code	16
+ 540              		.thumb_func
+ 541              		.fpu softvfp
+ 543              	inverse_substitute:
+ 544              	.LVL44:
+ 545              	.LFB10:
+ 126:simpleserial-aes.c **** 
+ 127:simpleserial-aes.c **** // Apply the substitution step (constant-time)
  128:simpleserial-aes.c **** 
+ 129:simpleserial-aes.c **** void inverse_substitute(uint8_t *block) {
+ 546              		.loc 1 129 41 is_stmt 1 view -0
+ 547              		.cfi_startproc
+ 548              		@ args = 0, pretend = 0, frame = 0
+ 549              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 550              		.loc 1 130 5 view .LVU140
+ 551              	.LBB22:
+ 552              		.loc 1 130 10 view .LVU141
+ 553              		.loc 1 130 21 view .LVU142
+ 554              	.LBE22:
  129:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
- 559              		.loc 1 129 5 is_stmt 1 view .LVU143
- 560              	.LBB23:
- 561              		.loc 1 129 10 view .LVU144
- 562              		.loc 1 129 21 view .LVU145
- 563              		.loc 1 129 14 is_stmt 0 view .LVU146
- 564 000e 0023     		movs	r3, #0
- 130:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
- 565              		.loc 1 130 46 view .LVU147
- 566 0010 0F21     		movs	r1, #15
- 567              	.LVL48:
- 568              	.L27:
- 569              		.loc 1 130 9 is_stmt 1 discriminator 3 view .LVU148
- 570              		.loc 1 130 46 is_stmt 0 discriminator 3 view .LVU149
- 571 0012 1A00     		movs	r2, r3
- 572              		.loc 1 130 18 discriminator 3 view .LVU150
- 573 0014 6846     		mov	r0, sp
- 574              		.loc 1 130 46 discriminator 3 view .LVU151
- 575 0016 0D32     		adds	r2, r2, #13
- 576 0018 0A40     		ands	r2, r1
- 577              		.loc 1 130 18 discriminator 3 view .LVU152
- 578 001a 825C     		ldrb	r2, [r0, r2]
- 579 001c E254     		strb	r2, [r4, r3]
- 129:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
- 580              		.loc 1 129 37 is_stmt 1 discriminator 3 view .LVU153
- 129:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
- 581              		.loc 1 129 38 is_stmt 0 discriminator 3 view .LVU154
- 582 001e 0133     		adds	r3, r3, #1
- 583              	.LVL49:
- 129:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
- 584              		.loc 1 129 21 is_stmt 1 discriminator 3 view .LVU155
- 129:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
- 585              		.loc 1 129 5 is_stmt 0 discriminator 3 view .LVU156
- 586 0020 102B     		cmp	r3, #16
- 587 0022 F6D1     		bne	.L27
- 588              	.LBE23:
- 131:simpleserial-aes.c ****     }
- 132:simpleserial-aes.c **** }
- 589              		.loc 1 132 1 view .LVU157
- 590              		@ sp needed
- 591              	.LVL50:
- 592              		.loc 1 132 1 view .LVU158
- 593 0024 1FBD     		pop	{r0, r1, r2, r3, r4, pc}
- 594              		.cfi_endproc
- 595              	.LFE10:
- 597              		.section	.text.decrypt_block,"ax",%progbits
- 598              		.align	1
- 599              		.global	decrypt_block
- 600              		.syntax unified
- 601              		.code	16
- 602              		.thumb_func
- 603              		.fpu softvfp
- 605              	decrypt_block:
- 606              	.LVL51:
- 607              	.LFB11:
- 133:simpleserial-aes.c **** 
- 134:simpleserial-aes.c **** //Decryption function
- 135:simpleserial-aes.c **** void decrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
- 608              		.loc 1 135 77 is_stmt 1 view -0
- 609              		.cfi_startproc
- 610              		@ args = 0, pretend = 0, frame = 0
- 611              		@ frame_needed = 0, uses_anonymous_args = 0
- 136:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 612              		.loc 1 136 5 view .LVU160
- 613              	.LBB24:
- 614              		.loc 1 136 10 view .LVU161
- 615              		.loc 1 136 25 view .LVU162
- 616              	.LBE24:
- 135:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 617              		.loc 1 135 77 is_stmt 0 view .LVU163
- 618 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 619              	.LCFI8:
- 620              		.cfi_def_cfa_offset 24
- 621              		.cfi_offset 3, -24
- 622              		.cfi_offset 4, -20
- 623              		.cfi_offset 5, -16
- 624              		.cfi_offset 6, -12
- 625              		.cfi_offset 7, -8
- 626              		.cfi_offset 14, -4
- 135:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
- 627              		.loc 1 135 77 view .LVU164
- 628 0002 0400     		movs	r4, r0
- 629 0004 0F00     		movs	r7, r1
- 630 0006 1600     		movs	r6, r2
- 631 0008 0A25     		movs	r5, #10
- 632              	.LVL52:
- 633              	.L30:
- 634              	.LBB25:
- 137:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
- 635              		.loc 1 137 9 is_stmt 1 discriminator 3 view .LVU165
- 636 000a 3900     		movs	r1, r7
- 637 000c 2000     		movs	r0, r4
- 638 000e FFF7FEFF 		bl	balanced_xor
- 639              	.LVL53:
- 138:simpleserial-aes.c ****         reverse_permute(block);          // Reverse permutation
- 640              		.loc 1 138 9 discriminator 3 view .LVU166
- 641 0012 2000     		movs	r0, r4
- 642 0014 FFF7FEFF 		bl	reverse_permute
- 643              	.LVL54:
- 139:simpleserial-aes.c ****         inverse_substitute(block);       // Reverse substitution
- 644              		.loc 1 139 9 discriminator 3 view .LVU167
- 645 0018 2000     		movs	r0, r4
- 646 001a FFF7FEFF 		bl	inverse_substitute
- 647              	.LVL55:
- 140:simpleserial-aes.c ****         balanced_xor(block, mask);       // Reverse XOR with mask
- 648              		.loc 1 140 9 discriminator 3 view .LVU168
- 136:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
- 649              		.loc 1 136 5 is_stmt 0 discriminator 3 view .LVU169
- 650 001e 013D     		subs	r5, r5, #1
- 651              	.LVL56:
- 652              		.loc 1 140 9 discriminator 3 view .LVU170
- 653 0020 3100     		movs	r1, r6
- 654 0022 2000     		movs	r0, r4
- 655 0024 FFF7FEFF 		bl	balanced_xor
- 656              	.LVL57:
- 136:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
- 657              		.loc 1 136 41 is_stmt 1 discriminator 3 view .LVU171
- 136:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
- 658              		.loc 1 136 25 discriminator 3 view .LVU172
- 136:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
- 659              		.loc 1 136 5 is_stmt 0 discriminator 3 view .LVU173
- 660 0028 002D     		cmp	r5, #0
- 661 002a EED1     		bne	.L30
- 662              	.LBE25:
- 141:simpleserial-aes.c ****     }
- 142:simpleserial-aes.c **** }
- 663              		.loc 1 142 1 view .LVU174
- 664              		@ sp needed
- 665              	.LVL58:
- 666              	.LVL59:
- 667              	.LVL60:
- 668              		.loc 1 142 1 view .LVU175
- 669 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 670              		.cfi_endproc
- 671              	.LFE11:
- 673              		.section	.text.get_pt,"ax",%progbits
- 674              		.align	1
- 675              		.global	get_pt
- 676              		.syntax unified
- 677              		.code	16
- 678              		.thumb_func
- 679              		.fpu softvfp
- 681              	get_pt:
- 682              	.LVL61:
- 683              	.LFB12:
- 143:simpleserial-aes.c **** 
+ 555              		.loc 1 129 41 is_stmt 0 view .LVU143
+ 556 0000 70B5     		push	{r4, r5, r6, lr}
+ 557              	.LCFI7:
+ 558              		.cfi_def_cfa_offset 16
+ 559              		.cfi_offset 4, -16
+ 560              		.cfi_offset 5, -12
+ 561              		.cfi_offset 6, -8
+ 562              		.cfi_offset 14, -4
+ 563 0002 0500     		movs	r5, r0
+ 129:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 564              		.loc 1 129 41 view .LVU144
+ 565 0004 0400     		movs	r4, r0
+ 566 0006 1035     		adds	r5, r5, #16
+ 567              	.LVL45:
+ 568              	.L30:
+ 569              	.LBB23:
+ 131:simpleserial-aes.c ****         block[i] = inverse_substitute_byte(block[i]);
+ 570              		.loc 1 131 9 is_stmt 1 discriminator 3 view .LVU145
+ 571              		.loc 1 131 20 is_stmt 0 discriminator 3 view .LVU146
+ 572 0008 2078     		ldrb	r0, [r4]
+ 573 000a FFF7FEFF 		bl	inverse_substitute_byte
+ 574              	.LVL46:
+ 575              		.loc 1 131 18 discriminator 3 view .LVU147
+ 576 000e 2070     		strb	r0, [r4]
+ 130:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 577              		.loc 1 130 37 is_stmt 1 discriminator 3 view .LVU148
+ 578              	.LVL47:
+ 130:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 579              		.loc 1 130 21 discriminator 3 view .LVU149
+ 130:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 580              		.loc 1 130 5 is_stmt 0 discriminator 3 view .LVU150
+ 581 0010 0134     		adds	r4, r4, #1
+ 582              	.LVL48:
+ 130:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 583              		.loc 1 130 5 discriminator 3 view .LVU151
+ 584 0012 AC42     		cmp	r4, r5
+ 585 0014 F8D1     		bne	.L30
+ 586              	.LBE23:
+ 132:simpleserial-aes.c ****     }
+ 133:simpleserial-aes.c **** }
+ 587              		.loc 1 133 1 view .LVU152
+ 588              		@ sp needed
+ 589              	.LVL49:
+ 590              	.LVL50:
+ 591              		.loc 1 133 1 view .LVU153
+ 592 0016 70BD     		pop	{r4, r5, r6, pc}
+ 593              		.cfi_endproc
+ 594              	.LFE10:
+ 596              		.section	.text.reverse_permute,"ax",%progbits
+ 597              		.align	1
+ 598              		.global	reverse_permute
+ 599              		.syntax unified
+ 600              		.code	16
+ 601              		.thumb_func
+ 602              		.fpu softvfp
+ 604              	reverse_permute:
+ 605              	.LVL51:
+ 606              	.LFB11:
+ 134:simpleserial-aes.c **** 
+ 135:simpleserial-aes.c **** // Perform reverse permutation (rotate bytes right by 3)
+ 136:simpleserial-aes.c **** void reverse_permute(uint8_t *block) {
+ 607              		.loc 1 136 38 is_stmt 1 view -0
+ 608              		.cfi_startproc
+ 609              		@ args = 0, pretend = 0, frame = 16
+ 610              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 611              		.loc 1 137 5 view .LVU155
+ 138:simpleserial-aes.c ****     memcpy(temp, block, BLOCK_SIZE);
+ 612              		.loc 1 138 5 view .LVU156
+ 136:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 613              		.loc 1 136 38 is_stmt 0 view .LVU157
+ 614 0000 1FB5     		push	{r0, r1, r2, r3, r4, lr}
+ 615              	.LCFI8:
+ 616              		.cfi_def_cfa_offset 24
+ 617              		.cfi_offset 0, -24
+ 618              		.cfi_offset 1, -20
+ 619              		.cfi_offset 2, -16
+ 620              		.cfi_offset 3, -12
+ 621              		.cfi_offset 4, -8
+ 622              		.cfi_offset 14, -4
+ 623              		.loc 1 138 5 view .LVU158
+ 624 0002 0100     		movs	r1, r0
+ 136:simpleserial-aes.c ****     uint8_t temp[BLOCK_SIZE];
+ 625              		.loc 1 136 38 view .LVU159
+ 626 0004 0400     		movs	r4, r0
+ 627              		.loc 1 138 5 view .LVU160
+ 628 0006 1022     		movs	r2, #16
+ 629 0008 6846     		mov	r0, sp
+ 630              	.LVL52:
+ 631              		.loc 1 138 5 view .LVU161
+ 632 000a FFF7FEFF 		bl	memcpy
+ 633              	.LVL53:
+ 139:simpleserial-aes.c **** 
+ 140:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
+ 634              		.loc 1 140 5 is_stmt 1 view .LVU162
+ 635              	.LBB24:
+ 636              		.loc 1 140 10 view .LVU163
+ 637              		.loc 1 140 21 view .LVU164
+ 638              		.loc 1 140 14 is_stmt 0 view .LVU165
+ 639 000e 0023     		movs	r3, #0
+ 141:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+ 640              		.loc 1 141 46 view .LVU166
+ 641 0010 0F21     		movs	r1, #15
+ 642              	.LVL54:
+ 643              	.L33:
+ 644              		.loc 1 141 9 is_stmt 1 discriminator 3 view .LVU167
+ 645              		.loc 1 141 46 is_stmt 0 discriminator 3 view .LVU168
+ 646 0012 1A00     		movs	r2, r3
+ 647              		.loc 1 141 18 discriminator 3 view .LVU169
+ 648 0014 6846     		mov	r0, sp
+ 649              		.loc 1 141 46 discriminator 3 view .LVU170
+ 650 0016 0D32     		adds	r2, r2, #13
+ 651 0018 0A40     		ands	r2, r1
+ 652              		.loc 1 141 18 discriminator 3 view .LVU171
+ 653 001a 825C     		ldrb	r2, [r0, r2]
+ 654 001c E254     		strb	r2, [r4, r3]
+ 140:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+ 655              		.loc 1 140 37 is_stmt 1 discriminator 3 view .LVU172
+ 140:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+ 656              		.loc 1 140 38 is_stmt 0 discriminator 3 view .LVU173
+ 657 001e 0133     		adds	r3, r3, #1
+ 658              	.LVL55:
+ 140:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+ 659              		.loc 1 140 21 is_stmt 1 discriminator 3 view .LVU174
+ 140:simpleserial-aes.c ****         block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
+ 660              		.loc 1 140 5 is_stmt 0 discriminator 3 view .LVU175
+ 661 0020 102B     		cmp	r3, #16
+ 662 0022 F6D1     		bne	.L33
+ 663              	.LBE24:
+ 142:simpleserial-aes.c ****     }
+ 143:simpleserial-aes.c **** }
+ 664              		.loc 1 143 1 view .LVU176
+ 665              		@ sp needed
+ 666              	.LVL56:
+ 667              		.loc 1 143 1 view .LVU177
+ 668 0024 1FBD     		pop	{r0, r1, r2, r3, r4, pc}
+ 669              		.cfi_endproc
+ 670              	.LFE11:
+ 672              		.section	.text.decrypt_block,"ax",%progbits
+ 673              		.align	1
+ 674              		.global	decrypt_block
+ 675              		.syntax unified
+ 676              		.code	16
+ 677              		.thumb_func
+ 678              		.fpu softvfp
+ 680              	decrypt_block:
+ 681              	.LVL57:
+ 682              	.LFB12:
  144:simpleserial-aes.c **** 
- 145:simpleserial-aes.c **** // Function to get the plaintext from UART and perform encryption
- 146:simpleserial-aes.c **** uint8_t get_pt(uint8_t* pt, uint8_t len)
- 147:simpleserial-aes.c **** {
- 684              		.loc 1 147 1 is_stmt 1 view -0
- 685              		.cfi_startproc
- 686              		@ args = 0, pretend = 0, frame = 16
- 687              		@ frame_needed = 0, uses_anonymous_args = 0
- 148:simpleserial-aes.c **** 
- 149:simpleserial-aes.c ****     uint8_t mask[BLOCK_SIZE];
- 688              		.loc 1 149 5 view .LVU177
- 150:simpleserial-aes.c **** 
- 151:simpleserial-aes.c ****     srand(69);
- 689              		.loc 1 151 5 view .LVU178
- 147:simpleserial-aes.c **** 
- 690              		.loc 1 147 1 is_stmt 0 view .LVU179
- 691 0000 30B5     		push	{r4, r5, lr}
- 692              	.LCFI9:
- 693              		.cfi_def_cfa_offset 12
- 694              		.cfi_offset 4, -12
- 695              		.cfi_offset 5, -8
- 696              		.cfi_offset 14, -4
- 697 0002 0500     		movs	r5, r0
- 698 0004 85B0     		sub	sp, sp, #20
- 699              	.LCFI10:
- 700              		.cfi_def_cfa_offset 32
- 701              		.loc 1 151 5 view .LVU180
- 702 0006 4520     		movs	r0, #69
- 703              	.LVL62:
- 704              		.loc 1 151 5 view .LVU181
- 705 0008 FFF7FEFF 		bl	srand
- 706              	.LVL63:
- 152:simpleserial-aes.c **** 
- 153:simpleserial-aes.c ****     // Fill the array with random values
+ 145:simpleserial-aes.c **** //Decryption function
+ 146:simpleserial-aes.c **** void decrypt_block(uint8_t *block, const uint8_t *key, const uint8_t *mask) {
+ 683              		.loc 1 146 77 is_stmt 1 view -0
+ 684              		.cfi_startproc
+ 685              		@ args = 0, pretend = 0, frame = 0
+ 686              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 687              		.loc 1 147 5 view .LVU179
+ 688              	.LBB25:
+ 689              		.loc 1 147 10 view .LVU180
+ 690              		.loc 1 147 25 view .LVU181
+ 691              	.LBE25:
+ 146:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 692              		.loc 1 146 77 is_stmt 0 view .LVU182
+ 693 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 694              	.LCFI9:
+ 695              		.cfi_def_cfa_offset 24
+ 696              		.cfi_offset 3, -24
+ 697              		.cfi_offset 4, -20
+ 698              		.cfi_offset 5, -16
+ 699              		.cfi_offset 6, -12
+ 700              		.cfi_offset 7, -8
+ 701              		.cfi_offset 14, -4
+ 146:simpleserial-aes.c ****     for (int round = 0; round < ROUNDS; round++) {
+ 702              		.loc 1 146 77 view .LVU183
+ 703 0002 0400     		movs	r4, r0
+ 704 0004 0F00     		movs	r7, r1
+ 705 0006 1600     		movs	r6, r2
+ 706 0008 0A25     		movs	r5, #10
+ 707              	.LVL58:
+ 708              	.L36:
+ 709              	.LBB26:
+ 148:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
+ 710              		.loc 1 148 9 is_stmt 1 discriminator 3 view .LVU184
+ 711 000a 3900     		movs	r1, r7
+ 712 000c 2000     		movs	r0, r4
+ 713 000e FFF7FEFF 		bl	balanced_xor
+ 714              	.LVL59:
+ 149:simpleserial-aes.c ****         reverse_permute(block);          // Reverse permutation
+ 715              		.loc 1 149 9 discriminator 3 view .LVU185
+ 716 0012 2000     		movs	r0, r4
+ 717 0014 FFF7FEFF 		bl	reverse_permute
+ 718              	.LVL60:
+ 150:simpleserial-aes.c ****         inverse_substitute(block);       // Reverse substitution
+ 719              		.loc 1 150 9 discriminator 3 view .LVU186
+ 720 0018 2000     		movs	r0, r4
+ 721 001a FFF7FEFF 		bl	inverse_substitute
+ 722              	.LVL61:
+ 151:simpleserial-aes.c ****         balanced_xor(block, mask);       // Reverse XOR with mask
+ 723              		.loc 1 151 9 discriminator 3 view .LVU187
+ 147:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
+ 724              		.loc 1 147 5 is_stmt 0 discriminator 3 view .LVU188
+ 725 001e 013D     		subs	r5, r5, #1
+ 726              	.LVL62:
+ 727              		.loc 1 151 9 discriminator 3 view .LVU189
+ 728 0020 3100     		movs	r1, r6
+ 729 0022 2000     		movs	r0, r4
+ 730 0024 FFF7FEFF 		bl	balanced_xor
+ 731              	.LVL63:
+ 147:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
+ 732              		.loc 1 147 41 is_stmt 1 discriminator 3 view .LVU190
+ 147:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
+ 733              		.loc 1 147 25 discriminator 3 view .LVU191
+ 147:simpleserial-aes.c ****         balanced_xor(block, key);        // Reverse XOR with key
+ 734              		.loc 1 147 5 is_stmt 0 discriminator 3 view .LVU192
+ 735 0028 002D     		cmp	r5, #0
+ 736 002a EED1     		bne	.L36
+ 737              	.LBE26:
+ 152:simpleserial-aes.c ****     }
+ 153:simpleserial-aes.c **** }
+ 738              		.loc 1 153 1 view .LVU193
+ 739              		@ sp needed
+ 740              	.LVL64:
+ 741              	.LVL65:
+ 742              	.LVL66:
+ 743              		.loc 1 153 1 view .LVU194
+ 744 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 745              		.cfi_endproc
+ 746              	.LFE12:
+ 748              		.section	.text.get_pt,"ax",%progbits
+ 749              		.align	1
+ 750              		.global	get_pt
+ 751              		.syntax unified
+ 752              		.code	16
+ 753              		.thumb_func
+ 754              		.fpu softvfp
+ 756              	get_pt:
+ 757              	.LVL67:
+ 758              	.LFB13:
  154:simpleserial-aes.c **** 
- 155:simpleserial-aes.c ****     for (int i = 0; i < 16; i++) {
- 707              		.loc 1 155 5 is_stmt 1 view .LVU182
- 708              	.LBB26:
- 709              		.loc 1 155 10 view .LVU183
- 710              		.loc 1 155 21 view .LVU184
- 711              		.loc 1 155 14 is_stmt 0 view .LVU185
- 712 000c 0024     		movs	r4, #0
- 713              	.LVL64:
- 714              	.L34:
- 156:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 715              		.loc 1 156 9 is_stmt 1 discriminator 3 view .LVU186
- 716              		.loc 1 156 19 is_stmt 0 discriminator 3 view .LVU187
- 717 000e FFF7FEFF 		bl	rand
- 718              	.LVL65:
- 719              		.loc 1 156 26 discriminator 3 view .LVU188
- 720 0012 0E4B     		ldr	r3, .L36
- 721 0014 1840     		ands	r0, r3
- 722 0016 03D5     		bpl	.L33
- 723 0018 0D4B     		ldr	r3, .L36+4
- 724 001a 0138     		subs	r0, r0, #1
- 725 001c 1843     		orrs	r0, r3
- 726 001e 0130     		adds	r0, r0, #1
- 727              	.L33:
- 728              		.loc 1 156 17 discriminator 3 view .LVU189
- 729 0020 6B46     		mov	r3, sp
- 730 0022 E054     		strb	r0, [r4, r3]
- 155:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 731              		.loc 1 155 29 is_stmt 1 discriminator 3 view .LVU190
- 155:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 732              		.loc 1 155 30 is_stmt 0 discriminator 3 view .LVU191
- 733 0024 0134     		adds	r4, r4, #1
- 734              	.LVL66:
- 155:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 735              		.loc 1 155 21 is_stmt 1 discriminator 3 view .LVU192
- 155:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 736              		.loc 1 155 5 is_stmt 0 discriminator 3 view .LVU193
- 737 0026 102C     		cmp	r4, #16
- 738 0028 F1D1     		bne	.L34
- 739              	.LBE26:
- 157:simpleserial-aes.c ****     }
+ 155:simpleserial-aes.c **** 
+ 156:simpleserial-aes.c **** // Function to get the plaintext from UART and perform encryption
+ 157:simpleserial-aes.c **** uint8_t get_pt(uint8_t* pt, uint8_t len)
+ 158:simpleserial-aes.c **** {
+ 759              		.loc 1 158 1 is_stmt 1 view -0
+ 760              		.cfi_startproc
+ 761              		@ args = 0, pretend = 0, frame = 0
+ 762              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159:simpleserial-aes.c **** 
+ 160:simpleserial-aes.c **** 	trigger_high();
+ 763              		.loc 1 160 2 view .LVU196
  158:simpleserial-aes.c **** 
- 159:simpleserial-aes.c ****     //uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
- 160:simpleserial-aes.c ****     //                       0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+ 764              		.loc 1 158 1 is_stmt 0 view .LVU197
+ 765 0000 10B5     		push	{r4, lr}
+ 766              	.LCFI10:
+ 767              		.cfi_def_cfa_offset 8
+ 768              		.cfi_offset 4, -8
+ 769              		.cfi_offset 14, -4
+ 158:simpleserial-aes.c **** 
+ 770              		.loc 1 158 1 view .LVU198
+ 771 0002 0400     		movs	r4, r0
  161:simpleserial-aes.c **** 
- 162:simpleserial-aes.c **** 
- 163:simpleserial-aes.c **** 	trigger_high();
- 740              		.loc 1 163 2 is_stmt 1 view .LVU194
- 741 002a FFF7FEFF 		bl	trigger_high
- 742              	.LVL67:
- 164:simpleserial-aes.c **** 
- 165:simpleserial-aes.c ****   #ifdef ADD_JITTER
- 166:simpleserial-aes.c ****   for (volatile uint8_t k = 0; k < (*pt & 0x0F); k++);
- 167:simpleserial-aes.c ****   #endif
+ 162:simpleserial-aes.c ****   #ifdef ADD_JITTER
+ 163:simpleserial-aes.c ****   for (volatile uint8_t k = 0; k < (*pt & 0x0F); k++);
+ 164:simpleserial-aes.c ****   #endif
+ 165:simpleserial-aes.c **** 
+ 166:simpleserial-aes.c **** 	encrypt_block(pt, key, mask); /* encrypting the data block */
+ 167:simpleserial-aes.c **** 	trigger_low();
  168:simpleserial-aes.c **** 
- 169:simpleserial-aes.c **** 	encrypt_block(pt, key, mask); /* encrypting the data block */
- 743              		.loc 1 169 2 view .LVU195
- 744 002e 6A46     		mov	r2, sp
- 745 0030 2800     		movs	r0, r5
- 746 0032 0849     		ldr	r1, .L36+8
- 747 0034 FFF7FEFF 		bl	encrypt_block
- 748              	.LVL68:
- 170:simpleserial-aes.c **** 	trigger_low();
- 749              		.loc 1 170 2 view .LVU196
- 750 0038 FFF7FEFF 		bl	trigger_low
- 751              	.LVL69:
- 171:simpleserial-aes.c **** 
- 172:simpleserial-aes.c **** 	simpleserial_put('r', 16, pt);
- 752              		.loc 1 172 2 view .LVU197
- 753 003c 2A00     		movs	r2, r5
- 754 003e 2100     		movs	r1, r4
- 755 0040 7220     		movs	r0, #114
- 756 0042 FFF7FEFF 		bl	simpleserial_put
- 757              	.LVL70:
+ 169:simpleserial-aes.c **** 	simpleserial_put('r', 16, pt);
+ 170:simpleserial-aes.c **** 
+ 171:simpleserial-aes.c **** 	return 0x00;
+ 172:simpleserial-aes.c **** }
+ 772              		.loc 1 172 1 view .LVU199
+ 773              		@ sp needed
+ 160:simpleserial-aes.c **** 
+ 774              		.loc 1 160 2 view .LVU200
+ 775 0004 FFF7FEFF 		bl	trigger_high
+ 776              	.LVL68:
+ 166:simpleserial-aes.c **** 	trigger_low();
+ 777              		.loc 1 166 2 is_stmt 1 view .LVU201
+ 778 0008 074A     		ldr	r2, .L39
+ 779 000a 2000     		movs	r0, r4
+ 780 000c 1100     		movs	r1, r2
+ 781 000e 1031     		adds	r1, r1, #16
+ 782 0010 FFF7FEFF 		bl	encrypt_block
+ 783              	.LVL69:
+ 167:simpleserial-aes.c **** 
+ 784              		.loc 1 167 2 view .LVU202
+ 785 0014 FFF7FEFF 		bl	trigger_low
+ 786              	.LVL70:
+ 169:simpleserial-aes.c **** 
+ 787              		.loc 1 169 2 view .LVU203
+ 788 0018 2200     		movs	r2, r4
+ 789 001a 1021     		movs	r1, #16
+ 790 001c 7220     		movs	r0, #114
+ 791 001e FFF7FEFF 		bl	simpleserial_put
+ 792              	.LVL71:
+ 171:simpleserial-aes.c **** }
+ 793              		.loc 1 171 2 view .LVU204
+ 794              		.loc 1 172 1 is_stmt 0 view .LVU205
+ 795 0022 0020     		movs	r0, #0
+ 796              	.LVL72:
+ 797              		.loc 1 172 1 view .LVU206
+ 798 0024 10BD     		pop	{r4, pc}
+ 799              	.L40:
+ 800 0026 C046     		.align	2
+ 801              	.L39:
+ 802 0028 00000000 		.word	.LANCHOR0
+ 803              		.cfi_endproc
+ 804              	.LFE13:
+ 806              		.section	.text.get_pt_wrapper,"ax",%progbits
+ 807              		.align	1
+ 808              		.global	get_pt_wrapper
+ 809              		.syntax unified
+ 810              		.code	16
+ 811              		.thumb_func
+ 812              		.fpu softvfp
+ 814              	get_pt_wrapper:
+ 815              	.LVL73:
+ 816              	.LFB16:
  173:simpleserial-aes.c **** 
- 174:simpleserial-aes.c **** 	return 0x00;
- 758              		.loc 1 174 2 view .LVU198
- 175:simpleserial-aes.c **** }
- 759              		.loc 1 175 1 is_stmt 0 view .LVU199
- 760 0046 0020     		movs	r0, #0
- 761 0048 05B0     		add	sp, sp, #20
- 762              		@ sp needed
- 763              	.LVL71:
- 764              	.LVL72:
- 765              		.loc 1 175 1 view .LVU200
- 766 004a 30BD     		pop	{r4, r5, pc}
- 767              	.L37:
- 768              		.align	2
- 769              	.L36:
- 770 004c FF000080 		.word	-2147483393
- 771 0050 00FFFFFF 		.word	-256
- 772 0054 00000000 		.word	.LANCHOR0
- 773              		.cfi_endproc
- 774              	.LFE12:
- 776              		.section	.text.get_pt_wrapper,"ax",%progbits
- 777              		.align	1
- 778              		.global	get_pt_wrapper
- 779              		.syntax unified
- 780              		.code	16
- 781              		.thumb_func
- 782              		.fpu softvfp
- 784              	get_pt_wrapper:
- 785              	.LVL73:
- 786              	.LFB15:
+ 174:simpleserial-aes.c **** uint8_t give_dt(uint8_t* dt, uint8_t len)
+ 175:simpleserial-aes.c **** {
  176:simpleserial-aes.c **** 
- 177:simpleserial-aes.c **** uint8_t give_dt(uint8_t* dt, uint8_t len)
- 178:simpleserial-aes.c **** {
+ 177:simpleserial-aes.c **** 
+ 178:simpleserial-aes.c **** 	trigger_high();
  179:simpleserial-aes.c **** 
- 180:simpleserial-aes.c ****     uint8_t mask[BLOCK_SIZE];
+ 180:simpleserial-aes.c **** 	trigger_high();
  181:simpleserial-aes.c **** 
- 182:simpleserial-aes.c ****     srand(69);
- 183:simpleserial-aes.c **** 
- 184:simpleserial-aes.c ****     // Fill the array with random values
+ 182:simpleserial-aes.c ****   #ifdef ADD_JITTER
+ 183:simpleserial-aes.c ****   for (volatile uint8_t b = 0; b < (*dt & 0x0F); b++);
+ 184:simpleserial-aes.c ****   #endif
  185:simpleserial-aes.c **** 
- 186:simpleserial-aes.c ****     for (int i = 0; i < 16; i++) {
- 187:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 188:simpleserial-aes.c ****     }
- 189:simpleserial-aes.c **** 
- 190:simpleserial-aes.c ****     // uint8_t key[BLOCK_SIZE] = {0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07, 0x18,
- 191:simpleserial-aes.c ****     //                         0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F, 0x90};
+ 186:simpleserial-aes.c **** 
+ 187:simpleserial-aes.c **** 	decrypt_block(dt, key, mask); /* encrypting the data block */
+ 188:simpleserial-aes.c **** 	trigger_low();
+ 189:simpleserial-aes.c **** 	simpleserial_put('r', 16, dt);
+ 190:simpleserial-aes.c **** 	return 0x00;
+ 191:simpleserial-aes.c **** }
  192:simpleserial-aes.c **** 
- 193:simpleserial-aes.c **** 
- 194:simpleserial-aes.c **** 	trigger_high();
- 195:simpleserial-aes.c **** 
- 196:simpleserial-aes.c **** 	trigger_high();
- 197:simpleserial-aes.c **** 
- 198:simpleserial-aes.c ****   #ifdef ADD_JITTER
- 199:simpleserial-aes.c ****   for (volatile uint8_t b = 0; b < (*dt & 0x0F); b++);
- 200:simpleserial-aes.c ****   #endif
+ 193:simpleserial-aes.c **** uint8_t get_key(uint8_t* pykey, uint8_t len)
+ 194:simpleserial-aes.c **** {
+ 195:simpleserial-aes.c ****     for(uint8_t i=0; i < 16; i++){
+ 196:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 197:simpleserial-aes.c **** 	}
+ 198:simpleserial-aes.c ****     return 0x00;
+ 199:simpleserial-aes.c **** 
+ 200:simpleserial-aes.c **** }
  201:simpleserial-aes.c **** 
- 202:simpleserial-aes.c **** 	decrypt_block(dt, key, mask); /* encrypting the data block */
- 203:simpleserial-aes.c **** 	trigger_low();
- 204:simpleserial-aes.c **** 	simpleserial_put('r', 16, dt);
- 205:simpleserial-aes.c **** 	return 0x00;
- 206:simpleserial-aes.c **** }
- 207:simpleserial-aes.c **** 
- 208:simpleserial-aes.c **** uint8_t get_key(uint8_t* pykey)
- 209:simpleserial-aes.c **** {
- 210:simpleserial-aes.c ****     for (uint8_t i = 0; i < 16; i++){
- 211:simpleserial-aes.c ****         key[i] = pykey[i];
- 212:simpleserial-aes.c ****     }
- 213:simpleserial-aes.c **** 
- 214:simpleserial-aes.c ****     return 0x00;
- 215:simpleserial-aes.c **** 
- 216:simpleserial-aes.c **** }
- 217:simpleserial-aes.c **** 
- 218:simpleserial-aes.c **** 
- 219:simpleserial-aes.c **** uint8_t get_pt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
- 220:simpleserial-aes.c **** {
- 787              		.loc 1 220 1 is_stmt 1 view -0
- 788              		.cfi_startproc
- 789              		@ args = 0, pretend = 0, frame = 0
- 790              		@ frame_needed = 0, uses_anonymous_args = 0
- 221:simpleserial-aes.c ****     uint8_t err = 0;
- 791              		.loc 1 221 5 view .LVU202
- 222:simpleserial-aes.c ****     err = get_pt(buf, len);
- 792              		.loc 1 222 5 view .LVU203
- 220:simpleserial-aes.c ****     uint8_t err = 0;
- 793              		.loc 1 220 1 is_stmt 0 view .LVU204
- 794 0000 10B5     		push	{r4, lr}
- 795              	.LCFI11:
- 796              		.cfi_def_cfa_offset 8
- 797              		.cfi_offset 4, -8
- 798              		.cfi_offset 14, -4
- 220:simpleserial-aes.c ****     uint8_t err = 0;
- 799              		.loc 1 220 1 view .LVU205
- 800 0002 1100     		movs	r1, r2
- 801              	.LVL74:
- 223:simpleserial-aes.c ****         return err;
- 224:simpleserial-aes.c ****     
- 225:simpleserial-aes.c ****     return 0x00;
- 226:simpleserial-aes.c **** }
- 802              		.loc 1 226 1 view .LVU206
- 803              		@ sp needed
- 220:simpleserial-aes.c ****     uint8_t err = 0;
- 804              		.loc 1 220 1 view .LVU207
- 805 0004 1800     		movs	r0, r3
- 806              	.LVL75:
- 222:simpleserial-aes.c ****         return err;
- 807              		.loc 1 222 11 view .LVU208
- 808 0006 FFF7FEFF 		bl	get_pt
- 809              	.LVL76:
- 223:simpleserial-aes.c ****         return err;
- 810              		.loc 1 223 9 is_stmt 1 view .LVU209
- 811              		.loc 1 226 1 is_stmt 0 view .LVU210
- 812 000a 10BD     		pop	{r4, pc}
- 813              		.cfi_endproc
- 814              	.LFE15:
- 816              		.section	.text.give_dt,"ax",%progbits
- 817              		.align	1
- 818              		.global	give_dt
- 819              		.syntax unified
- 820              		.code	16
- 821              		.thumb_func
- 822              		.fpu softvfp
- 824              	give_dt:
- 825              	.LVL77:
- 826              	.LFB13:
+ 202:simpleserial-aes.c **** 
+ 203:simpleserial-aes.c **** uint8_t get_pt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+ 204:simpleserial-aes.c **** {
+ 817              		.loc 1 204 1 is_stmt 1 view -0
+ 818              		.cfi_startproc
+ 819              		@ args = 0, pretend = 0, frame = 0
+ 820              		@ frame_needed = 0, uses_anonymous_args = 0
+ 205:simpleserial-aes.c ****     uint8_t err = 0;
+ 821              		.loc 1 205 5 view .LVU208
+ 206:simpleserial-aes.c ****     err = get_pt(buf, len);
+ 822              		.loc 1 206 5 view .LVU209
+ 204:simpleserial-aes.c ****     uint8_t err = 0;
+ 823              		.loc 1 204 1 is_stmt 0 view .LVU210
+ 824 0000 10B5     		push	{r4, lr}
+ 825              	.LCFI11:
+ 826              		.cfi_def_cfa_offset 8
+ 827              		.cfi_offset 4, -8
+ 828              		.cfi_offset 14, -4
+ 204:simpleserial-aes.c ****     uint8_t err = 0;
+ 829              		.loc 1 204 1 view .LVU211
+ 830 0002 1100     		movs	r1, r2
+ 831              	.LVL74:
+ 207:simpleserial-aes.c ****         return err;
+ 208:simpleserial-aes.c ****     
+ 209:simpleserial-aes.c ****     return 0x00;
+ 210:simpleserial-aes.c **** }
+ 832              		.loc 1 210 1 view .LVU212
+ 833              		@ sp needed
+ 204:simpleserial-aes.c ****     uint8_t err = 0;
+ 834              		.loc 1 204 1 view .LVU213
+ 835 0004 1800     		movs	r0, r3
+ 836              	.LVL75:
+ 206:simpleserial-aes.c ****         return err;
+ 837              		.loc 1 206 11 view .LVU214
+ 838 0006 FFF7FEFF 		bl	get_pt
+ 839              	.LVL76:
+ 207:simpleserial-aes.c ****         return err;
+ 840              		.loc 1 207 9 is_stmt 1 view .LVU215
+ 841              		.loc 1 210 1 is_stmt 0 view .LVU216
+ 842 000a 10BD     		pop	{r4, pc}
+ 843              		.cfi_endproc
+ 844              	.LFE16:
+ 846              		.section	.text.give_dt,"ax",%progbits
+ 847              		.align	1
+ 848              		.global	give_dt
+ 849              		.syntax unified
+ 850              		.code	16
+ 851              		.thumb_func
+ 852              		.fpu softvfp
+ 854              	give_dt:
+ 855              	.LVL77:
+ 856              	.LFB14:
+ 175:simpleserial-aes.c **** 
+ 857              		.loc 1 175 1 is_stmt 1 view -0
+ 858              		.cfi_startproc
+ 859              		@ args = 0, pretend = 0, frame = 0
+ 860              		@ frame_needed = 0, uses_anonymous_args = 0
  178:simpleserial-aes.c **** 
- 827              		.loc 1 178 1 is_stmt 1 view -0
- 828              		.cfi_startproc
- 829              		@ args = 0, pretend = 0, frame = 16
- 830              		@ frame_needed = 0, uses_anonymous_args = 0
+ 861              		.loc 1 178 2 view .LVU218
+ 175:simpleserial-aes.c **** 
+ 862              		.loc 1 175 1 is_stmt 0 view .LVU219
+ 863 0000 10B5     		push	{r4, lr}
+ 864              	.LCFI12:
+ 865              		.cfi_def_cfa_offset 8
+ 866              		.cfi_offset 4, -8
+ 867              		.cfi_offset 14, -4
+ 175:simpleserial-aes.c **** 
+ 868              		.loc 1 175 1 view .LVU220
+ 869 0002 0400     		movs	r4, r0
+ 191:simpleserial-aes.c **** 
+ 870              		.loc 1 191 1 view .LVU221
+ 871              		@ sp needed
+ 178:simpleserial-aes.c **** 
+ 872              		.loc 1 178 2 view .LVU222
+ 873 0004 FFF7FEFF 		bl	trigger_high
+ 874              	.LVL78:
  180:simpleserial-aes.c **** 
- 831              		.loc 1 180 5 view .LVU212
- 182:simpleserial-aes.c **** 
- 832              		.loc 1 182 5 view .LVU213
- 178:simpleserial-aes.c **** 
- 833              		.loc 1 178 1 is_stmt 0 view .LVU214
- 834 0000 30B5     		push	{r4, r5, lr}
- 835              	.LCFI12:
- 836              		.cfi_def_cfa_offset 12
- 837              		.cfi_offset 4, -12
- 838              		.cfi_offset 5, -8
- 839              		.cfi_offset 14, -4
- 840 0002 0500     		movs	r5, r0
- 841 0004 85B0     		sub	sp, sp, #20
- 842              	.LCFI13:
- 843              		.cfi_def_cfa_offset 32
- 182:simpleserial-aes.c **** 
- 844              		.loc 1 182 5 view .LVU215
- 845 0006 4520     		movs	r0, #69
- 846              	.LVL78:
- 182:simpleserial-aes.c **** 
- 847              		.loc 1 182 5 view .LVU216
- 848 0008 FFF7FEFF 		bl	srand
- 849              	.LVL79:
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 850              		.loc 1 186 5 is_stmt 1 view .LVU217
- 851              	.LBB27:
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 852              		.loc 1 186 10 view .LVU218
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 853              		.loc 1 186 21 view .LVU219
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 854              		.loc 1 186 14 is_stmt 0 view .LVU220
- 855 000c 0024     		movs	r4, #0
- 856              	.LVL80:
- 857              	.L41:
- 187:simpleserial-aes.c ****     }
- 858              		.loc 1 187 9 is_stmt 1 discriminator 3 view .LVU221
- 187:simpleserial-aes.c ****     }
- 859              		.loc 1 187 19 is_stmt 0 discriminator 3 view .LVU222
- 860 000e FFF7FEFF 		bl	rand
- 861              	.LVL81:
- 187:simpleserial-aes.c ****     }
- 862              		.loc 1 187 26 discriminator 3 view .LVU223
- 863 0012 0F4B     		ldr	r3, .L43
- 864 0014 1840     		ands	r0, r3
- 865 0016 03D5     		bpl	.L40
- 866 0018 0E4B     		ldr	r3, .L43+4
- 867 001a 0138     		subs	r0, r0, #1
- 868 001c 1843     		orrs	r0, r3
- 869 001e 0130     		adds	r0, r0, #1
- 870              	.L40:
- 187:simpleserial-aes.c ****     }
- 871              		.loc 1 187 17 discriminator 3 view .LVU224
- 872 0020 6B46     		mov	r3, sp
- 873 0022 E054     		strb	r0, [r4, r3]
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 874              		.loc 1 186 29 is_stmt 1 discriminator 3 view .LVU225
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 875              		.loc 1 186 30 is_stmt 0 discriminator 3 view .LVU226
- 876 0024 0134     		adds	r4, r4, #1
- 877              	.LVL82:
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 878              		.loc 1 186 21 is_stmt 1 discriminator 3 view .LVU227
- 186:simpleserial-aes.c ****         mask[i] = rand() % 256; // Random value between 0x00 and 0xFF
- 879              		.loc 1 186 5 is_stmt 0 discriminator 3 view .LVU228
- 880 0026 102C     		cmp	r4, #16
- 881 0028 F1D1     		bne	.L41
- 882              	.LBE27:
- 194:simpleserial-aes.c **** 
- 883              		.loc 1 194 2 is_stmt 1 view .LVU229
- 884 002a FFF7FEFF 		bl	trigger_high
- 885              	.LVL83:
- 196:simpleserial-aes.c **** 
- 886              		.loc 1 196 2 view .LVU230
- 887 002e FFF7FEFF 		bl	trigger_high
- 888              	.LVL84:
- 202:simpleserial-aes.c **** 	trigger_low();
- 889              		.loc 1 202 2 view .LVU231
- 890 0032 6A46     		mov	r2, sp
- 891 0034 2800     		movs	r0, r5
- 892 0036 0849     		ldr	r1, .L43+8
- 893 0038 FFF7FEFF 		bl	decrypt_block
- 894              	.LVL85:
- 203:simpleserial-aes.c **** 	simpleserial_put('r', 16, dt);
- 895              		.loc 1 203 2 view .LVU232
- 896 003c FFF7FEFF 		bl	trigger_low
- 897              	.LVL86:
- 204:simpleserial-aes.c **** 	return 0x00;
- 898              		.loc 1 204 2 view .LVU233
- 899 0040 2A00     		movs	r2, r5
- 900 0042 2100     		movs	r1, r4
- 901 0044 7220     		movs	r0, #114
- 902 0046 FFF7FEFF 		bl	simpleserial_put
- 903              	.LVL87:
- 205:simpleserial-aes.c **** }
- 904              		.loc 1 205 2 view .LVU234
- 206:simpleserial-aes.c **** 
- 905              		.loc 1 206 1 is_stmt 0 view .LVU235
- 906 004a 0020     		movs	r0, #0
- 907 004c 05B0     		add	sp, sp, #20
- 908              		@ sp needed
- 909              	.LVL88:
- 910              	.LVL89:
- 206:simpleserial-aes.c **** 
- 911              		.loc 1 206 1 view .LVU236
- 912 004e 30BD     		pop	{r4, r5, pc}
- 913              	.L44:
- 914              		.align	2
- 915              	.L43:
- 916 0050 FF000080 		.word	-2147483393
- 917 0054 00FFFFFF 		.word	-256
- 918 0058 00000000 		.word	.LANCHOR0
- 919              		.cfi_endproc
- 920              	.LFE13:
- 922              		.section	.text.give_dt_wrapper,"ax",%progbits
- 923              		.align	1
- 924              		.global	give_dt_wrapper
- 925              		.syntax unified
- 926              		.code	16
- 927              		.thumb_func
- 928              		.fpu softvfp
- 930              	give_dt_wrapper:
- 931              	.LVL90:
- 932              	.LFB16:
- 227:simpleserial-aes.c **** 
- 228:simpleserial-aes.c **** uint8_t give_dt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
- 229:simpleserial-aes.c **** {
- 933              		.loc 1 229 1 is_stmt 1 view -0
- 934              		.cfi_startproc
- 935              		@ args = 0, pretend = 0, frame = 0
- 936              		@ frame_needed = 0, uses_anonymous_args = 0
- 230:simpleserial-aes.c ****     uint8_t err = 0;
- 937              		.loc 1 230 5 view .LVU238
- 231:simpleserial-aes.c ****     err = give_dt(buf, len);
- 938              		.loc 1 231 5 view .LVU239
- 229:simpleserial-aes.c ****     uint8_t err = 0;
- 939              		.loc 1 229 1 is_stmt 0 view .LVU240
- 940 0000 10B5     		push	{r4, lr}
- 941              	.LCFI14:
- 942              		.cfi_def_cfa_offset 8
- 943              		.cfi_offset 4, -8
- 944              		.cfi_offset 14, -4
- 229:simpleserial-aes.c ****     uint8_t err = 0;
- 945              		.loc 1 229 1 view .LVU241
- 946 0002 1100     		movs	r1, r2
- 947              	.LVL91:
- 232:simpleserial-aes.c ****         return err;
- 233:simpleserial-aes.c ****     
- 234:simpleserial-aes.c ****     return 0x00;
- 235:simpleserial-aes.c **** }
- 948              		.loc 1 235 1 view .LVU242
- 949              		@ sp needed
- 229:simpleserial-aes.c ****     uint8_t err = 0;
- 950              		.loc 1 229 1 view .LVU243
- 951 0004 1800     		movs	r0, r3
- 952              	.LVL92:
- 231:simpleserial-aes.c ****         return err;
- 953              		.loc 1 231 11 view .LVU244
- 954 0006 FFF7FEFF 		bl	give_dt
- 955              	.LVL93:
- 232:simpleserial-aes.c ****         return err;
- 956              		.loc 1 232 9 is_stmt 1 view .LVU245
- 957              		.loc 1 235 1 is_stmt 0 view .LVU246
- 958 000a 10BD     		pop	{r4, pc}
- 959              		.cfi_endproc
- 960              	.LFE16:
- 962              		.section	.text.get_key,"ax",%progbits
- 963              		.align	1
- 964              		.global	get_key
- 965              		.syntax unified
- 966              		.code	16
- 967              		.thumb_func
- 968              		.fpu softvfp
- 970              	get_key:
- 971              	.LVL94:
- 972              	.LFB14:
- 209:simpleserial-aes.c ****     for (uint8_t i = 0; i < 16; i++){
- 973              		.loc 1 209 1 is_stmt 1 view -0
- 974              		.cfi_startproc
- 975              		@ args = 0, pretend = 0, frame = 0
- 976              		@ frame_needed = 0, uses_anonymous_args = 0
- 977              		@ link register save eliminated.
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 978              		.loc 1 210 5 view .LVU248
- 979              	.LBB28:
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 980              		.loc 1 210 10 view .LVU249
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 981              		.loc 1 210 25 view .LVU250
- 982              	.LBE28:
- 209:simpleserial-aes.c ****     for (uint8_t i = 0; i < 16; i++){
- 983              		.loc 1 209 1 is_stmt 0 view .LVU251
- 984 0000 0023     		movs	r3, #0
- 985              	.LBB29:
- 211:simpleserial-aes.c ****     }
- 986              		.loc 1 211 16 view .LVU252
- 987 0002 044A     		ldr	r2, .L49
- 988              	.LVL95:
- 989              	.L47:
- 211:simpleserial-aes.c ****     }
- 990              		.loc 1 211 9 is_stmt 1 discriminator 3 view .LVU253
- 211:simpleserial-aes.c ****     }
- 991              		.loc 1 211 23 is_stmt 0 discriminator 3 view .LVU254
- 992 0004 C15C     		ldrb	r1, [r0, r3]
- 211:simpleserial-aes.c ****     }
- 993              		.loc 1 211 16 discriminator 3 view .LVU255
- 994 0006 9954     		strb	r1, [r3, r2]
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 995              		.loc 1 210 33 is_stmt 1 discriminator 3 view .LVU256
- 996              	.LVL96:
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 997              		.loc 1 210 25 discriminator 3 view .LVU257
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 998              		.loc 1 210 5 is_stmt 0 discriminator 3 view .LVU258
- 999 0008 0133     		adds	r3, r3, #1
- 1000              	.LVL97:
- 210:simpleserial-aes.c ****         key[i] = pykey[i];
- 1001              		.loc 1 210 5 discriminator 3 view .LVU259
- 1002 000a 102B     		cmp	r3, #16
- 1003 000c FAD1     		bne	.L47
- 1004              	.LBE29:
- 214:simpleserial-aes.c **** 
- 1005              		.loc 1 214 5 is_stmt 1 view .LVU260
- 216:simpleserial-aes.c **** 
- 1006              		.loc 1 216 1 is_stmt 0 view .LVU261
- 1007 000e 0020     		movs	r0, #0
- 1008              	.LVL98:
- 216:simpleserial-aes.c **** 
- 1009              		.loc 1 216 1 view .LVU262
- 1010              		@ sp needed
- 1011 0010 7047     		bx	lr
- 1012              	.L50:
- 1013 0012 C046     		.align	2
- 1014              	.L49:
- 1015 0014 00000000 		.word	.LANCHOR0
- 1016              		.cfi_endproc
- 1017              	.LFE14:
- 1019              		.section	.text.get_key_wrapper,"ax",%progbits
- 1020              		.align	1
- 1021              		.global	get_key_wrapper
- 1022              		.syntax unified
- 1023              		.code	16
- 1024              		.thumb_func
- 1025              		.fpu softvfp
- 1027              	get_key_wrapper:
- 1028              	.LVL99:
- 1029              	.LFB17:
- 236:simpleserial-aes.c **** 
- 237:simpleserial-aes.c **** uint8_t get_key_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
- 238:simpleserial-aes.c **** {
- 1030              		.loc 1 238 1 is_stmt 1 view -0
- 1031              		.cfi_startproc
- 1032              		@ args = 0, pretend = 0, frame = 0
- 1033              		@ frame_needed = 0, uses_anonymous_args = 0
- 239:simpleserial-aes.c ****     uint8_t err = 0;
- 1034              		.loc 1 239 5 view .LVU264
- 240:simpleserial-aes.c ****     err = get_key(buf);
- 1035              		.loc 1 240 5 view .LVU265
- 238:simpleserial-aes.c ****     uint8_t err = 0;
- 1036              		.loc 1 238 1 is_stmt 0 view .LVU266
- 1037 0000 10B5     		push	{r4, lr}
- 1038              	.LCFI15:
- 1039              		.cfi_def_cfa_offset 8
- 1040              		.cfi_offset 4, -8
- 1041              		.cfi_offset 14, -4
- 238:simpleserial-aes.c ****     uint8_t err = 0;
- 1042              		.loc 1 238 1 view .LVU267
- 1043 0002 1800     		movs	r0, r3
- 1044              	.LVL100:
- 241:simpleserial-aes.c ****         return err;
- 242:simpleserial-aes.c ****     
- 243:simpleserial-aes.c ****     return 0x00;
- 244:simpleserial-aes.c **** }
- 1045              		.loc 1 244 1 view .LVU268
- 1046              		@ sp needed
- 240:simpleserial-aes.c ****         return err;
- 1047              		.loc 1 240 11 view .LVU269
- 1048 0004 FFF7FEFF 		bl	get_key
- 1049              	.LVL101:
- 241:simpleserial-aes.c ****         return err;
- 1050              		.loc 1 241 9 is_stmt 1 view .LVU270
- 1051              		.loc 1 244 1 is_stmt 0 view .LVU271
- 1052 0008 10BD     		pop	{r4, pc}
- 1053              		.cfi_endproc
- 1054              	.LFE17:
- 1056              		.section	.text.startup.main,"ax",%progbits
- 1057              		.align	1
- 1058              		.global	main
- 1059              		.syntax unified
- 1060              		.code	16
- 1061              		.thumb_func
- 1062              		.fpu softvfp
- 1064              	main:
- 1065              	.LFB18:
- 245:simpleserial-aes.c **** 
- 246:simpleserial-aes.c **** 
- 247:simpleserial-aes.c **** // #if SS_VER == SS_VER_2_1
- 248:simpleserial-aes.c **** // uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
- 249:simpleserial-aes.c **** // {
- 250:simpleserial-aes.c **** //     uint8_t req_len = 0;
- 251:simpleserial-aes.c **** //     uint8_t err = 0;
- 252:simpleserial-aes.c **** 
- 253:simpleserial-aes.c **** //     if (scmd & 0x01) {
- 254:simpleserial-aes.c **** //         req_len += 16;
- 255:simpleserial-aes.c **** //         if (req_len > len) {
- 256:simpleserial-aes.c **** //             return SS_ERR_LEN;
- 257:simpleserial-aes.c **** //         }
- 258:simpleserial-aes.c **** //         err = get_pt(buf + req_len - 16, 16);
- 259:simpleserial-aes.c **** //         if (err)
- 260:simpleserial-aes.c **** //             return err;
- 261:simpleserial-aes.c **** //     }
- 262:simpleserial-aes.c **** 
- 263:simpleserial-aes.c **** //     if (len != req_len) {
- 264:simpleserial-aes.c **** //         return SS_ERR_LEN;
- 265:simpleserial-aes.c **** //     }
- 266:simpleserial-aes.c **** 
- 267:simpleserial-aes.c **** //     return 0x00;
- 268:simpleserial-aes.c **** // }
- 269:simpleserial-aes.c **** // #endif
- 270:simpleserial-aes.c **** 
- 271:simpleserial-aes.c **** int main(void)
- 272:simpleserial-aes.c **** {
- 1066              		.loc 1 272 1 is_stmt 1 view -0
- 1067              		.cfi_startproc
- 1068              		@ Volatile: function does not return.
- 1069              		@ args = 0, pretend = 0, frame = 0
- 1070              		@ frame_needed = 0, uses_anonymous_args = 0
- 273:simpleserial-aes.c ****     platform_init();
- 1071              		.loc 1 273 5 view .LVU273
- 272:simpleserial-aes.c ****     platform_init();
- 1072              		.loc 1 272 1 is_stmt 0 view .LVU274
- 1073 0000 10B5     		push	{r4, lr}
- 1074              	.LCFI16:
- 1075              		.cfi_def_cfa_offset 8
- 1076              		.cfi_offset 4, -8
- 1077              		.cfi_offset 14, -4
- 1078              		.loc 1 273 5 view .LVU275
- 1079 0002 FFF7FEFF 		bl	platform_init
- 1080              	.LVL102:
- 274:simpleserial-aes.c ****     init_uart();
- 1081              		.loc 1 274 5 is_stmt 1 view .LVU276
- 1082 0006 FFF7FEFF 		bl	init_uart
- 1083              	.LVL103:
- 275:simpleserial-aes.c ****     trigger_setup();
- 1084              		.loc 1 275 5 view .LVU277
- 1085 000a FFF7FEFF 		bl	trigger_setup
- 1086              	.LVL104:
- 276:simpleserial-aes.c **** 
- 277:simpleserial-aes.c ****     simpleserial_init();
- 1087              		.loc 1 277 5 view .LVU278
- 1088 000e FFF7FEFF 		bl	simpleserial_init
- 1089              	.LVL105:
- 278:simpleserial-aes.c ****     #if SS_VER == SS_VER_2_1
- 279:simpleserial-aes.c ****     // simpleserial_addcmd(0x01, 16, aes);  // Add AES command for testing 
- 280:simpleserial-aes.c ****     simpleserial_addcmd('d', 16, give_dt_wrapper); // Use 'd' command to get cyphertext and decrypt
- 1090              		.loc 1 280 5 view .LVU279
- 1091 0012 1021     		movs	r1, #16
- 1092 0014 084A     		ldr	r2, .L54
- 1093 0016 6420     		movs	r0, #100
- 1094 0018 FFF7FEFF 		bl	simpleserial_addcmd
- 1095              	.LVL106:
- 281:simpleserial-aes.c ****     simpleserial_addcmd('e', 16, get_pt_wrapper);  // Use 'p' command to get plaintext and encrypt
- 1096              		.loc 1 281 5 view .LVU280
- 1097 001c 1021     		movs	r1, #16
- 1098 001e 074A     		ldr	r2, .L54+4
- 1099 0020 6520     		movs	r0, #101
- 1100 0022 FFF7FEFF 		bl	simpleserial_addcmd
- 1101              	.LVL107:
- 282:simpleserial-aes.c ****     simpleserial_addcmd('l', 16, get_key_wrapper); // Use 'k' command to get the key
- 1102              		.loc 1 282 5 view .LVU281
- 1103 0026 1021     		movs	r1, #16
- 1104 0028 6C20     		movs	r0, #108
- 1105 002a 054A     		ldr	r2, .L54+8
- 1106 002c FFF7FEFF 		bl	simpleserial_addcmd
- 1107              	.LVL108:
- 1108              	.L53:
- 283:simpleserial-aes.c ****     #else
- 284:simpleserial-aes.c **** 	
- 285:simpleserial-aes.c ****     #endif
- 286:simpleserial-aes.c **** 
- 287:simpleserial-aes.c ****     while(1)
- 1109              		.loc 1 287 5 discriminator 1 view .LVU282
- 288:simpleserial-aes.c ****         simpleserial_get();  // Wait for UART commands
- 1110              		.loc 1 288 9 discriminator 1 view .LVU283
- 1111 0030 FFF7FEFF 		bl	simpleserial_get
- 1112              	.LVL109:
- 287:simpleserial-aes.c ****         simpleserial_get();  // Wait for UART commands
- 1113              		.loc 1 287 10 discriminator 1 view .LVU284
- 1114 0034 FCE7     		b	.L53
- 1115              	.L55:
- 1116 0036 C046     		.align	2
- 1117              	.L54:
- 1118 0038 00000000 		.word	give_dt_wrapper
- 1119 003c 00000000 		.word	get_pt_wrapper
- 1120 0040 00000000 		.word	get_key_wrapper
- 1121              		.cfi_endproc
- 1122              	.LFE18:
- 1124              		.global	key
- 1125              		.section	.rodata
- 1128              	InvSBox:
- 1129 0000 52096AD5 		.ascii	"R\011j\32506\2458\277@\243\236\201\363\327\373|\343"
- 1129      3036A538 
- 1129      BF40A39E 
- 1129      81F3D7FB 
- 1129      7CE3
- 1130 0012 39829B2F 		.ascii	"9\202\233/\377\2074\216CD\304\336\351\313T{\2242\246"
- 1130      FF87348E 
- 1130      4344C4DE 
- 1130      E9CB547B 
- 1130      9432A6
- 1131 0025 C2233DEE 		.ascii	"\302#=\356L\225\013B\372\303N\010.\241f(\331$\262v["
- 1131      4C950B42 
- 1131      FAC34E08 
- 1131      2EA16628 
- 1131      D924B276 
- 1132 003a A2496D8B 		.ascii	"\242Im\213\321%r\370\366d\206h\230\026\324\244\\\314"
- 1132      D12572F8 
- 1132      F6648668 
- 1132      9816D4A4 
- 1132      5CCC
- 1133 004c 5D65B692 		.ascii	"]e\266\222lpHP\375\355\271\332^\025FW\247\215\235\204"
- 1133      6C704850 
- 1133      FDEDB9DA 
- 1133      5E154657 
- 1133      A78D9D84 
- 1134 0060 90D8AB00 		.ascii	"\220\330\253\000\214\274\323\012\367\344X\005\270\263"
- 1134      8CBCD30A 
- 1134      F7E45805 
- 1134      B8B3
- 1135 006e 4506D02C 		.ascii	"E\006\320,\036\217\312?\017\002\301\257\275\003\001"
- 1135      1E8FCA3F 
- 1135      0F02C1AF 
- 1135      BD0301
- 1136 007d 138A6B3A 		.ascii	"\023\212k:\221\021AOg\334\352\227\362\317\316\360\264"
- 1136      9111414F 
- 1136      67DCEA97 
- 1136      F2CFCEF0 
- 1136      B4
- 1137 008e E67396AC 		.ascii	"\346s\226\254t\"\347\2555\205\342\3717\350\034u\337"
- 1137      7422E7AD 
- 1137      3585E2F9 
- 1137      37E81C75 
- 1137      DF
- 1138 009f 6E47F11A 		.ascii	"nG\361\032q\035)\305\211o\267b\016\252\030\276\033\374"
- 1138      711D29C5 
- 1138      896FB762 
- 1138      0EAA18BE 
- 1138      1BFC
- 1139 00b1 563E4BC6 		.ascii	"V>K\306\322y \232\333\300\376x\315Z\364\037\335\250"
- 1139      D279209A 
- 1139      DBC0FE78 
- 1139      CD5AF41F 
- 1139      DDA8
- 1140 00c3 338807C7 		.ascii	"3\210\007\3071\261\022\020Y'\200\354_`Q\177\251\031"
- 1140      31B11210 
- 1140      592780EC 
- 1140      5F60517F 
- 1140      A919
- 1141 00d5 B54A0D2D 		.ascii	"\265J\015-\345z\237\223\311\234\357\240\340;M\256*\365"
- 1141      E57A9F93 
- 1141      C99CEFA0 
- 1141      E03B4DAE 
- 1141      2AF5
- 1142 00e7 B0C8EBBB 		.ascii	"\260\310\353\273<\203S\231a\027+\004~\272w\326&\341"
- 1142      3C835399 
- 1142      61172B04 
- 1142      7EBA77D6 
- 1142      26E1
- 1143 00f9 69146355 		.ascii	"i\024cU!\014}"
- 1143      210C7D
- 1146              	SBox:
- 1147 0100 637C777B 		.ascii	"c|w{\362ko\3050\001g+\376\327\253v\312\202\311}\372"
- 1147      F26B6FC5 
- 1147      3001672B 
- 1147      FED7AB76 
- 1147      CA82C97D 
- 1148 0115 5947F0AD 		.ascii	"YG\360\255\324\242\257\234\244r\300\267\375\223&6?\367"
- 1148      D4A2AF9C 
- 1148      A472C0B7 
- 1148      FD932636 
- 1148      3FF7
- 1149 0127 CC34A5E5 		.ascii	"\3144\245\345\361q\3301\025\004\307#\303\030\226\005"
- 1149      F171D831 
- 1149      1504C723 
- 1149      C3189605 
- 1150 0137 9A071280 		.ascii	"\232\007\022\200\342\353'\262u\011\203,\032\033nZ\240"
- 1150      E2EB27B2 
- 1150      7509832C 
- 1150      1A1B6E5A 
- 1150      A0
- 1151 0148 523BD6B3 		.ascii	"R;\326\263)\343/\204S\321\000\355 \374\261[j\313\276"
- 1151      29E32F84 
- 1151      53D100ED 
- 1151      20FCB15B 
- 1151      6ACBBE
- 1152 015b 394A4C58 		.ascii	"9JLX\317\320\357\252\373CM3\205E\371\002\177P<\237\250"
- 1152      CFD0EFAA 
- 1152      FB434D33 
- 1152      8545F902 
- 1152      7F503C9F 
- 1153 0170 51A3408F 		.ascii	"Q\243@\217\222\2358\365\274\266\332!\020\377\363\322"
- 1153      929D38F5 
- 1153      BCB6DA21 
- 1153      10FFF3D2 
- 1154 0180 CD0C13EC 		.ascii	"\315\014\023\354_\227D\027\304\247~=d]\031s`\201O\334"
- 1154      5F974417 
- 1154      C4A77E3D 
- 1154      645D1973 
- 1154      60814FDC 
- 1155 0194 222A9088 		.ascii	"\"*\220\210F\356\270\024\336^\013\333\3402:\012I\006"
- 1155      46EEB814 
- 1155      DE5E0BDB 
- 1155      E0323A0A 
- 1155      4906
- 1156 01a6 245CC2D3 		.ascii	"$\\\302\323\254b\221\225\344y\347\3107m\215\325N\251"
- 1156      AC629195 
- 1156      E479E7C8 
- 1156      376D8DD5 
- 1156      4EA9
- 1157 01b8 6C56F4EA 		.ascii	"lV\364\352ez\256\010\272x%.\034\246\264\306\350\335"
- 1157      657AAE08 
- 1157      BA78252E 
- 1157      1CA6B4C6 
- 1157      E8DD
- 1158 01ca 741F4BBD 		.ascii	"t\037K\275\213\212p>\265fH\003\366\016a5W\271\206\301"
- 1158      8B8A703E 
- 1158      B5664803 
- 1158      F60E6135 
- 1158      57B986C1 
- 1159 01de 1D9EE1F8 		.ascii	"\035\236\341\370\230\021i\331\216\224\233\036\207\351"
- 1159      981169D9 
- 1159      8E949B1E 
- 1159      87E9
- 1160 01ec CE5528DF 		.ascii	"\316U(\337\214\241\211\015\277\346BhA\231-\017\260T"
- 1160      8CA1890D 
- 1160      BFE64268 
- 1160      41992D0F 
- 1160      B054
- 1161 01fe BB16     		.ascii	"\273\026"
- 1162              		.bss
- 1163              		.set	.LANCHOR0,. + 0
- 1166              	key:
- 1167 0000 00000000 		.space	16
- 1167      00000000 
- 1167      00000000 
- 1167      00000000 
- 1168              		.text
- 1169              	.Letext0:
- 1170              		.file 2 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\
- 1171              		.file 3 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_std
- 1172              		.file 4 ".././hal/hal.h"
- 1173              		.file 5 ".././hal/stm32f0/stm32f0_hal.h"
- 1174              		.file 6 ".././simpleserial/simpleserial.h"
- 1175              		.file 7 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\stdlib.h"
- 1176              		.file 8 "<built-in>"
+ 875              		.loc 1 180 2 is_stmt 1 view .LVU223
+ 876 0008 FFF7FEFF 		bl	trigger_high
+ 877              	.LVL79:
+ 187:simpleserial-aes.c **** 	trigger_low();
+ 878              		.loc 1 187 2 view .LVU224
+ 879 000c 074A     		ldr	r2, .L43
+ 880 000e 2000     		movs	r0, r4
+ 881 0010 1100     		movs	r1, r2
+ 882 0012 1031     		adds	r1, r1, #16
+ 883 0014 FFF7FEFF 		bl	decrypt_block
+ 884              	.LVL80:
+ 188:simpleserial-aes.c **** 	simpleserial_put('r', 16, dt);
+ 885              		.loc 1 188 2 view .LVU225
+ 886 0018 FFF7FEFF 		bl	trigger_low
+ 887              	.LVL81:
+ 189:simpleserial-aes.c **** 	return 0x00;
+ 888              		.loc 1 189 2 view .LVU226
+ 889 001c 2200     		movs	r2, r4
+ 890 001e 1021     		movs	r1, #16
+ 891 0020 7220     		movs	r0, #114
+ 892 0022 FFF7FEFF 		bl	simpleserial_put
+ 893              	.LVL82:
+ 190:simpleserial-aes.c **** }
+ 894              		.loc 1 190 2 view .LVU227
+ 191:simpleserial-aes.c **** 
+ 895              		.loc 1 191 1 is_stmt 0 view .LVU228
+ 896 0026 0020     		movs	r0, #0
+ 897              	.LVL83:
+ 191:simpleserial-aes.c **** 
+ 898              		.loc 1 191 1 view .LVU229
+ 899 0028 10BD     		pop	{r4, pc}
+ 900              	.L44:
+ 901 002a C046     		.align	2
+ 902              	.L43:
+ 903 002c 00000000 		.word	.LANCHOR0
+ 904              		.cfi_endproc
+ 905              	.LFE14:
+ 907              		.section	.text.give_dt_wrapper,"ax",%progbits
+ 908              		.align	1
+ 909              		.global	give_dt_wrapper
+ 910              		.syntax unified
+ 911              		.code	16
+ 912              		.thumb_func
+ 913              		.fpu softvfp
+ 915              	give_dt_wrapper:
+ 916              	.LVL84:
+ 917              	.LFB17:
+ 211:simpleserial-aes.c **** 
+ 212:simpleserial-aes.c **** uint8_t give_dt_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+ 213:simpleserial-aes.c **** {
+ 918              		.loc 1 213 1 is_stmt 1 view -0
+ 919              		.cfi_startproc
+ 920              		@ args = 0, pretend = 0, frame = 0
+ 921              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214:simpleserial-aes.c ****     uint8_t err = 0;
+ 922              		.loc 1 214 5 view .LVU231
+ 215:simpleserial-aes.c ****     err = give_dt(buf, len);
+ 923              		.loc 1 215 5 view .LVU232
+ 213:simpleserial-aes.c ****     uint8_t err = 0;
+ 924              		.loc 1 213 1 is_stmt 0 view .LVU233
+ 925 0000 10B5     		push	{r4, lr}
+ 926              	.LCFI13:
+ 927              		.cfi_def_cfa_offset 8
+ 928              		.cfi_offset 4, -8
+ 929              		.cfi_offset 14, -4
+ 213:simpleserial-aes.c ****     uint8_t err = 0;
+ 930              		.loc 1 213 1 view .LVU234
+ 931 0002 1100     		movs	r1, r2
+ 932              	.LVL85:
+ 216:simpleserial-aes.c ****         return err;
+ 217:simpleserial-aes.c ****     
+ 218:simpleserial-aes.c ****     return 0x00;
+ 219:simpleserial-aes.c **** }
+ 933              		.loc 1 219 1 view .LVU235
+ 934              		@ sp needed
+ 213:simpleserial-aes.c ****     uint8_t err = 0;
+ 935              		.loc 1 213 1 view .LVU236
+ 936 0004 1800     		movs	r0, r3
+ 937              	.LVL86:
+ 215:simpleserial-aes.c ****         return err;
+ 938              		.loc 1 215 11 view .LVU237
+ 939 0006 FFF7FEFF 		bl	give_dt
+ 940              	.LVL87:
+ 216:simpleserial-aes.c ****         return err;
+ 941              		.loc 1 216 9 is_stmt 1 view .LVU238
+ 942              		.loc 1 219 1 is_stmt 0 view .LVU239
+ 943 000a 10BD     		pop	{r4, pc}
+ 944              		.cfi_endproc
+ 945              	.LFE17:
+ 947              		.section	.text.get_key,"ax",%progbits
+ 948              		.align	1
+ 949              		.global	get_key
+ 950              		.syntax unified
+ 951              		.code	16
+ 952              		.thumb_func
+ 953              		.fpu softvfp
+ 955              	get_key:
+ 956              	.LVL88:
+ 957              	.LFB15:
+ 194:simpleserial-aes.c ****     for(uint8_t i=0; i < 16; i++){
+ 958              		.loc 1 194 1 is_stmt 1 view -0
+ 959              		.cfi_startproc
+ 960              		@ args = 0, pretend = 0, frame = 0
+ 961              		@ frame_needed = 0, uses_anonymous_args = 0
+ 962              		@ link register save eliminated.
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 963              		.loc 1 195 5 view .LVU241
+ 964              	.LBB27:
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 965              		.loc 1 195 9 view .LVU242
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 966              		.loc 1 195 22 view .LVU243
+ 967              	.LBE27:
+ 194:simpleserial-aes.c ****     for(uint8_t i=0; i < 16; i++){
+ 968              		.loc 1 194 1 is_stmt 0 view .LVU244
+ 969 0000 0023     		movs	r3, #0
+ 970              	.LBB28:
+ 196:simpleserial-aes.c **** 	}
+ 971              		.loc 1 196 10 view .LVU245
+ 972 0002 044A     		ldr	r2, .L49
+ 973 0004 1032     		adds	r2, r2, #16
+ 974              	.LVL89:
+ 975              	.L47:
+ 196:simpleserial-aes.c **** 	}
+ 976              		.loc 1 196 3 is_stmt 1 discriminator 3 view .LVU246
+ 196:simpleserial-aes.c **** 	}
+ 977              		.loc 1 196 17 is_stmt 0 discriminator 3 view .LVU247
+ 978 0006 C15C     		ldrb	r1, [r0, r3]
+ 196:simpleserial-aes.c **** 	}
+ 979              		.loc 1 196 10 discriminator 3 view .LVU248
+ 980 0008 9954     		strb	r1, [r3, r2]
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 981              		.loc 1 195 30 is_stmt 1 discriminator 3 view .LVU249
+ 982              	.LVL90:
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 983              		.loc 1 195 22 discriminator 3 view .LVU250
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 984              		.loc 1 195 5 is_stmt 0 discriminator 3 view .LVU251
+ 985 000a 0133     		adds	r3, r3, #1
+ 986              	.LVL91:
+ 195:simpleserial-aes.c **** 		key[i] = pykey[i];
+ 987              		.loc 1 195 5 discriminator 3 view .LVU252
+ 988 000c 102B     		cmp	r3, #16
+ 989 000e FAD1     		bne	.L47
+ 990              	.LBE28:
+ 198:simpleserial-aes.c **** 
+ 991              		.loc 1 198 5 is_stmt 1 view .LVU253
+ 200:simpleserial-aes.c **** 
+ 992              		.loc 1 200 1 is_stmt 0 view .LVU254
+ 993 0010 0020     		movs	r0, #0
+ 994              	.LVL92:
+ 200:simpleserial-aes.c **** 
+ 995              		.loc 1 200 1 view .LVU255
+ 996              		@ sp needed
+ 997 0012 7047     		bx	lr
+ 998              	.L50:
+ 999              		.align	2
+ 1000              	.L49:
+ 1001 0014 00000000 		.word	.LANCHOR0
+ 1002              		.cfi_endproc
+ 1003              	.LFE15:
+ 1005              		.section	.text.get_key_wrapper,"ax",%progbits
+ 1006              		.align	1
+ 1007              		.global	get_key_wrapper
+ 1008              		.syntax unified
+ 1009              		.code	16
+ 1010              		.thumb_func
+ 1011              		.fpu softvfp
+ 1013              	get_key_wrapper:
+ 1014              	.LVL93:
+ 1015              	.LFB18:
+ 220:simpleserial-aes.c **** 
+ 221:simpleserial-aes.c **** uint8_t get_key_wrapper(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf)
+ 222:simpleserial-aes.c **** {
+ 1016              		.loc 1 222 1 is_stmt 1 view -0
+ 1017              		.cfi_startproc
+ 1018              		@ args = 0, pretend = 0, frame = 0
+ 1019              		@ frame_needed = 0, uses_anonymous_args = 0
+ 223:simpleserial-aes.c ****     uint8_t err = 0;
+ 1020              		.loc 1 223 5 view .LVU257
+ 224:simpleserial-aes.c ****     err = get_key(buf, len);
+ 1021              		.loc 1 224 5 view .LVU258
+ 222:simpleserial-aes.c ****     uint8_t err = 0;
+ 1022              		.loc 1 222 1 is_stmt 0 view .LVU259
+ 1023 0000 10B5     		push	{r4, lr}
+ 1024              	.LCFI14:
+ 1025              		.cfi_def_cfa_offset 8
+ 1026              		.cfi_offset 4, -8
+ 1027              		.cfi_offset 14, -4
+ 222:simpleserial-aes.c ****     uint8_t err = 0;
+ 1028              		.loc 1 222 1 view .LVU260
+ 1029 0002 1100     		movs	r1, r2
+ 1030              	.LVL94:
+ 225:simpleserial-aes.c ****         return err;
+ 226:simpleserial-aes.c ****     
+ 227:simpleserial-aes.c ****     return 0x00;
+ 228:simpleserial-aes.c **** }
+ 1031              		.loc 1 228 1 view .LVU261
+ 1032              		@ sp needed
+ 222:simpleserial-aes.c ****     uint8_t err = 0;
+ 1033              		.loc 1 222 1 view .LVU262
+ 1034 0004 1800     		movs	r0, r3
+ 1035              	.LVL95:
+ 224:simpleserial-aes.c ****         return err;
+ 1036              		.loc 1 224 11 view .LVU263
+ 1037 0006 FFF7FEFF 		bl	get_key
+ 1038              	.LVL96:
+ 225:simpleserial-aes.c ****         return err;
+ 1039              		.loc 1 225 9 is_stmt 1 view .LVU264
+ 1040              		.loc 1 228 1 is_stmt 0 view .LVU265
+ 1041 000a 10BD     		pop	{r4, pc}
+ 1042              		.cfi_endproc
+ 1043              	.LFE18:
+ 1045              		.section	.text.startup.main,"ax",%progbits
+ 1046              		.align	1
+ 1047              		.global	main
+ 1048              		.syntax unified
+ 1049              		.code	16
+ 1050              		.thumb_func
+ 1051              		.fpu softvfp
+ 1053              	main:
+ 1054              	.LFB19:
+ 229:simpleserial-aes.c **** 
+ 230:simpleserial-aes.c **** 
+ 231:simpleserial-aes.c **** int main(void)
+ 232:simpleserial-aes.c **** {
+ 1055              		.loc 1 232 1 is_stmt 1 view -0
+ 1056              		.cfi_startproc
+ 1057              		@ Volatile: function does not return.
+ 1058              		@ args = 0, pretend = 0, frame = 0
+ 1059              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233:simpleserial-aes.c ****     platform_init();
+ 1060              		.loc 1 233 5 view .LVU267
+ 232:simpleserial-aes.c ****     platform_init();
+ 1061              		.loc 1 232 1 is_stmt 0 view .LVU268
+ 1062 0000 10B5     		push	{r4, lr}
+ 1063              	.LCFI15:
+ 1064              		.cfi_def_cfa_offset 8
+ 1065              		.cfi_offset 4, -8
+ 1066              		.cfi_offset 14, -4
+ 1067              		.loc 1 233 5 view .LVU269
+ 1068 0002 FFF7FEFF 		bl	platform_init
+ 1069              	.LVL97:
+ 234:simpleserial-aes.c ****     init_uart();
+ 1070              		.loc 1 234 5 is_stmt 1 view .LVU270
+ 1071 0006 FFF7FEFF 		bl	init_uart
+ 1072              	.LVL98:
+ 235:simpleserial-aes.c ****     trigger_setup();
+ 1073              		.loc 1 235 5 view .LVU271
+ 1074 000a FFF7FEFF 		bl	trigger_setup
+ 1075              	.LVL99:
+ 236:simpleserial-aes.c ****     init_mask();
+ 1076              		.loc 1 236 5 view .LVU272
+ 1077 000e FFF7FEFF 		bl	init_mask
+ 1078              	.LVL100:
+ 237:simpleserial-aes.c **** 
+ 238:simpleserial-aes.c ****     simpleserial_init();
+ 1079              		.loc 1 238 5 view .LVU273
+ 1080 0012 FFF7FEFF 		bl	simpleserial_init
+ 1081              	.LVL101:
+ 239:simpleserial-aes.c ****     #if SS_VER == SS_VER_2_1
+ 240:simpleserial-aes.c ****     // simpleserial_addcmd(0x01, 16, aes);  // Add AES command for testing 
+ 241:simpleserial-aes.c ****     simpleserial_addcmd('d', 16, give_dt_wrapper); // Use 'd' command to get cyphertext and decrypt
+ 1082              		.loc 1 241 5 view .LVU274
+ 1083 0016 1021     		movs	r1, #16
+ 1084 0018 084A     		ldr	r2, .L54
+ 1085 001a 6420     		movs	r0, #100
+ 1086 001c FFF7FEFF 		bl	simpleserial_addcmd
+ 1087              	.LVL102:
+ 242:simpleserial-aes.c ****     simpleserial_addcmd('e', 16, get_pt_wrapper);  // Use 'p' command to get plaintext and encrypt
+ 1088              		.loc 1 242 5 view .LVU275
+ 1089 0020 1021     		movs	r1, #16
+ 1090 0022 074A     		ldr	r2, .L54+4
+ 1091 0024 6520     		movs	r0, #101
+ 1092 0026 FFF7FEFF 		bl	simpleserial_addcmd
+ 1093              	.LVL103:
+ 243:simpleserial-aes.c ****     simpleserial_addcmd('l', 16, get_key_wrapper); // Use 'k' command to get the key
+ 1094              		.loc 1 243 5 view .LVU276
+ 1095 002a 1021     		movs	r1, #16
+ 1096 002c 6C20     		movs	r0, #108
+ 1097 002e 054A     		ldr	r2, .L54+8
+ 1098 0030 FFF7FEFF 		bl	simpleserial_addcmd
+ 1099              	.LVL104:
+ 1100              	.L53:
+ 244:simpleserial-aes.c **** 
+ 245:simpleserial-aes.c ****     #else
+ 246:simpleserial-aes.c **** 	
+ 247:simpleserial-aes.c ****     #endif
+ 248:simpleserial-aes.c **** 
+ 249:simpleserial-aes.c ****     while(1)
+ 1101              		.loc 1 249 5 discriminator 1 view .LVU277
+ 250:simpleserial-aes.c ****         simpleserial_get();  // Wait for UART commands
+ 1102              		.loc 1 250 9 discriminator 1 view .LVU278
+ 1103 0034 FFF7FEFF 		bl	simpleserial_get
+ 1104              	.LVL105:
+ 249:simpleserial-aes.c ****         simpleserial_get();  // Wait for UART commands
+ 1105              		.loc 1 249 10 discriminator 1 view .LVU279
+ 1106 0038 FCE7     		b	.L53
+ 1107              	.L55:
+ 1108 003a C046     		.align	2
+ 1109              	.L54:
+ 1110 003c 00000000 		.word	give_dt_wrapper
+ 1111 0040 00000000 		.word	get_pt_wrapper
+ 1112 0044 00000000 		.word	get_key_wrapper
+ 1113              		.cfi_endproc
+ 1114              	.LFE19:
+ 1116              		.global	mask
+ 1117              		.global	key
+ 1118              		.section	.rodata
+ 1121              	InvSBox:
+ 1122 0000 52096AD5 		.ascii	"R\011j\32506\2458\277@\243\236\201\363\327\373|\343"
+ 1122      3036A538 
+ 1122      BF40A39E 
+ 1122      81F3D7FB 
+ 1122      7CE3
+ 1123 0012 39829B2F 		.ascii	"9\202\233/\377\2074\216CD\304\336\351\313T{\2242\246"
+ 1123      FF87348E 
+ 1123      4344C4DE 
+ 1123      E9CB547B 
+ 1123      9432A6
+ 1124 0025 C2233DEE 		.ascii	"\302#=\356L\225\013B\372\303N\010.\241f(\331$\262v["
+ 1124      4C950B42 
+ 1124      FAC34E08 
+ 1124      2EA16628 
+ 1124      D924B276 
+ 1125 003a A2496D8B 		.ascii	"\242Im\213\321%r\370\366d\206h\230\026\324\244\\\314"
+ 1125      D12572F8 
+ 1125      F6648668 
+ 1125      9816D4A4 
+ 1125      5CCC
+ 1126 004c 5D65B692 		.ascii	"]e\266\222lpHP\375\355\271\332^\025FW\247\215\235\204"
+ 1126      6C704850 
+ 1126      FDEDB9DA 
+ 1126      5E154657 
+ 1126      A78D9D84 
+ 1127 0060 90D8AB00 		.ascii	"\220\330\253\000\214\274\323\012\367\344X\005\270\263"
+ 1127      8CBCD30A 
+ 1127      F7E45805 
+ 1127      B8B3
+ 1128 006e 4506D02C 		.ascii	"E\006\320,\036\217\312?\017\002\301\257\275\003\001"
+ 1128      1E8FCA3F 
+ 1128      0F02C1AF 
+ 1128      BD0301
+ 1129 007d 138A6B3A 		.ascii	"\023\212k:\221\021AOg\334\352\227\362\317\316\360\264"
+ 1129      9111414F 
+ 1129      67DCEA97 
+ 1129      F2CFCEF0 
+ 1129      B4
+ 1130 008e E67396AC 		.ascii	"\346s\226\254t\"\347\2555\205\342\3717\350\034u\337"
+ 1130      7422E7AD 
+ 1130      3585E2F9 
+ 1130      37E81C75 
+ 1130      DF
+ 1131 009f 6E47F11A 		.ascii	"nG\361\032q\035)\305\211o\267b\016\252\030\276\033\374"
+ 1131      711D29C5 
+ 1131      896FB762 
+ 1131      0EAA18BE 
+ 1131      1BFC
+ 1132 00b1 563E4BC6 		.ascii	"V>K\306\322y \232\333\300\376x\315Z\364\037\335\250"
+ 1132      D279209A 
+ 1132      DBC0FE78 
+ 1132      CD5AF41F 
+ 1132      DDA8
+ 1133 00c3 338807C7 		.ascii	"3\210\007\3071\261\022\020Y'\200\354_`Q\177\251\031"
+ 1133      31B11210 
+ 1133      592780EC 
+ 1133      5F60517F 
+ 1133      A919
+ 1134 00d5 B54A0D2D 		.ascii	"\265J\015-\345z\237\223\311\234\357\240\340;M\256*\365"
+ 1134      E57A9F93 
+ 1134      C99CEFA0 
+ 1134      E03B4DAE 
+ 1134      2AF5
+ 1135 00e7 B0C8EBBB 		.ascii	"\260\310\353\273<\203S\231a\027+\004~\272w\326&\341"
+ 1135      3C835399 
+ 1135      61172B04 
+ 1135      7EBA77D6 
+ 1135      26E1
+ 1136 00f9 69146355 		.ascii	"i\024cU!\014}"
+ 1136      210C7D
+ 1139              	SBox:
+ 1140 0100 637C777B 		.ascii	"c|w{\362ko\3050\001g+\376\327\253v\312\202\311}\372"
+ 1140      F26B6FC5 
+ 1140      3001672B 
+ 1140      FED7AB76 
+ 1140      CA82C97D 
+ 1141 0115 5947F0AD 		.ascii	"YG\360\255\324\242\257\234\244r\300\267\375\223&6?\367"
+ 1141      D4A2AF9C 
+ 1141      A472C0B7 
+ 1141      FD932636 
+ 1141      3FF7
+ 1142 0127 CC34A5E5 		.ascii	"\3144\245\345\361q\3301\025\004\307#\303\030\226\005"
+ 1142      F171D831 
+ 1142      1504C723 
+ 1142      C3189605 
+ 1143 0137 9A071280 		.ascii	"\232\007\022\200\342\353'\262u\011\203,\032\033nZ\240"
+ 1143      E2EB27B2 
+ 1143      7509832C 
+ 1143      1A1B6E5A 
+ 1143      A0
+ 1144 0148 523BD6B3 		.ascii	"R;\326\263)\343/\204S\321\000\355 \374\261[j\313\276"
+ 1144      29E32F84 
+ 1144      53D100ED 
+ 1144      20FCB15B 
+ 1144      6ACBBE
+ 1145 015b 394A4C58 		.ascii	"9JLX\317\320\357\252\373CM3\205E\371\002\177P<\237\250"
+ 1145      CFD0EFAA 
+ 1145      FB434D33 
+ 1145      8545F902 
+ 1145      7F503C9F 
+ 1146 0170 51A3408F 		.ascii	"Q\243@\217\222\2358\365\274\266\332!\020\377\363\322"
+ 1146      929D38F5 
+ 1146      BCB6DA21 
+ 1146      10FFF3D2 
+ 1147 0180 CD0C13EC 		.ascii	"\315\014\023\354_\227D\027\304\247~=d]\031s`\201O\334"
+ 1147      5F974417 
+ 1147      C4A77E3D 
+ 1147      645D1973 
+ 1147      60814FDC 
+ 1148 0194 222A9088 		.ascii	"\"*\220\210F\356\270\024\336^\013\333\3402:\012I\006"
+ 1148      46EEB814 
+ 1148      DE5E0BDB 
+ 1148      E0323A0A 
+ 1148      4906
+ 1149 01a6 245CC2D3 		.ascii	"$\\\302\323\254b\221\225\344y\347\3107m\215\325N\251"
+ 1149      AC629195 
+ 1149      E479E7C8 
+ 1149      376D8DD5 
+ 1149      4EA9
+ 1150 01b8 6C56F4EA 		.ascii	"lV\364\352ez\256\010\272x%.\034\246\264\306\350\335"
+ 1150      657AAE08 
+ 1150      BA78252E 
+ 1150      1CA6B4C6 
+ 1150      E8DD
+ 1151 01ca 741F4BBD 		.ascii	"t\037K\275\213\212p>\265fH\003\366\016a5W\271\206\301"
+ 1151      8B8A703E 
+ 1151      B5664803 
+ 1151      F60E6135 
+ 1151      57B986C1 
+ 1152 01de 1D9EE1F8 		.ascii	"\035\236\341\370\230\021i\331\216\224\233\036\207\351"
+ 1152      981169D9 
+ 1152      8E949B1E 
+ 1152      87E9
+ 1153 01ec CE5528DF 		.ascii	"\316U(\337\214\241\211\015\277\346BhA\231-\017\260T"
+ 1153      8CA1890D 
+ 1153      BFE64268 
+ 1153      41992D0F 
+ 1153      B054
+ 1154 01fe BB16     		.ascii	"\273\026"
+ 1155              		.bss
+ 1156              		.set	.LANCHOR0,. + 0
+ 1159              	mask:
+ 1160 0000 00000000 		.space	16
+ 1160      00000000 
+ 1160      00000000 
+ 1160      00000000 
+ 1163              	key:
+ 1164 0010 00000000 		.space	16
+ 1164      00000000 
+ 1164      00000000 
+ 1164      00000000 
+ 1165              		.text
+ 1166              	.Letext0:
+ 1167              		.file 2 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\machine\\
+ 1168              		.file 3 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\sys\\_std
+ 1169              		.file 4 ".././hal/hal.h"
+ 1170              		.file 5 ".././hal/stm32f0/stm32f0_hal.h"
+ 1171              		.file 6 ".././simpleserial/simpleserial.h"
+ 1172              		.file 7 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\stdlib.h"
+ 1173              		.file 8 "c:\\users\\alexb\\chipwh~1\\cw\\home\\portable\\armgcc\\arm-none-eabi\\include\\time.h"
+ 1174              		.file 9 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:00000000 simpleserial-aes.c
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:16     .text.substitute_byte:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:24     .text.substitute_byte:00000000 substitute_byte
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:103    .text.substitute_byte:00000024 $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1146   .rodata:00000100 SBox
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:108    .text.substitute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:115    .text.substitute:00000000 substitute
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:169    .text.balanced_xor:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:176    .text.balanced_xor:00000000 balanced_xor
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:221    .text.permute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:228    .text.permute:00000000 permute
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:295    .text.encrypt_block:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:302    .text.encrypt_block:00000000 encrypt_block
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:371    .text.inverse_substitute_byte:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:378    .text.inverse_substitute_byte:00000000 inverse_substitute_byte
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:456    .text.inverse_substitute_byte:00000024 $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1128   .rodata:00000000 InvSBox
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:461    .text.inverse_substitute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:468    .text.inverse_substitute:00000000 inverse_substitute
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:522    .text.reverse_permute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:529    .text.reverse_permute:00000000 reverse_permute
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:598    .text.decrypt_block:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:605    .text.decrypt_block:00000000 decrypt_block
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:674    .text.get_pt:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:681    .text.get_pt:00000000 get_pt
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:770    .text.get_pt:0000004c $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:777    .text.get_pt_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:784    .text.get_pt_wrapper:00000000 get_pt_wrapper
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:817    .text.give_dt:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:824    .text.give_dt:00000000 give_dt
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:916    .text.give_dt:00000050 $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:923    .text.give_dt_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:930    .text.give_dt_wrapper:00000000 give_dt_wrapper
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:963    .text.get_key:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:970    .text.get_key:00000000 get_key
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1015   .text.get_key:00000014 $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1020   .text.get_key_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1027   .text.get_key_wrapper:00000000 get_key_wrapper
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1057   .text.startup.main:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1064   .text.startup.main:00000000 main
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1118   .text.startup.main:00000038 $d
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1166   .bss:00000000 key
-C:\Users\alexb\AppData\Local\Temp\cclDIvwT.s:1167   .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:16     .text.init_mask:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:24     .text.init_mask:00000000 init_mask
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:86     .text.init_mask:0000002c $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:93     .text.substitute_byte:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:100    .text.substitute_byte:00000000 substitute_byte
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:178    .text.substitute_byte:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1139   .rodata:00000100 SBox
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:183    .text.substitute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:190    .text.substitute:00000000 substitute
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:244    .text.balanced_xor:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:251    .text.balanced_xor:00000000 balanced_xor
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:296    .text.permute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:303    .text.permute:00000000 permute
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:370    .text.encrypt_block:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:377    .text.encrypt_block:00000000 encrypt_block
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:446    .text.inverse_substitute_byte:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:453    .text.inverse_substitute_byte:00000000 inverse_substitute_byte
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:531    .text.inverse_substitute_byte:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1121   .rodata:00000000 InvSBox
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:536    .text.inverse_substitute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:543    .text.inverse_substitute:00000000 inverse_substitute
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:597    .text.reverse_permute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:604    .text.reverse_permute:00000000 reverse_permute
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:673    .text.decrypt_block:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:680    .text.decrypt_block:00000000 decrypt_block
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:749    .text.get_pt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:756    .text.get_pt:00000000 get_pt
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:802    .text.get_pt:00000028 $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:807    .text.get_pt_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:814    .text.get_pt_wrapper:00000000 get_pt_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:847    .text.give_dt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:854    .text.give_dt:00000000 give_dt
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:903    .text.give_dt:0000002c $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:908    .text.give_dt_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:915    .text.give_dt_wrapper:00000000 give_dt_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:948    .text.get_key:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:955    .text.get_key:00000000 get_key
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1001   .text.get_key:00000014 $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1006   .text.get_key_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1013   .text.get_key_wrapper:00000000 get_key_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1046   .text.startup.main:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1053   .text.startup.main:00000000 main
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1110   .text.startup.main:0000003c $d
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1159   .bss:00000000 mask
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1163   .bss:00000010 key
+C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1160   .bss:00000000 $d
 
 UNDEFINED SYMBOLS
-memcpy
+time
 srand
 rand
+memcpy
 trigger_high
 trigger_low
 simpleserial_put
