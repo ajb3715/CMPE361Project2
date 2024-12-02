@@ -173,7 +173,7 @@
  102              	.LFB4:
   70:simpleserial-aes.c **** 
   71:simpleserial-aes.c **** 
-  72:simpleserial-aes.c **** // Function to substitute a byte using a constant-time lookup
+  72:simpleserial-aes.c **** // Function to substitute a byte
   73:simpleserial-aes.c **** uint8_t substitute_byte(uint8_t byte) {
  103              		.loc 1 73 39 is_stmt 1 view -0
  104              		.cfi_startproc
@@ -353,7 +353,7 @@
  252              	.LVL19:
  253              	.LFB6:
   88:simpleserial-aes.c **** 
-  89:simpleserial-aes.c **** // Perform XOR in constant time
+  89:simpleserial-aes.c **** // Perform XOR
   90:simpleserial-aes.c **** void balanced_xor(uint8_t *block, const uint8_t *mask) {
  254              		.loc 1 90 56 is_stmt 1 view -0
  255              		.cfi_startproc
@@ -415,7 +415,7 @@
  304              	.LVL22:
  305              	.LFB7:
   95:simpleserial-aes.c **** 
-  96:simpleserial-aes.c **** // Perform a constant-time permutation (avoid data-dependent indexing)
+  96:simpleserial-aes.c **** // Perform permutation (avoid data-dependent indexing)
   97:simpleserial-aes.c **** void permute(uint8_t *block) {
  306              		.loc 1 97 30 is_stmt 1 view -0
  307              		.cfi_startproc
@@ -449,7 +449,7 @@
  331 000a FFF7FEFF 		bl	memcpy
  332              	.LVL24:
  100:simpleserial-aes.c **** 
- 101:simpleserial-aes.c ****     // Example permutation: Rotate bytes left by 3 (constant-time)
+ 101:simpleserial-aes.c ****     //Rotate bytes left by 3
  102:simpleserial-aes.c ****     for (int i = 0; i < BLOCK_SIZE; i++) {
  333              		.loc 1 102 5 is_stmt 1 view .LVU81
  334              	.LBB13:
@@ -1615,52 +1615,52 @@
  1174              		.file 9 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:00000000 simpleserial-aes.c
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:16     .text.init_mask:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:24     .text.init_mask:00000000 init_mask
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:86     .text.init_mask:0000002c $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:93     .text.substitute_byte:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:100    .text.substitute_byte:00000000 substitute_byte
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:178    .text.substitute_byte:00000024 $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1139   .rodata:00000100 SBox
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:183    .text.substitute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:190    .text.substitute:00000000 substitute
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:244    .text.balanced_xor:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:251    .text.balanced_xor:00000000 balanced_xor
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:296    .text.permute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:303    .text.permute:00000000 permute
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:370    .text.encrypt_block:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:377    .text.encrypt_block:00000000 encrypt_block
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:446    .text.inverse_substitute_byte:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:453    .text.inverse_substitute_byte:00000000 inverse_substitute_byte
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:531    .text.inverse_substitute_byte:00000024 $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1121   .rodata:00000000 InvSBox
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:536    .text.inverse_substitute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:543    .text.inverse_substitute:00000000 inverse_substitute
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:597    .text.reverse_permute:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:604    .text.reverse_permute:00000000 reverse_permute
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:673    .text.decrypt_block:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:680    .text.decrypt_block:00000000 decrypt_block
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:749    .text.get_pt:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:756    .text.get_pt:00000000 get_pt
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:802    .text.get_pt:00000028 $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:807    .text.get_pt_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:814    .text.get_pt_wrapper:00000000 get_pt_wrapper
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:847    .text.give_dt:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:854    .text.give_dt:00000000 give_dt
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:903    .text.give_dt:0000002c $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:908    .text.give_dt_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:915    .text.give_dt_wrapper:00000000 give_dt_wrapper
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:948    .text.get_key:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:955    .text.get_key:00000000 get_key
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1001   .text.get_key:00000014 $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1006   .text.get_key_wrapper:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1013   .text.get_key_wrapper:00000000 get_key_wrapper
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1046   .text.startup.main:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1053   .text.startup.main:00000000 main
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1110   .text.startup.main:0000003c $d
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1159   .bss:00000000 mask
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1163   .bss:00000010 key
-C:\Users\alexb\AppData\Local\Temp\ccv4dVVc.s:1160   .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:16     .text.init_mask:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:24     .text.init_mask:00000000 init_mask
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:86     .text.init_mask:0000002c $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:93     .text.substitute_byte:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:100    .text.substitute_byte:00000000 substitute_byte
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:178    .text.substitute_byte:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1139   .rodata:00000100 SBox
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:183    .text.substitute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:190    .text.substitute:00000000 substitute
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:244    .text.balanced_xor:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:251    .text.balanced_xor:00000000 balanced_xor
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:296    .text.permute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:303    .text.permute:00000000 permute
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:370    .text.encrypt_block:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:377    .text.encrypt_block:00000000 encrypt_block
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:446    .text.inverse_substitute_byte:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:453    .text.inverse_substitute_byte:00000000 inverse_substitute_byte
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:531    .text.inverse_substitute_byte:00000024 $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1121   .rodata:00000000 InvSBox
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:536    .text.inverse_substitute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:543    .text.inverse_substitute:00000000 inverse_substitute
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:597    .text.reverse_permute:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:604    .text.reverse_permute:00000000 reverse_permute
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:673    .text.decrypt_block:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:680    .text.decrypt_block:00000000 decrypt_block
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:749    .text.get_pt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:756    .text.get_pt:00000000 get_pt
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:802    .text.get_pt:00000028 $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:807    .text.get_pt_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:814    .text.get_pt_wrapper:00000000 get_pt_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:847    .text.give_dt:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:854    .text.give_dt:00000000 give_dt
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:903    .text.give_dt:0000002c $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:908    .text.give_dt_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:915    .text.give_dt_wrapper:00000000 give_dt_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:948    .text.get_key:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:955    .text.get_key:00000000 get_key
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1001   .text.get_key:00000014 $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1006   .text.get_key_wrapper:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1013   .text.get_key_wrapper:00000000 get_key_wrapper
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1046   .text.startup.main:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1053   .text.startup.main:00000000 main
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1110   .text.startup.main:0000003c $d
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1159   .bss:00000000 mask
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1163   .bss:00000010 key
+C:\Users\alexb\AppData\Local\Temp\ccYbFHEw.s:1160   .bss:00000000 $d
 
 UNDEFINED SYMBOLS
 time

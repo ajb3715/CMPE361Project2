@@ -343,7 +343,7 @@ void init_mask(){
 080003a4 <substitute_byte>:
 
 
-// Function to substitute a byte using a constant-time lookup
+// Function to substitute a byte
 uint8_t substitute_byte(uint8_t byte) {
     uint8_t result = 0;
     for (int i = 0; i < 256; i++) {
@@ -405,7 +405,7 @@ void substitute(uint8_t *block) {
 
 080003e4 <balanced_xor>:
 
-// Perform XOR in constant time
+// Perform XOR
 void balanced_xor(uint8_t *block, const uint8_t *mask) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
  80003e4:	2300      	movs	r3, #0
@@ -426,7 +426,7 @@ void balanced_xor(uint8_t *block, const uint8_t *mask) {
 
 080003f8 <permute>:
 
-// Perform a constant-time permutation (avoid data-dependent indexing)
+// Perform permutation (avoid data-dependent indexing)
 void permute(uint8_t *block) {
  80003f8:	b51f      	push	{r0, r1, r2, r3, r4, lr}
     uint8_t temp[BLOCK_SIZE];
@@ -439,7 +439,7 @@ void permute(uint8_t *block) {
  8000400:	4668      	mov	r0, sp
  8000402:	f001 f823 	bl	800144c <memcpy>
 
-    // Example permutation: Rotate bytes left by 3 (constant-time)
+    //Rotate bytes left by 3
     for (int i = 0; i < BLOCK_SIZE; i++) {
  8000406:	2300      	movs	r3, #0
         block[i] = temp[(i + 3) % BLOCK_SIZE];

@@ -980,30 +980,30 @@
  735              		.file 10 ".././hal/stm32f0/stm32f0xx_hal_uart.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f0_hal_nano.c
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:16     .text.platform_init:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:24     .text.platform_init:00000000 platform_init
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:143    .text.init_uart:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:150    .text.init_uart:00000000 init_uart
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:293    .text.init_uart:00000074 $d
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:300    .text.trigger_setup:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:307    .text.trigger_setup:00000000 trigger_setup
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:451    .text.trigger_setup:0000007c $d
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:456    .text.trigger_high:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:463    .text.trigger_high:00000000 trigger_high
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:492    .text.trigger_low:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:499    .text.trigger_low:00000000 trigger_low
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:528    .text.getch:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:535    .text.getch:00000000 getch
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:587    .text.getch:00000028 $d
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:593    .text.putch:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:600    .text.putch:00000000 putch
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:636    .text.putch:00000014 $d
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:642    .text.led_error:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:649    .text.led_error:00000000 led_error
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:680    .text.led_ok:00000000 $t
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:687    .text.led_ok:00000000 led_ok
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:723    .bss:00000000 UartHandle
-C:\Users\alexb\AppData\Local\Temp\ccDeyayh.s:719    .bss:00000000 $d
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:16     .text.platform_init:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:24     .text.platform_init:00000000 platform_init
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:143    .text.init_uart:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:150    .text.init_uart:00000000 init_uart
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:293    .text.init_uart:00000074 $d
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:300    .text.trigger_setup:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:307    .text.trigger_setup:00000000 trigger_setup
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:451    .text.trigger_setup:0000007c $d
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:456    .text.trigger_high:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:463    .text.trigger_high:00000000 trigger_high
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:492    .text.trigger_low:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:499    .text.trigger_low:00000000 trigger_low
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:528    .text.getch:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:535    .text.getch:00000000 getch
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:587    .text.getch:00000028 $d
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:593    .text.putch:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:600    .text.putch:00000000 putch
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:636    .text.putch:00000014 $d
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:642    .text.led_error:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:649    .text.led_error:00000000 led_error
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:680    .text.led_ok:00000000 $t
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:687    .text.led_ok:00000000 led_ok
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:723    .bss:00000000 UartHandle
+C:\Users\alexb\AppData\Local\Temp\ccOwPaBv.s:719    .bss:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_Init
