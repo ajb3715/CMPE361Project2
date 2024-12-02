@@ -95,14 +95,7 @@ void balanced_xor(uint8_t *block, const uint8_t *mask) {
 
 // Perform permutation (avoid data-dependent indexing)
 void permute(uint8_t *block) {
-    // uint8_t temp[BLOCK_SIZE];
-    // memcpy(temp, block, BLOCK_SIZE);
-
-    // //Rotate bytes left by 3
-    // for (int i = 0; i < BLOCK_SIZE; i++) {
-    //     block[i] = temp[(i + 3) % BLOCK_SIZE];
-    // }
-
+    
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
 
@@ -162,12 +155,6 @@ void inverse_substitute(uint8_t *block) {
 
 // Perform reverse permutation (rotate bytes right by 3)
 void reverse_permute(uint8_t *block) {
-    // uint8_t temp[BLOCK_SIZE];
-    // memcpy(temp, block, BLOCK_SIZE);
-
-    // for (int i = 0; i < BLOCK_SIZE; i++) {
-    //     block[i] = temp[(i - 3 + BLOCK_SIZE) % BLOCK_SIZE]; // Rotate right
-    // }
 
     uint8_t temp[BLOCK_SIZE];
     memcpy(temp, block, BLOCK_SIZE);
